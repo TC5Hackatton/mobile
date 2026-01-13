@@ -1,13 +1,13 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
 
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { ExternalLink } from '@/src/presentation/components/external-link';
+import ParallaxScrollView from '@/src/presentation/components/parallax-scroll-view';
+import { ThemedText } from '@/src/presentation/components/themed-text';
+import { ThemedView } from '@/src/presentation/components/themed-view';
+import { Collapsible } from '@/src/presentation/components/ui/collapsible';
+import { IconSymbol } from '@/src/presentation/components/ui/icon-symbol';
+import { Fonts } from '@/src/presentation/constants/theme';
 
 export default function TabTwoScreen() {
   return (
@@ -22,7 +22,11 @@ export default function TabTwoScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={{ fontFamily: Fonts.rounded }}>
+        <ThemedText
+          type="title"
+          style={{
+            fontFamily: Fonts.rounded,
+          }}>
           Explore
         </ThemedText>
       </ThemedView>
