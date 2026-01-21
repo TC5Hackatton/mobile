@@ -1,64 +1,50 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { router } from 'expo-router';
 import { useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
-import { loginSchema, type LoginFormData } from '@/src/domain/validations/login-schema';
+import { signUpSchema, type SignUpFormData } from '@/src/domain/validations/sign-up-schema';
 import { CustomButton } from '@/src/presentation/components/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
-import { LinkText } from '@/src/presentation/components/link-text';
 import { LoginLogo } from '@/src/presentation/components/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 
-export default function SignIn() {
-  const params = useLocalSearchParams<{ success?: string; message?: string }>();
-
+export default function SignUp() {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
-  useEffect(() => {
-    if (params.success === 'true' && params.message) {
-      Toast.show({
-        type: 'success',
-        text1: params.message,
-      });
-    }
-  }, [params.success, params.message]);
-
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: SignUpFormData) => {
     try {
-      // TODO: Implementar lógica de autenticação
-      console.log('Login data:', data);
+      // TODO: Implementar lógica de cadastro
+      console.log('Sign up data:', data);
 
-      // Simular delay de autenticação
+      // Simular delay de cadastro
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Navegar para a tela principal após login bem-sucedido
-      router.replace('/(tabs)');
+      // Navegar para a tela de login com mensagem de sucesso
+      router.replace({
+        pathname: '/sign-in',
+        params: { success: 'true', message: 'Conta criada com sucesso!' },
+      });
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Sign up error:', error);
       // TODO: Mostrar erro ao usuário
     }
   };
 
-  const handleSignUp = () => {
-    router.push('/sign-up');
-  };
-
-  const handleForgotPassword = () => {
-    // TODO: Navegar para tela de recuperação de senha
-    console.log('Navigate to forgot password');
+  const handleCancel = () => {
+    router.back();
   };
 
   return (
@@ -70,6 +56,18 @@ export default function SignIn() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={handleCancel}
+              style={styles.backButton}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+              accessibilityHint="Volta para a tela anterior">
+              <IconButton icon="chevron-left" iconColor={customColors.skyBlue} size={24} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Cadastre-se</Text>
+          </View>
+
           <LoginLogo />
 
           <View style={styles.formContainer}>
@@ -84,7 +82,7 @@ export default function SignIn() {
                 error={!!errors.email}
                 mode="outlined"
                 accessibilityLabel="Campo de e-mail"
-                accessibilityHint="Digite seu endereço de e-mail para fazer login"
+                accessibilityHint="Digite seu endereço de e-mail para cadastro"
               />
               {errors.email && (
                 <View style={styles.errorContainer}>
@@ -93,7 +91,7 @@ export default function SignIn() {
               )}
             </View>
 
-            <View style={styles.inputContainer}>
+            <View>
               <CustomTextInput
                 label="Senha"
                 placeholder="Insira sua senha"
@@ -103,7 +101,7 @@ export default function SignIn() {
                 error={!!errors.password}
                 mode="outlined"
                 accessibilityLabel="Campo de senha"
-                accessibilityHint="Digite sua senha para fazer login"
+                accessibilityHint="Digite sua senha para cadastro"
               />
               {errors.password && (
                 <View style={styles.errorContainer}>
@@ -112,26 +110,41 @@ export default function SignIn() {
               )}
             </View>
 
+            <View style={styles.inputContainer}>
+              <CustomTextInput
+                label="Repita a senha"
+                placeholder="Repita sua senha"
+                control={control}
+                name="confirmPassword"
+                secureTextEntry
+                error={!!errors.confirmPassword}
+                mode="outlined"
+                accessibilityLabel="Campo de confirmação de senha"
+                accessibilityHint="Repita sua senha para confirmar"
+              />
+              {errors.confirmPassword && (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+                </View>
+              )}
+            </View>
+
             <CustomButton
-              label="Entrar"
+              label="Cadastrar"
               onPress={handleSubmit(onSubmit)}
               variant="primary"
               loading={isSubmitting}
-              accessibilityLabel="Botão de entrar"
-              accessibilityHint="Faz login na aplicação com as credenciais informadas"
+              accessibilityLabel="Botão de cadastrar"
+              accessibilityHint="Cria uma nova conta com os dados informados"
             />
 
             <CustomButton
-              label="Cadastre-se"
-              onPress={handleSignUp}
-              variant="secondary"
-              accessibilityLabel="Botão de cadastrar"
-              accessibilityHint="Navega para a tela de cadastro"
+              label="Cancelar"
+              onPress={handleCancel}
+              variant="cancel"
+              accessibilityLabel="Botão de cancelar"
+              accessibilityHint="Cancela o cadastro e volta para a tela anterior"
             />
-
-            <View style={styles.linkContainer}>
-              <LinkText text="Esqueci minha senha" onPress={handleForgotPassword} />
-            </View>
           </View>
         </View>
       </ScrollView>
@@ -143,11 +156,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  inputContainer: {
-    marginBottom: 32,
-  },
   scrollContent: {
-    flexGrow: 1,
     justifyContent: 'center',
   },
   content: {
@@ -157,10 +166,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
   },
+  header: {
+    width: '100%',
+    maxWidth: 400,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingLeft: 4,
+  },
+  backButton: {
+    marginLeft: -12,
+    marginRight: 4,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Raleway_600SemiBold',
+    color: customColors.skyBlue,
+    marginLeft: 8,
+  },
   formContainer: {
     width: '100%',
     maxWidth: 400,
     gap: 16,
+  },
+  inputContainer: {
+    marginBottom: 32,
   },
   errorContainer: {
     marginTop: 4,
@@ -169,11 +199,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    color: '#E89B8C',
+    color: customColors.coral,
     fontFamily: 'Raleway_400Regular',
-  },
-  linkContainer: {
-    marginTop: 8,
-    alignItems: 'center',
   },
 });

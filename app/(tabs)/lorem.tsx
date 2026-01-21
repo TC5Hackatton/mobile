@@ -1,20 +1,14 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/src/presentation/components/app-header';
-import { ContentCard } from '@/src/presentation/components/content-card';
-import { FloatingActionButton } from '@/src/presentation/components/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { typography } from '@/src/presentation/constants/typography';
+import { spacing } from '@/src/presentation/constants/spacing';
 import { useAppHeader } from '@/src/presentation/hooks/use-app-header';
-import { logger } from '@/src/infrastructure/logger';
 
-export default function HomeScreen() {
+export default function LoremScreen() {
   const { handleExpandPress, handleThemeTogglePress } = useAppHeader();
-
-  const handleFABPress = () => {
-    logger.log('FAB pressed');
-    // TODO: Implementar ação do FAB
-  };
 
   return (
     <View style={styles.container}>
@@ -22,14 +16,8 @@ export default function HomeScreen() {
         <AppHeader onExpandPress={handleExpandPress} onThemeTogglePress={handleThemeTogglePress} />
         
         <View style={styles.content}>
-          <ContentCard />
+          <Text style={styles.title} accessibilityRole="header">Lorem</Text>
         </View>
-
-        <FloatingActionButton
-          onPress={handleFABPress}
-          accessibilityLabel="Adicionar novo item"
-          accessibilityHint="Abre a tela para adicionar um novo item"
-        />
       </SafeAreaView>
     </View>
   );
@@ -46,5 +34,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    padding: spacing.lg,
+  },
+  title: {
+    fontSize: typography.fontSize.xxl,
+    fontFamily: typography.fontFamily.semiBold,
+    color: customColors.darkNavy,
   },
 });
