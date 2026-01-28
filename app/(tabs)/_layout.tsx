@@ -29,34 +29,26 @@ export default function TabLayout() {
           fontFamily: 'Raleway_400Regular',
           fontSize: 12,
         },
-      }}
-    >
+      }}>
       <Tabs.Screen
-        name='index'
+        name="index"
         options={{
           title: 'Inicio',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name='house.fill' color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name='explore'
+        name="explore"
         options={{
           title: 'Tarefas',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name='doc.text.fill' color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name='lorem'
-        options={{
-          title: 'Lorem',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name='square' color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name='preferences'
+        name="preferences"
         options={{
           title: 'Preferências',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name='gearshape.fill' color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />
     </Tabs>
