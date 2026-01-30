@@ -44,3 +44,9 @@ app-example
 
 # tests and generated files from it
 coverage/
+
+# env files
+.env
+.env.*
+!.env.example
+
