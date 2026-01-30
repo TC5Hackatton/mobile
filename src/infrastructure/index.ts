@@ -1,3 +1,6 @@
+// Repositories
+export * from './repositories/FirebaseAuthRepository';
+
 /**
  * Exporta todos os módulos de infraestrutura
  */
