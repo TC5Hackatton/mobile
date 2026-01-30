@@ -32,10 +32,9 @@ export default function SignUpContent({ signUpUseCase }: { signUpUseCase: any })
       const response = await signUpUseCase.execute(data.email, data.password);
       console.log('Response:', response);
 
-      // Simular delay de cadastro
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       // Navegar para a tela de login com mensagem de sucesso
+      // TODO: isso pode ser substituído por redirecionar o usuário para a Home, pois já temos
+      // ... o token dele. Além disso, deve ser feito no UseCase.
       router.replace({
         pathname: '/sign-in',
         params: { success: 'true', message: 'Conta criada com sucesso!' },
