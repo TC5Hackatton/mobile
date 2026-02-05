@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// TODO: Mover para pasta de componentes, pois é validação de UI/UX
 export const signUpSchema = z
   .object({
     email: z.email('E-mail inválido'),

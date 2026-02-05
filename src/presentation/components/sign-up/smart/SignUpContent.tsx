@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { signUpSchema, type SignUpFormData } from '@/src/domain/validations/sign-up-schema';
 import { CustomButton } from '@/src/presentation/components/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
 export default function SignUpContent({ signUpUseCase }: { signUpUseCase: any }) {
   const {
