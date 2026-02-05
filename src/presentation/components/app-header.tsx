@@ -1,8 +1,7 @@
 import { Image } from 'expo-image';
 import { useCallback } from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { logger } from '@/src/infrastructure/logger';
 import { customColors } from '@/src/presentation/constants/paper-theme';
@@ -10,8 +9,6 @@ import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 
 export function AppHeader() {
-  const insets = useSafeAreaInsets();
-
   const handleExpandPress = useCallback(() => {
     logger.log('Expand pressed');
     // TODO: Implementar ação de expandir
@@ -24,7 +21,6 @@ export function AppHeader() {
 
   return (
     <>
-      {Platform.OS === 'ios' && <View style={[styles.statusBarBackground, { height: insets.top }]} />}
       <View style={styles.container} accessibilityLabel="Cabeçalho da aplicação">
         <Text style={styles.appName} accessibilityRole="header">
           MindEase
@@ -65,10 +61,6 @@ export function AppHeader() {
 }
 
 const styles = StyleSheet.create({
-  statusBarBackground: {
-    backgroundColor: customColors.darkNavy,
-    width: '100%',
-  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
