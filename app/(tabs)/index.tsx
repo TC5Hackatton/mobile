@@ -7,11 +7,8 @@ import { AppHeader } from '@/src/presentation/components/app-header';
 import { ContentCard } from '@/src/presentation/components/content-card';
 import { FloatingActionButton } from '@/src/presentation/components/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { useAppHeader } from '@/src/presentation/hooks/use-app-header';
 
 export default function HomeScreen() {
-  const { handleExpandPress, handleThemeTogglePress } = useAppHeader();
-
   const handleFABPress = () => {
     logger.log('FAB pressed');
     // TODO: Implementar ação do FAB
@@ -20,7 +17,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader onExpandPress={handleExpandPress} onThemeTogglePress={handleThemeTogglePress} />
+        <AppHeader />
 
         <View style={styles.content}>
           <ContentCard>
