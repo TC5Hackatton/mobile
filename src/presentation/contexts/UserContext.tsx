@@ -1,10 +1,10 @@
-import { CreateUserUseCase, SignInUserUseCase } from '@/src/domain';
+import { CreateUserUseCase, SignInUseCase } from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
 export interface UserUseCases {
   createUserUseCase: CreateUserUseCase;
-  signInUserUseCase: SignInUserUseCase;
+  signInUseCase: SignInUseCase;
 }
 
 // Create a context for Auth dependencies
@@ -17,7 +17,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const userUseCases = useMemo<UserUseCases>(
     () => ({
       createUserUseCase: new CreateUserUseCase(authRepository),
-      signInUserUseCase: new SignInUserUseCase(authRepository),
+      signInUseCase: new SignInUseCase(authRepository),
     }),
     [authRepository],
   );

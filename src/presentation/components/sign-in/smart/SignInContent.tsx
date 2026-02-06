@@ -14,7 +14,7 @@ import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
 
 export default function SignInContent() {
-  const { signInUserUseCase } = useUser();
+  const { signInUseCase } = useUser();
   const params = useLocalSearchParams<{ success?: string; message?: string }>();
 
   const {
@@ -43,7 +43,7 @@ export default function SignInContent() {
       // TODO: Implementar lógica de autenticação
       console.log('Login data:', data);
 
-      const response = await signInUserUseCase.execute(data.email, data.password);
+      const response = await signInUseCase.execute(data.email, data.password);
       console.log('Response:', response);
       console.log('Mais detalhes:', { token: response.stsTokenManager.accessToken, uid: response.uid });
 

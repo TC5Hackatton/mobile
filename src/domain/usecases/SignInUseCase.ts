@@ -1,6 +1,6 @@
 import { AuthRepository } from '../repositories/AuthRepository';
 
-export class SignInUserUseCase {
+export class SignInUseCase {
   constructor(private authRepository: AuthRepository) {}
 
   execute(email: string, password: string): Promise<any> {
