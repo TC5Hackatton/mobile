@@ -3,20 +3,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/src/presentation/components/app-header';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { typography } from '@/src/presentation/constants/typography';
 import { spacing } from '@/src/presentation/constants/spacing';
-import { useAppHeader } from '@/src/presentation/hooks/use-app-header';
+import { typography } from '@/src/presentation/constants/typography';
 
 export default function TasksScreen() {
-  const { handleExpandPress, handleThemeTogglePress } = useAppHeader();
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader onExpandPress={handleExpandPress} onThemeTogglePress={handleThemeTogglePress} />
-        
+        <AppHeader />
+
         <View style={styles.content}>
-          <Text style={styles.title} accessibilityRole="header">Tarefas</Text>
+          <Text style={styles.title} accessibilityRole="header">
+            Tarefas
+          </Text>
         </View>
       </SafeAreaView>
     </View>

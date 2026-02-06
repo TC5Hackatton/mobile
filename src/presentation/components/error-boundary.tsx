@@ -1,10 +1,10 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CustomButton } from './custom-button';
+import { ErrorHandler } from '@/src/infrastructure/error-handler';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { typography } from '@/src/presentation/constants/typography';
-import { ErrorHandler } from '@/src/infrastructure/error-handler';
+import { CustomButton } from './custom-button';
 
 interface Props {
   children: ReactNode;
@@ -16,6 +16,8 @@ interface State {
   error: Error | null;
 }
 
+// TODO: validar se é necessário ser class component ou se podemos seguir as instruções da
+// ... documentação (https://react.dev/reference/react/Component) para usar function component.
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -47,9 +49,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Ops! Algo deu errado
             </Text>
             <Text style={styles.message}>
-              {ErrorHandler.getUserFriendlyMessage(
-                ErrorHandler.handle(this.state.error || new Error('Unknown error'))
-              )}
+              {ErrorHandler.getUserFriendlyMessage(ErrorHandler.handle(this.state.error || new Error('Unknown error')))}
             </Text>
             <CustomButton
               label="Tentar novamente"

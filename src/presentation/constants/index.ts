@@ -3,5 +3,5 @@
  */
 export * from './paper-theme';
 export * from './spacing';
-export * from './typography';
 export * from './theme';
+export * from './typography';
