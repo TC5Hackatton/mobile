@@ -10,11 +10,17 @@ import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { ErrorBoundary } from '@/src/presentation/components/error-boundary';
 import { CustomToast } from '@/src/presentation/components/custom-toast';
+import { ErrorBoundary } from '@/src/presentation/components/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
+import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
 import { useColorScheme } from '@/src/presentation/hooks/use-color-scheme';
-import { Raleway_400Regular, Raleway_500Medium, Raleway_600SemiBold, Raleway_700Bold } from '@expo-google-fonts/raleway';
+import {
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+} from '@expo-google-fonts/raleway';
 
 // Manter a splash screen visível enquanto carregamos as fontes
 SplashScreen.preventAutoHideAsync();
@@ -55,23 +61,25 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
-      <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-          <PaperProvider theme={paperTheme}>
-            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <Stack>
-                <Stack.Screen name="splash" options={{ headerShown: false }} />
-                <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-                <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-              </Stack>
-              <StatusBar style="dark" />
-              <CustomToast />
-            </ThemeProvider>
-          </PaperProvider>
-        </SafeAreaView>
-      </SafeAreaProvider>
+      <DependenciesProvider>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+            <PaperProvider theme={paperTheme}>
+              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <Stack>
+                  <Stack.Screen name="splash" options={{ headerShown: false }} />
+                  <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+                  <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+                </Stack>
+                <StatusBar style="dark" />
+                <CustomToast />
+              </ThemeProvider>
+            </PaperProvider>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </DependenciesProvider>
     </ErrorBoundary>
   );
 }

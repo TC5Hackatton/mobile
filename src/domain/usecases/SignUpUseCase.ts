@@ -1,6 +1,6 @@
 import { AuthRepository } from '../repositories/AuthRepository';
 
-export class CreateUserUseCase {
+export class SignUpUseCase {
   constructor(private readonly authRepository: AuthRepository) {}
 
   execute(email: string, password: string) {

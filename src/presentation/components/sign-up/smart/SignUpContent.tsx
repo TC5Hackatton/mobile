@@ -8,9 +8,12 @@ import { CustomButton } from '@/src/presentation/components/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
-export default function SignUpContent({ signUpUseCase }: { signUpUseCase: any }) {
+export default function SignUpContent() {
+  const { signUpUseCase } = useUser();
+
   const {
     control,
     handleSubmit,

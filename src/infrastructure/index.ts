@@ -1,11 +1,10 @@
 // Repositories
 export * from './repositories/FirebaseAuthRepository';
+export * from './repositories/InMemoryLoggerRepository';
 
 /**
  * Exporta todos os módulos de infraestrutura
- * TODO: validar quais desses módulos serão necessários ao final do desenvolvimento e onde eles
- * ... deveriam ficar, já que são "internos"
+ * TODO: validar se esse módulo será necessário ao final do desenvolvimento e onde ele
+ * ... deveria ficar, já que é "interno"
  */
-export * from './config';
 export * from './error-handler';
-export * from './logger';

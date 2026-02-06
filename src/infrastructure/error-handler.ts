@@ -2,7 +2,9 @@
  * Serviço centralizado para tratamento de erros
  * Evita expor informações sensíveis em produção
  */
-import { logger } from './logger';
+
+import { LoggerRepository } from '../domain';
+import { InMemoryLoggerRepository } from './repositories/InMemoryLoggerRepository';
 
 export interface AppError {
   message: string;
@@ -11,6 +13,9 @@ export interface AppError {
 }
 
 export class ErrorHandler {
+  // TODO: it's not ideal, but it's a quick fix to keep developing
+  private static logger: LoggerRepository = new InMemoryLoggerRepository();
+
   /**
    * Trata erros de forma segura, sem expor informações sensíveis
    */
@@ -30,9 +35,9 @@ export class ErrorHandler {
 
     // Log detalhado apenas em desenvolvimento
     if (context) {
-      logger.error(`[${context}]`, appError);
+      ErrorHandler.logger.error(`[${context}]`, error instanceof Error ? error : undefined);
     } else {
-      logger.error('Error:', appError);
+      ErrorHandler.logger.error('Error:', error instanceof Error ? error : undefined);
     }
 
     return appError;

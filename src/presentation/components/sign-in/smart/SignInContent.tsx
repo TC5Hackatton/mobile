@@ -10,9 +10,11 @@ import { CustomTextInput } from '@/src/presentation/components/custom-text-input
 import { LinkText } from '@/src/presentation/components/link-text';
 import { LoginLogo } from '@/src/presentation/components/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
 
 export default function SignInContent() {
+  const { signInUseCase } = useUser();
   const params = useLocalSearchParams<{ success?: string; message?: string }>();
 
   const {
@@ -41,8 +43,9 @@ export default function SignInContent() {
       // TODO: Implementar lógica de autenticação
       console.log('Login data:', data);
 
-      // Simular delay de autenticação
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await signInUseCase.execute(data.email, data.password);
+      console.log('Response:', response);
+      console.log('Mais detalhes:', { token: response.stsTokenManager.accessToken, uid: response.uid });
 
       // Navegar para a tela principal após login bem-sucedido
       router.replace('/(tabs)');
