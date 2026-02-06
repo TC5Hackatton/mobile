@@ -1,0 +1,26 @@
+/* eslint-disable prettier/prettier */
+import { useState } from 'react';
+import { useRouter } from 'expo-router';
+
+export function useCadastrarTarefa() {
+  const router = useRouter();
+  const [mode, setMode] = useState<'timer' | 'fixed'>('timer');
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
+
+  const handleCancel = () => router.back();
+
+  const handleSave = () => {
+    // Aqui viria a chamada para o UseCase do Domain
+    console.log('Salvando tarefa...');
+    router.back();
+  };
+
+  return {
+    mode,
+    setMode,
+    selectedDuration,
+    setSelectedDuration,
+    handleCancel,
+    handleSave,
+  };
+}

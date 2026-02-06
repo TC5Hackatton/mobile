@@ -1,59 +1,94 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { IconButton } from 'react-native-paper';
-
-import { customColors } from '@/src/presentation/constants/paper-theme';
+/* eslint-disable prettier/prettier */
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { FAB, Portal } from 'react-native-paper';
+import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { spacing } from '@/src/presentation/constants/spacing';
+import { customColors } from '@/src/presentation/constants/paper-theme';
 
-interface FloatingActionButtonProps {
-  onPress: () => void;
-  icon?: string;
-  testID?: string;
-  accessibilityLabel?: string;
-  accessibilityHint?: string;
-}
+export function FloatingActionButton() {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
-export function FloatingActionButton({
-  onPress,
-  icon = 'plus',
-  testID,
-  accessibilityLabel = 'Adicionar',
-  accessibilityHint,
-}: FloatingActionButtonProps) {
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={0.8}
-      testID={testID}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}>
-      <IconButton icon={icon} iconColor={customColors.white} size={24} style={styles.icon} />
-    </TouchableOpacity>
+    <Portal>
+      <View style={styles.wrapper}>
+        {open && (
+          <View style={styles.actions}>
+            {/* Checklist */}
+            <Pressable style={styles.pillButton} onPress={() => { setOpen(false); console.log('Checklist'); }}>
+              <MaterialCommunityIcons
+                name="format-list-checks"
+                size={20}
+                color="#4A617C"
+              />
+              <Text style={styles.pillText}>Checklist</Text>
+            </Pressable>
+
+            {/* Tarefa */}
+            <Pressable
+              style={styles.pillButton}
+              onPress={() => {
+                setOpen(false);
+                router.push('/cadastrar-tarefa');
+              }}
+            >
+              <MaterialCommunityIcons
+                name="file-document-outline"
+                size={20}
+                color="#4A617C"
+              />
+              <Text style={styles.pillText}>Tarefa</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {/* FAB principal */}
+        <FAB
+          icon={open ? 'close' : 'plus'}
+          onPress={() => setOpen(!open)}
+          style={styles.fab}
+          color="#fff"
+        />
+      </View>
+    </Portal>
   );
 }
 
+
+/* eslint-disable prettier/prettier */
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     position: 'absolute',
     right: spacing.md,
     bottom: spacing.md,
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    backgroundColor: customColors.mediumBlue,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    alignItems: 'flex-end',
   },
-  icon: {
-    margin: 0,
+
+  actions: {
+    marginBottom: 12,
+    gap: 10,
+  },
+
+  pillButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#BDD1E6',
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    height: 42,
+    gap: 10,
+  },
+
+  pillText: {
+    color: '#4A617C',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+
+  fab: {
+    backgroundColor: customColors.mediumBlue,
+    borderRadius: 28,
   },
 });
