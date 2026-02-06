@@ -6,6 +6,5 @@ export * from './repositories/FirebaseAuthRepository';
  * TODO: validar quais desses módulos serão necessários ao final do desenvolvimento e onde eles
  * ... deveriam ficar, já que são "internos"
  */
-export * from './config';
 export * from './error-handler';
 export * from './logger';
