@@ -11,3 +11,4 @@ export * from './repositories/LoggerRepository';
 
 // Use Cases
 export * from './usecases/CreateUserUseCase';
+export * from './usecases/SignInUserUseCase';

@@ -8,9 +8,12 @@ import { CustomButton } from '@/src/presentation/components/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
-export default function SignUpContent({ signUpUseCase }: { signUpUseCase: any }) {
+export default function SignUpContent() {
+  const { createUserUseCase } = useUser();
+
   const {
     control,
     handleSubmit,
@@ -29,7 +32,7 @@ export default function SignUpContent({ signUpUseCase }: { signUpUseCase: any })
       // TODO: Implementar lógica de cadastro
       console.log('Sign up data:', data);
 
-      const response = await signUpUseCase.execute(data.email, data.password);
+      const response = await createUserUseCase.execute(data.email, data.password);
       console.log('Response:', response);
 
       // Navegar para a tela de login com mensagem de sucesso
