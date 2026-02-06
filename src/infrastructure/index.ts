@@ -1,5 +1,6 @@
 // Repositories
 export * from './repositories/FirebaseAuthRepository';
+export * from './repositories/InMemoryLoggerRepository';
 
 /**
  * Exporta todos os módulos de infraestrutura
