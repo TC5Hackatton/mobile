@@ -3,21 +3,23 @@ import { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { logger } from '@/src/infrastructure/logger';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 
 export function AppHeader() {
+  const { logger } = useDependencies();
+
   const handleExpandPress = useCallback(() => {
     logger.log('Expand pressed');
     // TODO: Implementar ação de expandir
-  }, []);
+  }, [logger]);
 
   const handleThemeTogglePress = useCallback(() => {
     logger.log('Theme toggle pressed');
     // TODO: Implementar toggle de tema
-  }, []);
+  }, [logger]);
 
   return (
     <>

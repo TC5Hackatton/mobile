@@ -8,4 +8,3 @@ export * from './repositories/InMemoryLoggerRepository';
  * ... deveriam ficar, já que são "internos"
  */
 export * from './error-handler';
-export * from './logger';
