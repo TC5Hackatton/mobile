@@ -12,7 +12,7 @@ import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
 export default function SignUpContent() {
-  const { createUserUseCase } = useUser();
+  const { signUpUseCase } = useUser();
 
   const {
     control,
@@ -32,7 +32,7 @@ export default function SignUpContent() {
       // TODO: Implementar lógica de cadastro
       console.log('Sign up data:', data);
 
-      const response = await createUserUseCase.execute(data.email, data.password);
+      const response = await signUpUseCase.execute(data.email, data.password);
       console.log('Response:', response);
 
       // Navegar para a tela de login com mensagem de sucesso
