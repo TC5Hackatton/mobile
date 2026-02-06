@@ -8,7 +8,11 @@ import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { IconSymbol } from './ui/icon-symbol';
 
-export function AppHeader() {
+interface AppHeaderProps {
+  title: string;
+}
+
+export function AppHeader({ title }: AppHeaderProps) {
   const { logger } = useDependencies();
 
   const handleExpandPress = useCallback(() => {
@@ -29,6 +33,7 @@ export function AppHeader() {
         </Text>
 
         <View style={styles.rightSection}>
+          <Text style={styles.title}>{title}</Text>
           <TouchableOpacity
             onPress={handleExpandPress}
             style={styles.iconButton}
@@ -75,6 +80,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
+  },
+  title: {
+    fontSize: typography.fontSize.md,
+    fontFamily: typography.fontFamily.regular,
+    color: customColors.darkNavy,
+    flex: 1,
   },
   iconButton: {
     margin: 0,
