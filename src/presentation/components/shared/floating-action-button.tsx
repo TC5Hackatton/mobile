@@ -1,11 +1,10 @@
-/* eslint-disable prettier/prettier */
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { FAB, Portal } from 'react-native-paper';
-import { useState } from 'react';
-import { useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { spacing } from '@/src/presentation/constants/spacing';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { spacing } from '@/src/presentation/constants/spacing';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FAB, Portal } from 'react-native-paper';
 
 export function FloatingActionButton() {
   const [open, setOpen] = useState(false);
@@ -56,8 +55,6 @@ export function FloatingActionButton() {
   );
 }
 
-
-/* eslint-disable prettier/prettier */
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',

@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

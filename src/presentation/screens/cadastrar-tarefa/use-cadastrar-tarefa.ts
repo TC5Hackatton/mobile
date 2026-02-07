@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
-import { useState } from 'react';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 
 export function useCadastrarTarefa() {
   const router = useRouter();
