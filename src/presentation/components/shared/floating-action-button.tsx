@@ -7,8 +7,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FAB, Portal } from 'react-native-paper';
 
 export function FloatingActionButton() {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   return (
     <Portal>
@@ -16,12 +16,13 @@ export function FloatingActionButton() {
         {open && (
           <View style={styles.actions}>
             {/* Checklist */}
-            <Pressable style={styles.pillButton} onPress={() => { setOpen(false); console.log('Checklist'); }}>
-              <MaterialCommunityIcons
-                name="format-list-checks"
-                size={20}
-                color="#4A617C"
-              />
+            <Pressable
+              style={styles.pillButton}
+              onPress={() => {
+                setOpen(false);
+                console.log('Checklist');
+              }}>
+              <MaterialCommunityIcons name="format-list-checks" size={20} color="#4A617C" />
               <Text style={styles.pillText}>Checklist</Text>
             </Pressable>
 
@@ -31,25 +32,14 @@ export function FloatingActionButton() {
               onPress={() => {
                 setOpen(false);
                 router.push('/cadastrar-tarefa');
-              }}
-            >
-              <MaterialCommunityIcons
-                name="file-document-outline"
-                size={20}
-                color="#4A617C"
-              />
+              }}>
+              <MaterialCommunityIcons name="file-document-outline" size={20} color="#4A617C" />
               <Text style={styles.pillText}>Tarefa</Text>
             </Pressable>
           </View>
         )}
 
-        {/* FAB principal */}
-        <FAB
-          icon={open ? 'close' : 'plus'}
-          onPress={() => setOpen(!open)}
-          style={styles.fab}
-          color="#fff"
-        />
+        <FAB icon={open ? 'close' : 'plus'} onPress={() => setOpen(!open)} style={styles.fab} color="#fff" />
       </View>
     </Portal>
   );
