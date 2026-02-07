@@ -57,8 +57,7 @@ export default function SignInContent() {
   };
 
   const handleForgotPassword = () => {
-    // TODO: Navegar para tela de recuperação de senha
-    console.log('Navigate to forgot password');
+    router.push('/forgot-password');
   };
 
   return (
