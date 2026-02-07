@@ -67,11 +67,10 @@ export default function RootLayout() {
             <PaperProvider theme={paperTheme}>
               <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                 <Stack>
-                  <Stack.Screen name="splash" options={{ headerShown: false }} />
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
                   <Stack.Screen name="sign-in" options={{ headerShown: false }} />
                   <Stack.Screen name="sign-up" options={{ headerShown: false }} />
                   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
                 </Stack>
                 <StatusBar style="dark" />
                 <CustomToast />
