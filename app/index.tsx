@@ -10,7 +10,7 @@ export default function Index() {
     const timer = setTimeout(() => {
       console.log('Navegando para a tela de login...');
       router.replace('/sign-in');
-    }, 2000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);

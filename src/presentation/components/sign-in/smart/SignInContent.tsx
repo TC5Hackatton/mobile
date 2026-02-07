@@ -45,7 +45,7 @@ export default function SignInContent() {
       console.log('Mais detalhes:', { token: response.stsTokenManager.accessToken, uid: response.uid });
 
       // Navegar para a tela principal após login bem-sucedido
-      router.replace('/(tabs)');
+      router.replace('/(tabs)/home');
     } catch (error) {
       console.error('Login error:', error);
       // TODO: Mostrar erro ao usuário

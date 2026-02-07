@@ -1,16 +1,11 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HapticTab } from '@/src/presentation/components/haptic-tab';
 import { IconSymbol } from '@/src/presentation/components/ui/icon-symbol';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { useColorScheme } from '@/src/presentation/hooks/use-color-scheme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const insets = useSafeAreaInsets();
-
   return (
     <Tabs
       screenOptions={{
@@ -31,14 +26,14 @@ export default function TabLayout() {
         },
       }}>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Inicio',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="tasks"
         options={{
           title: 'Tarefas',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.text.fill" color={color} />,
