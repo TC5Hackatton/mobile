@@ -29,9 +29,6 @@ export default function SignUpContent() {
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
-      // TODO: Implementar lógica de cadastro
-      console.log('Sign up data:', data);
-
       const response = await signUpUseCase.execute(data.email, data.password);
       console.log('Response:', response);
 

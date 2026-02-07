@@ -40,9 +40,6 @@ export default function SignInContent() {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      // TODO: Implementar lógica de autenticação
-      console.log('Login data:', data);
-
       const response = await signInUseCase.execute(data.email, data.password);
       console.log('Response:', response);
       console.log('Mais detalhes:', { token: response.stsTokenManager.accessToken, uid: response.uid });

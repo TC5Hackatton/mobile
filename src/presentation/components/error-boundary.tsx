@@ -16,8 +16,6 @@ interface State {
   error: Error | null;
 }
 
-// TODO: validar se é necessário ser class component ou se podemos seguir as instruções da
-// ... documentação (https://react.dev/reference/react/Component) para usar function component.
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);

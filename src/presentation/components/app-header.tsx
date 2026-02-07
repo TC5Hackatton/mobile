@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -7,6 +6,7 @@ import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
+import { IconSymbol } from './ui/icon-symbol';
 
 export function AppHeader() {
   const { logger } = useDependencies();
@@ -48,12 +48,7 @@ export function AppHeader() {
           </TouchableOpacity>
 
           <View style={styles.profileContainer} accessibilityRole="button" accessibilityLabel="Perfil do usuário">
-            <Image
-              source={{ uri: 'https://i.pravatar.cc/150?img=12' }}
-              style={styles.profileImage}
-              contentFit="cover"
-              accessibilityIgnoresInvertColors
-            />
+            <IconSymbol size={36} name="person.circle.fill" color={customColors.gray} />
             <View style={styles.statusIndicator} />
           </View>
         </View>
