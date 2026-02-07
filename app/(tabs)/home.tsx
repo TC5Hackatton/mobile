@@ -7,15 +7,7 @@ import { ContentCard } from '@/src/presentation/components/content-card';
 import { FloatingActionButton } from '@/src/presentation/components/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 
-import { useRouter } from 'expo-router';
-
 export default function HomeScreen() {
-  const router = useRouter();
-
-  const handleFABPress = () => {
-    router.push('/cadastrar-tarefa');
-  };
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
@@ -27,11 +19,7 @@ export default function HomeScreen() {
           </ContentCard>
         </View>
 
-        <FloatingActionButton
-          onPress={handleFABPress}
-          accessibilityLabel="Adicionar novo item"
-          accessibilityHint="Abre a tela para adicionar um novo item"
-        />
+        <FloatingActionButton />
       </SafeAreaView>
     </View>
   );

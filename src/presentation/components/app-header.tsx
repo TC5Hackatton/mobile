@@ -29,11 +29,10 @@ export function AppHeader({ title }: AppHeaderProps) {
     <>
       <View style={styles.container} accessibilityLabel="Cabeçalho da aplicação">
         <Text style={styles.appName} accessibilityRole="header">
-          MindEase
+          {title}
         </Text>
 
         <View style={styles.rightSection}>
-          <Text style={styles.title}>{title}</Text>
           <TouchableOpacity
             onPress={handleExpandPress}
             style={styles.iconButton}
