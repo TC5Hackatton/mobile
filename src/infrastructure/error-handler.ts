@@ -13,7 +13,7 @@ export interface AppError {
 }
 
 export class ErrorHandler {
-  // TODO: it's not ideal, but it's a quick fix to keep developing
+  // NOTE: it's not ideal, but it's a quick fix to keep developing
   private static logger: LoggerRepository = new InMemoryLoggerRepository();
 
   /**
