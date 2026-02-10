@@ -98,6 +98,7 @@ export default function SignUpContent() {
                 label="Senha"
                 placeholder="Insira sua senha"
                 control={control}
+                secureTextEntry
                 name="password"
                 error={!!errors.password}
                 mode="outlined"
@@ -116,6 +117,7 @@ export default function SignUpContent() {
                 label="Repita a senha"
                 placeholder="Repita sua senha"
                 control={control}
+                secureTextEntry
                 name="confirmPassword"
                 error={!!errors.confirmPassword}
                 mode="outlined"
