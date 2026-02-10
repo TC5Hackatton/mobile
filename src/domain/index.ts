@@ -10,5 +10,6 @@ export * from './repositories/AuthRepository';
 export * from './repositories/LoggerRepository';
 
 // Use Cases
-export * from './usecases/SignInUseCase';
-export * from './usecases/SignUpUseCase';
+export * from './usecases/task/CreateTaskUseCase';
+export * from './usecases/user/SignInUseCase';
+export * from './usecases/user/SignUpUseCase';
