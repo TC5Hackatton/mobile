@@ -1,5 +1,6 @@
 // Repositories
 export * from './repositories/FirebaseAuthRepository';
+export * from './repositories/FirebaseTaskRepository';
 export * from './repositories/InMemoryLoggerRepository';
 
 /**
