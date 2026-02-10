@@ -1,4 +1,5 @@
 // Entities
+export * from './entities/Task';
 export * from './entities/User';
 
 // Enums
@@ -8,6 +9,7 @@ export * from './enums/TimeType';
 // Repositories
 export * from './repositories/AuthRepository';
 export * from './repositories/LoggerRepository';
+export * from './repositories/TaskRepository';
 
 // Use Cases
 export * from './usecases/task/CreateTaskUseCase';
