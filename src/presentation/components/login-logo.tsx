@@ -4,11 +4,7 @@ import { StyleSheet, View } from 'react-native';
 export function LoginLogo() {
   return (
     <View style={styles.container}>
-      <Image
-        source={require('@/assets/images/logo_v.svg')}
-        style={styles.logo}
-        contentFit="contain"
-      />
+      <Image source={require('@/src/presentation/assets/images/logo_v.svg')} style={styles.logo} contentFit="contain" />
     </View>
   );
 }
