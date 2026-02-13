@@ -1,22 +1,33 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import {
+  AccessibilitySection,
+  AppearanceSection,
+  FocusModeSection,
+  InfoCard,
+  NotificationsSection,
+  ProductivitySection,
+} from '@/src/presentation/components/preferences';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { spacing } from '@/src/presentation/constants/spacing';
-import { typography } from '@/src/presentation/constants/typography';
 
 export default function PreferencesScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader />
-
-        <View style={styles.content}>
-          <Text style={styles.title} accessibilityRole="header">
-            Preferências
-          </Text>
-        </View>
+        <AppHeader title="Preferências" showBackButton />
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}>
+          <InfoCard />
+          <AppearanceSection />
+          <ProductivitySection />
+          <NotificationsSection />
+          <FocusModeSection />
+          <AccessibilitySection />
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -25,19 +36,15 @@ export default function PreferencesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: customColors.darkNavy,
+    backgroundColor: customColors.lightGray,
   },
   safeArea: {
     flex: 1,
-    backgroundColor: customColors.lightGray,
   },
-  content: {
+  scrollView: {
     flex: 1,
-    padding: spacing.lg,
   },
-  title: {
-    fontSize: typography.fontSize.xxl,
-    fontFamily: typography.fontFamily.semiBold,
-    color: customColors.darkNavy,
+  scrollContent: {
+    paddingBottom: 20,
   },
 });

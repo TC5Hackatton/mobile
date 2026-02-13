@@ -10,13 +10,7 @@ export default function TasksScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader />
-
-        <View style={styles.content}>
-          <Text style={styles.title} accessibilityRole="header">
-            Tarefas
-          </Text>
-        </View>
+        <AppHeader title="Tarefas" />
       </SafeAreaView>
     </View>
   );

@@ -23,6 +23,7 @@ const MAPPING = {
   'gearshape.fill': 'settings',
   'arrow-expand-all': 'open-in-full',
   'circle-half-full': 'brightness-6',
+  'person.circle.fill': 'account-circle',
 } as IconMapping;
 
 /**
