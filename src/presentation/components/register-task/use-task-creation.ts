@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
-export function useCadastrarTarefa() {
+export function useTaskCreation() {
   const router = useRouter();
   const [mode, setMode] = useState<'timer' | 'fixed'>('timer');
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);

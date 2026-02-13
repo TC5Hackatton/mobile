@@ -31,7 +31,7 @@ export function FloatingActionButton() {
               style={styles.pillButton}
               onPress={() => {
                 setOpen(false);
-                router.push('/cadastrar-tarefa');
+                router.push('/task-creation');
               }}>
               <MaterialCommunityIcons name="file-document-outline" size={20} color="#4A617C" />
               <Text style={styles.pillText}>Tarefa</Text>

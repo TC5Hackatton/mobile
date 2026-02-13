@@ -6,14 +6,13 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { Button, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function CadastrarTarefaScreen() {
+export default function TaskCreationContent() {
   const router = useRouter();
   const [tab, setTab] = useState<'cronometro' | 'fixo'>('cronometro');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-
       <AppHeader title="Cadastrar Tarefa" showBackButton onBackPress={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -41,17 +40,15 @@ export default function CadastrarTarefaScreen() {
         <Text style={styles.labelSection}>Tempo da Tarefa</Text>
 
         <View style={styles.tabContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.tabButton, tab === 'cronometro' ? styles.tabActiveCron : styles.tabInactive]}
-            onPress={() => setTab('cronometro')}
-          >
+            onPress={() => setTab('cronometro')}>
             <Text style={[styles.tabText, tab === 'cronometro' && styles.textWhite]}>Cronômetro</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.tabButton, tab === 'fixo' ? styles.tabActiveFixo : styles.tabInactive]}
-            onPress={() => setTab('fixo')}
-          >
+            onPress={() => setTab('fixo')}>
             <Text style={[styles.tabText, tab === 'fixo' && styles.textWhite]}>Tempo fixo</Text>
           </TouchableOpacity>
         </View>
@@ -63,11 +60,10 @@ export default function CadastrarTarefaScreen() {
         ) : (
           <View style={styles.fixedTimeList}>
             {['15 min', '25 min', '45 min', '1 hora'].map((time) => (
-              <TouchableOpacity 
-                key={time} 
+              <TouchableOpacity
+                key={time}
                 style={[styles.timeOption, selectedTime === time && styles.timeOptionSelected]}
-                onPress={() => setSelectedTime(time)}
-              >
+                onPress={() => setSelectedTime(time)}>
                 <Text style={[styles.timeOptionText, selectedTime === time && styles.textWhite]}>{time}</Text>
               </TouchableOpacity>
             ))}
@@ -75,21 +71,15 @@ export default function CadastrarTarefaScreen() {
         )}
 
         <View style={styles.footer}>
-          <Button 
-            mode="contained" 
-            onPress={() => {}} 
-            style={styles.btnSave}
-            contentStyle={styles.btnContent}
-          >
-            {tab === 'cronometro' ? "Adicionar Tarefa e Iniciar Cronômetro" : "Adicionar Tarefa"}
+          <Button mode="contained" onPress={() => {}} style={styles.btnSave} contentStyle={styles.btnContent}>
+            {tab === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
           </Button>
 
-          <Button 
-            mode="contained" 
-            onPress={() => router.back()} 
+          <Button
+            mode="contained"
+            onPress={() => router.back()}
             style={styles.btnCancel}
-            contentStyle={styles.btnContent}
-          >
+            contentStyle={styles.btnContent}>
             Cancelar
           </Button>
         </View>
@@ -99,26 +89,32 @@ export default function CadastrarTarefaScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  container: { flex: 1, backgroundColor: customColors.lightGray },
   content: { padding: 20 },
-  input: { marginBottom: 16, backgroundColor: '#FFF' },
-  textArea: { marginBottom: 24, backgroundColor: '#FFF', height: 120 },
-  labelSection: { fontSize: 16, fontWeight: '600', color: '#64748B', marginBottom: 12 },
+  input: { marginBottom: 16, backgroundColor: customColors.white },
+  textArea: { marginBottom: 24, backgroundColor: customColors.white, height: 120 },
+  labelSection: { fontSize: 16, fontWeight: '600', color: customColors.mediumBlue, marginBottom: 12 },
   tabContainer: { flexDirection: 'row', gap: 12, marginBottom: 30 },
   tabButton: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: 'center' },
-  tabInactive: { backgroundColor: '#CBD5E1' },
-  tabActiveCron: { backgroundColor: '#334155' }, // Azul escuro do mockup
-  tabActiveFixo: { backgroundColor: '#A2D9A1' }, // Verde do mockup
-  tabText: { fontWeight: '500', color: '#64748B' },
-  textWhite: { color: '#FFF' },
+  tabInactive: { backgroundColor: customColors.grayLight },
+  tabActiveCron: { backgroundColor: customColors.darkNavy },
+  tabActiveFixo: { backgroundColor: customColors.lightGreen },
+  tabText: { fontWeight: '500', color: customColors.mediumBlue },
+  textWhite: { color: customColors.white },
   timerWrapper: { alignItems: 'center', marginVertical: 40 },
-  timerDisplay: { fontSize: 64, fontWeight: 'bold', color: '#1E293B' },
+  timerDisplay: { fontSize: 64, fontWeight: 'bold', color: customColors.darkNavy },
   fixedTimeList: { gap: 10 },
-  timeOption: { padding: 16, borderRadius: 12, borderWidth: 1, borderColor: customColors.mediumBlue, alignItems: 'center' },
-  timeOptionSelected: { backgroundColor: '#6488B4' }, // Cor azul destacada
+  timeOption: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: customColors.mediumBlue,
+    alignItems: 'center',
+  },
+  timeOptionSelected: { backgroundColor: customColors.skyBlue },
   timeOptionText: { color: customColors.mediumBlue, fontSize: 16 },
   footer: { marginTop: 40, gap: 12 },
-  btnSave: { backgroundColor: '#6495ED', borderRadius: 25 }, // Azul do mockup
-  btnCancel: { backgroundColor: '#E9967A', borderRadius: 25 }, // Salmão do mockup
-  btnContent: { paddingVertical: 8 }
+  btnSave: { backgroundColor: customColors.skyBlue, borderRadius: 25 },
+  btnCancel: { backgroundColor: customColors.coral, borderRadius: 25 },
+  btnContent: { paddingVertical: 8 },
 });
