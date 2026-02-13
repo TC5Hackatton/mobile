@@ -1,26 +1,10 @@
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import TasksContent from '@/src/presentation/components/tasks/smart/TasksContent';
+import { TaskProvider } from '@/src/presentation/contexts/TaskContext';
 
-import { AppHeader } from '@/src/presentation/components/shared/app-header';
-import { customColors } from '@/src/presentation/constants/paper-theme';
-
-export default function TasksScreen() {
+export default function Home() {
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader title="Tarefas" />
-      </SafeAreaView>
-    </View>
+    <TaskProvider>
+      <TasksContent />
+    </TaskProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: customColors.darkNavy,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: customColors.lightGray,
-  },
-});

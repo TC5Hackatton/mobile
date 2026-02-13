@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { TaskStatus } from '@/src/domain';
+import { Task, TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
@@ -12,6 +12,7 @@ import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useState } from 'react';
 
 // Dados mockados
 const mockData = {
@@ -38,16 +39,22 @@ const mockData = {
 
 export default function HomeContent() {
   const { logger } = useDependencies();
-  const { createTaskUseCase } = useTask();
+  const { createTaskUseCase, fetchAllTasksUseCase } = useTask();
+
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const handleFABPress = () => {
-    // TODO: remover isso assim que a criação de tarefa for implementada
+    // TODO: remover UseCases assim que a criação de tarefa for implementada
     createTaskUseCase.execute({
-      title: 'Nova tarefa',
-      description: 'Nova tarefa',
+      title: `[${Math.random().toString(36).substring(2, 9)}] Título de exemplo`,
+      description: 'Descrição de exemplo',
       status: TaskStatus.TODO,
       timeSpent: 0,
       timeType: 'minutes',
+    });
+
+    fetchAllTasksUseCase.execute().then((tasks) => {
+      setTasks(tasks);
     });
 
     // TODO: Implementar ação do FAB
