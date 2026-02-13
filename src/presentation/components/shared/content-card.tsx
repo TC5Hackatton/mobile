@@ -1,21 +1,15 @@
-import { StyleSheet, View } from 'react-native';
+import { AccessibilityRole, StyleSheet, View } from 'react-native';
 
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { spacing } from '@/src/presentation/constants/spacing';
 
 interface ContentCardProps {
   children?: React.ReactNode;
   testID?: string;
   accessibilityLabel?: string;
-  accessibilityRole?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
-export function ContentCard({
-  children,
-  testID,
-  accessibilityLabel,
-  accessibilityRole = 'none',
-}: ContentCardProps) {
+export function ContentCard({ children, testID, accessibilityLabel, accessibilityRole = 'none' }: ContentCardProps) {
   return (
     <View
       style={styles.container}
