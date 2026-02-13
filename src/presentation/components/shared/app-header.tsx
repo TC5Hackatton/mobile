@@ -6,7 +6,7 @@ import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
-import { IconSymbol } from './ui/icon-symbol';
+import { IconSymbol } from './icon-symbol';
 
 export function AppHeader() {
   const { logger } = useDependencies();

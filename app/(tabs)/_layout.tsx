@@ -1,8 +1,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { HapticTab } from '@/src/presentation/components/haptic-tab';
-import { IconSymbol } from '@/src/presentation/components/ui/icon-symbol';
+import { HapticTab } from '@/src/presentation/components/shared/haptic-tab';
+import { IconSymbol } from '@/src/presentation/components/shared/icon-symbol';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 
 export default function TabLayout() {

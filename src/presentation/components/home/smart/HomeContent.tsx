@@ -3,9 +3,9 @@ import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TaskStatus } from '@/src/domain';
-import { AppHeader } from '@/src/presentation/components/app-header';
-import { ContentCard } from '@/src/presentation/components/content-card';
-import { FloatingActionButton } from '@/src/presentation/components/floating-action-button';
+import { AppHeader } from '@/src/presentation/components/shared/app-header';
+import { ContentCard } from '@/src/presentation/components/shared/content-card';
+import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
