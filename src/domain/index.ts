@@ -13,5 +13,6 @@ export * from './repositories/TaskRepository';
 
 // Use Cases
 export * from './usecases/task/CreateTaskUseCase';
+export * from './usecases/task/FetchAllTasksUseCase';
 export * from './usecases/user/SignInUseCase';
 export * from './usecases/user/SignUpUseCase';
