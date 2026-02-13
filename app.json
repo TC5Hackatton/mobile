@@ -4,7 +4,7 @@
     "slug": "mind-ease",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/presentation/assets/images/icon.png",
     "scheme": "mind-ease",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -17,7 +17,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/logo_v.svg"
+      "favicon": "./src/presentation/assets/images/logo_v.svg"
     },
     "plugins": [
       "expo-router",

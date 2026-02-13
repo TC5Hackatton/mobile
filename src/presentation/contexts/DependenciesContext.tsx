@@ -1,9 +1,10 @@
-import { AuthRepository, LoggerRepository } from '@/src/domain';
-import { FirebaseAuthRepository, InMemoryLoggerRepository } from '@/src/infrastructure';
+import { AuthRepository, LoggerRepository, TaskRepository } from '@/src/domain';
+import { FirebaseAuthRepository, FirebaseTaskRepository, InMemoryLoggerRepository } from '@/src/infrastructure';
 import { createContext, useContext, useMemo } from 'react';
 
 export interface AppDependencies {
   authRepository: AuthRepository;
+  taskRepository: TaskRepository;
   logger: LoggerRepository;
 }
 
@@ -16,6 +17,7 @@ export function DependenciesProvider({ children }: { children: React.ReactNode }
   const dependencies = useMemo<AppDependencies>(
     () => ({
       authRepository: new FirebaseAuthRepository(),
+      taskRepository: new FirebaseTaskRepository(),
       logger: new InMemoryLoggerRepository(),
     }),
     [],

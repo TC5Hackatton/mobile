@@ -18,7 +18,11 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Image source={require('@/assets/images/logo_v.svg')} style={styles.logo} contentFit="contain" />
+        <Image
+          source={require('@/src/presentation/assets/images/logo_v.svg')}
+          style={styles.logo}
+          contentFit="contain"
+        />
 
         <Text style={styles.tagline}>Organize com calma,{'\n'}produza com foco</Text>
       </View>

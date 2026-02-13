@@ -1,4 +1,4 @@
-import { AuthRepository } from '../repositories/AuthRepository';
+import { AuthRepository } from '../../repositories/AuthRepository';
 
 export class SignUpUseCase {
   constructor(private readonly authRepository: AuthRepository) {}
