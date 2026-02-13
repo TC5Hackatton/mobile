@@ -10,8 +10,8 @@ import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { CustomToast } from '@/src/presentation/components/custom-toast';
-import { ErrorBoundary } from '@/src/presentation/components/error-boundary';
+import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
+import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
 import { useColorScheme } from '@/src/presentation/hooks/use-color-scheme';

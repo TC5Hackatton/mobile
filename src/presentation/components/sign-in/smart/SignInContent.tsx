@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-import { CustomButton } from '@/src/presentation/components/custom-button';
-import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
-import { LinkText } from '@/src/presentation/components/link-text';
-import { LoginLogo } from '@/src/presentation/components/login-logo';
+import { CustomButton } from '@/src/presentation/components/shared/custom-button';
+import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
+import { LinkText } from '@/src/presentation/components/shared/link-text';
+import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useUser } from '@/src/presentation/contexts/UserContext';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
