@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import { Badge, Card, Text } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Badge, Button, Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Task, TaskStatus } from '@/src/domain';
@@ -34,6 +34,8 @@ export default function TasksContent() {
       <SafeAreaView style={styles.safeArea} edges={[]}>
         <AppHeader title="Tarefas" />
 
+        <Button onPress={handleFABPress}>Exemplo Demonstrativo</Button>
+
         <View style={styles.content}>
           {!!tasks.length && (
             <ContentCard>
@@ -42,14 +44,16 @@ export default function TasksContent() {
                 <Text>A Fazer</Text>
               </View>
 
-              {tasks.map((task) => (
-                <Card key={task.id} style={styles.taskCard}>
-                  <Card.Content>
-                    <Text variant="headlineSmall">{task.title}</Text>
-                    <Text variant="bodyMedium">{task.description}</Text>
-                  </Card.Content>
-                </Card>
-              ))}
+              <ScrollView>
+                {tasks.map((task) => (
+                  <Card key={task.id} style={styles.taskCard}>
+                    <Card.Content>
+                      <Text variant="headlineSmall">{task.title}</Text>
+                      <Text variant="bodyMedium">{task.description}</Text>
+                    </Card.Content>
+                  </Card>
+                ))}
+              </ScrollView>
             </ContentCard>
           )}
         </View>
