@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -8,8 +9,17 @@ import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { IconSymbol } from './icon-symbol';
 
-export function AppHeader() {
+interface AppHeaderProps {
+  title?: string;
+  showBackButton?: boolean;
+}
+
+export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHeaderProps) {
   const { logger } = useDependencies();
+
+  const handleBackPress = useCallback(() => {
+    router.back();
+  }, []);
 
   const handleExpandPress = useCallback(() => {
     logger.log('Expand pressed');
@@ -22,38 +32,48 @@ export function AppHeader() {
   }, [logger]);
 
   return (
-    <>
-      <View style={styles.container} accessibilityLabel="Cabeçalho da aplicação">
-        <Text style={styles.appName} accessibilityRole="header">
-          MindEase
-        </Text>
-
-        <View style={styles.rightSection}>
+    <View style={styles.container} accessibilityLabel="Cabeçalho da aplicação">
+      <View style={styles.leftSection}>
+        {showBackButton && (
           <TouchableOpacity
-            onPress={handleExpandPress}
-            style={styles.iconButton}
+            onPress={handleBackPress}
+            style={styles.backButton}
             accessibilityRole="button"
-            accessibilityLabel="Expandir"
-            accessibilityHint="Expande o conteúdo da tela">
-            <IconButton icon="arrow-expand-all" iconColor={customColors.coral} size={24} style={styles.icon} />
+            accessibilityLabel="Voltar">
+            <IconButton icon="arrow-left" iconColor={customColors.darkNavy} size={24} style={styles.icon} />
           </TouchableOpacity>
+        )}
+      </View>
 
-          <TouchableOpacity
-            onPress={handleThemeTogglePress}
-            style={styles.iconButton}
-            accessibilityRole="button"
-            accessibilityLabel="Alternar tema"
-            accessibilityHint="Alterna entre tema claro e escuro">
-            <IconButton icon="circle-half-full" iconColor={customColors.gray} size={24} style={styles.icon} />
-          </TouchableOpacity>
+      <Text style={[styles.title, showBackButton && styles.titleWithBack]} accessibilityRole="header">
+        {title}
+      </Text>
 
-          <View style={styles.profileContainer} accessibilityRole="button" accessibilityLabel="Perfil do usuário">
-            <IconSymbol size={36} name="person.circle.fill" color={customColors.gray} />
-            <View style={styles.statusIndicator} />
-          </View>
+      <View style={styles.rightSection}>
+        <TouchableOpacity
+          onPress={handleExpandPress}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Expandir"
+          accessibilityHint="Expande o conteúdo da tela">
+          <IconButton icon="arrow-expand-all" iconColor={customColors.coral} size={24} style={styles.icon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={handleThemeTogglePress}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Alternar tema"
+          accessibilityHint="Alterna entre tema claro e escuro">
+          <IconButton icon="circle-half-full" iconColor={customColors.gray} size={24} style={styles.icon} />
+        </TouchableOpacity>
+
+        <View style={styles.profileContainer} accessibilityRole="button" accessibilityLabel="Perfil do usuário">
+          <IconSymbol size={36} name="person.circle.fill" color={customColors.gray} />
+          <View style={styles.statusIndicator} />
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -66,10 +86,23 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     backgroundColor: customColors.white,
   },
-  appName: {
+  leftSection: {
+    width: 40,
+    alignItems: 'flex-start',
+  },
+  backButton: {
+    margin: 0,
+  },
+  title: {
     fontSize: typography.fontSize.xl,
     fontFamily: typography.fontFamily.semiBold,
     color: customColors.skyBlue,
+    flex: 1,
+  },
+  titleWithBack: {
+    textAlign: 'center',
+    color: customColors.darkNavy,
+    fontSize: typography.fontSize.lg,
   },
   rightSection: {
     flexDirection: 'row',

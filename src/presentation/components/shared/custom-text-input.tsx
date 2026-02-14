@@ -54,9 +54,6 @@ export function CustomTextInput({
           const hasValue = !!fieldValue;
           const isPassword = secureTextEntry;
           const actualSecureTextEntry = isPassword && !showPassword;
-          // Fonte maior apenas quando senha está oculta e tem valor
-          const shouldUseLargeFont = isPassword && hasValue && actualSecureTextEntry;
-          
 
           return (
             <TextInput
@@ -71,10 +68,7 @@ export function CustomTextInput({
               keyboardType={keyboardType}
               error={hasError}
               style={styles.input}
-              contentStyle={[
-                styles.inputContent,
-                shouldUseLargeFont && styles.passwordInputContentHidden,
-              ]}
+              contentStyle={styles.inputContent}
               testID={testID}
               accessibilityLabel={accessibilityLabel || label}
               accessibilityHint={accessibilityHint}
@@ -87,11 +81,7 @@ export function CustomTextInput({
                     accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   />
                 ) : hasValue && !secureTextEntry ? (
-                  <TextInput.Icon
-                    icon="close-circle"
-                    onPress={() => onChange('')}
-                    accessibilityLabel="Limpar campo"
-                  />
+                  <TextInput.Icon icon="close-circle" onPress={() => onChange('')} accessibilityLabel="Limpar campo" />
                 ) : undefined
               }
               theme={{
@@ -115,8 +105,6 @@ export function CustomTextInput({
   const hasValue = !!value;
   const isPassword = secureTextEntry;
   const actualSecureTextEntry = isPassword && !showPassword;
-  // Fonte maior apenas quando senha está oculta e tem valor
-  const shouldUseLargeFont = isPassword && hasValue && actualSecureTextEntry;
 
   return (
     <TextInput
@@ -130,10 +118,7 @@ export function CustomTextInput({
       keyboardType={keyboardType}
       error={error}
       style={styles.input}
-      contentStyle={[
-        styles.inputContent,
-        shouldUseLargeFont && styles.passwordInputContentHidden,
-      ]}
+      contentStyle={styles.inputContent}
       testID={testID}
       accessibilityLabel={accessibilityLabel || label}
       accessibilityHint={accessibilityHint}
@@ -146,11 +131,7 @@ export function CustomTextInput({
             accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
           />
         ) : hasValue && !secureTextEntry ? (
-          <TextInput.Icon
-            icon="close-circle"
-            onPress={() => onChangeText?.('')}
-            accessibilityLabel="Limpar campo"
-          />
+          <TextInput.Icon icon="close-circle" onPress={() => onChangeText?.('')} accessibilityLabel="Limpar campo" />
         ) : undefined
       }
       theme={{
@@ -175,11 +156,5 @@ const styles = StyleSheet.create({
   inputContent: {
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.fontSize.md,
-  },
-  passwordInputContentHidden: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.fontSize.xxxl,
-    letterSpacing: 2,
-    lineHeight: 20,
   },
 });
