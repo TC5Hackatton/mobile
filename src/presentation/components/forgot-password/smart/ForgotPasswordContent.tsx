@@ -2,8 +2,10 @@ import { CustomButton } from '@/src/presentation/components/shared/custom-button
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { router } from 'expo-router';
 import { useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 export default function ForgotPasswordContent() {
   const {
@@ -24,12 +26,22 @@ export default function ForgotPasswordContent() {
     <KeyboardAvoidingView
       style={[styles.container, { backgroundColor: customColors.lightGray }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+              accessibilityHint="Volta para a tela anterior">
+              <IconButton icon="chevron-left" iconColor={customColors.skyBlue} size={24} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Esqueceu sua senha?</Text>
+          </View>
+
           <LoginLogo />
+
           <Text style={styles.tagline}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
 
           <View style={styles.formContainer}>
@@ -70,19 +82,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  inputContainer: {
-    marginBottom: 32,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingTop: 24,
+  },
+  header: {
+    width: '100%',
+    maxWidth: 400,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingLeft: 4,
+  },
+  backButton: {
+    marginLeft: -12,
+    marginRight: 4,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Raleway_600SemiBold',
+    color: customColors.skyBlue,
+    marginLeft: 8,
   },
   formContainer: {
     width: '100%',
@@ -105,7 +128,7 @@ const styles = StyleSheet.create({
     color: customColors.mediumBlue,
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',
-    marginTop: 16,
+    marginTop: 32,
     marginBottom: 40,
   },
 });
