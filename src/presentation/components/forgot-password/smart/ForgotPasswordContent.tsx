@@ -1,12 +1,134 @@
+import { CustomButton } from '@/src/presentation/components/shared/custom-button';
+import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
+import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
+import { customColors } from '@/src/presentation/constants/paper-theme';
 import { router } from 'expo-router';
-import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 export default function ForgotPasswordContent() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onSubmit = async (data: { email: string }) => {
+    console.log('Email para recuperação de senha:', data.email);
+  };
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20 }}>Tela precisa ser criada</Text>
-      <Button onPress={() => router.back()}>Voltar</Button>
-    </View>
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: customColors.lightGray }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+              accessibilityHint="Volta para a tela anterior">
+              <IconButton icon="chevron-left" iconColor={customColors.skyBlue} size={24} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Esqueceu sua senha?</Text>
+          </View>
+
+          <LoginLogo />
+
+          <Text style={styles.tagline}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
+
+          <View style={styles.formContainer}>
+            <CustomTextInput
+              label="E-mail"
+              placeholder="Insira seu e-mail"
+              control={control}
+              name="email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              error={!!errors.email}
+              mode="outlined"
+              accessibilityLabel="Campo de e-mail"
+              accessibilityHint="Digite seu endereço de e-mail para fazer login"
+            />
+            {errors.email && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{errors.email.message}</Text>
+              </View>
+            )}
+
+            <CustomButton
+              label="Enviar link de redefinição de senha"
+              onPress={handleSubmit(onSubmit)}
+              variant="primary"
+              loading={isSubmitting}
+              accessibilityLabel="Botão de enviar link de redefinição de senha"
+              accessibilityHint="Envia um link de redefinição de senha para o e-mail informado"
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  header: {
+    width: '100%',
+    maxWidth: 400,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingLeft: 4,
+  },
+  backButton: {
+    marginLeft: -12,
+    marginRight: 4,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Raleway_600SemiBold',
+    color: customColors.skyBlue,
+    marginLeft: 8,
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: 400,
+    gap: 16,
+  },
+  errorContainer: {
+    marginTop: 4,
+    marginBottom: 4,
+    minHeight: 20,
+  },
+  errorText: {
+    fontSize: 12,
+    color: customColors.coral,
+    fontFamily: 'Raleway_400Regular',
+  },
+  tagline: {
+    fontSize: 24,
+    maxWidth: '95%',
+    color: customColors.mediumBlue,
+    textAlign: 'center',
+    fontFamily: 'Raleway_400Regular',
+    marginTop: 32,
+    marginBottom: 40,
+  },
+});
