@@ -1,4 +1,4 @@
-import { AppHeader } from '@/src/presentation/components/app-header';
+import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,7 +13,7 @@ export default function TaskCreationContent() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <AppHeader title="Cadastrar Tarefa" showBackButton onBackPress={() => router.back()} />
+      <AppHeader title="Cadastrar Tarefa" showBackButton />
 
       <ScrollView contentContainerStyle={styles.content}>
         <TextInput
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   labelSection: { fontSize: 16, fontWeight: '600', color: customColors.mediumBlue, marginBottom: 12 },
   tabContainer: { flexDirection: 'row', gap: 12, marginBottom: 30 },
   tabButton: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: 'center' },
-  tabInactive: { backgroundColor: customColors.grayLight },
+  tabInactive: { backgroundColor: customColors.lightGray },
   tabActiveCron: { backgroundColor: customColors.darkNavy },
   tabActiveFixo: { backgroundColor: customColors.lightGreen },
   tabText: { fontWeight: '500', color: customColors.mediumBlue },

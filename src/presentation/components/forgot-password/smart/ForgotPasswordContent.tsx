@@ -30,7 +30,7 @@ export default function ForgotPasswordContent() {
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <LoginLogo />
-          <Text style={styles.tagline}>Utilize esta tela para enviar um link {'\n'}de redefinição de senha.</Text>
+          <Text style={styles.tagline}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
 
           <View style={styles.formContainer}>
             <CustomTextInput
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 24,
+    maxWidth: '95%',
     color: customColors.mediumBlue,
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',
