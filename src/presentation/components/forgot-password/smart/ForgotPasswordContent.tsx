@@ -1,14 +1,12 @@
-import { router } from 'expo-router';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
+import { CustomButton } from '@/src/presentation/components/shared/custom-button';
+import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
+import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { CustomButton } from '@/src/presentation/components/custom-button';
-import { CustomTextInput } from '@/src/presentation/components/custom-text-input';
-import { LoginLogo } from '@/src/presentation/components/login-logo';
+import { useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function ForgotPasswordContent() {
-  const{
+  const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -24,45 +22,45 @@ export default function ForgotPasswordContent() {
 
   return (
     <KeyboardAvoidingView
-          style={[styles.container, { backgroundColor: customColors.lightGray }]}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}>
-             <View style={styles.content}>
-              <LoginLogo />
-              <Text style={styles.tagline}>Utilize esta tela para enviar um link {'\n'}de redefinição de senha.</Text>
+      style={[styles.container, { backgroundColor: customColors.lightGray }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          <LoginLogo />
+          <Text style={styles.tagline}>Utilize esta tela para enviar um link {'\n'}de redefinição de senha.</Text>
 
+          <View style={styles.formContainer}>
+            <CustomTextInput
+              label="E-mail"
+              placeholder="Insira seu e-mail"
+              control={control}
+              name="email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              error={!!errors.email}
+              mode="outlined"
+              accessibilityLabel="Campo de e-mail"
+              accessibilityHint="Digite seu endereço de e-mail para fazer login"
+            />
+            {errors.email && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{errors.email.message}</Text>
+              </View>
+            )}
 
-              <View style={styles.formContainer}>
-                <CustomTextInput
-                label="E-mail"
-                placeholder="Insira seu e-mail"
-                control={control}
-                name="email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                error={!!errors.email}
-                mode="outlined"
-                accessibilityLabel="Campo de e-mail"
-                accessibilityHint="Digite seu endereço de e-mail para fazer login"
-              />
-              {errors.email && (
-                <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.email.message}</Text>
-                </View>
-              )}
-
-              <CustomButton
+            <CustomButton
               label="Enviar link de redefinição de senha"
               onPress={handleSubmit(onSubmit)}
               variant="primary"
               loading={isSubmitting}
               accessibilityLabel="Botão de enviar link de redefinição de senha"
               accessibilityHint="Envia um link de redefinição de senha para o e-mail informado"
-            /> 
-            </View>           
+            />
           </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -107,6 +105,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',
     marginTop: 16,
-    marginBottom: 40
+    marginBottom: 40,
   },
 });
