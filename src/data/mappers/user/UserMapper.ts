@@ -1,3 +1,5 @@
+// TODO: vao ser usados, mas ainda não foram
+
 // import { User } from '@/src/domain/entities/User';
 // import { UserDTO } from '../dtos/UserDTO';
 

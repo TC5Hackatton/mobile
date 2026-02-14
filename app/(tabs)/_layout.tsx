@@ -46,6 +46,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />
+      <Tabs.Screen name="task-creation" options={{ headerShown: false }} />
     </Tabs>
   );
 }
