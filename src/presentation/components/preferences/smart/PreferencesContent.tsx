@@ -12,6 +12,7 @@ import {
   ProductivitySection,
 } from '../presentation';
 
+// NOTE: maybe here we can render the some sections directly, and use a reducer to control the state
 export default function PreferencesContent() {
   return (
     <View style={styles.container}>
