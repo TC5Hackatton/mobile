@@ -4,14 +4,11 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
-import { useTask } from '@/src/presentation/contexts/TaskContext';
 
 // Dados mockados
 const mockData = {
@@ -28,7 +25,7 @@ const mockData = {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus convallis non orci id cursus. Integer non iaculis magna. Duis ultricies, lorem quis pulvinar vulputate, erat mauris egestas sem.',
   },
   weekly: {
-    progress: 0.67, // 67% aproximadamente 2/3
+    progress: 0.67,
     tasksCompleted: 15,
     focusTime: '3h 45min',
     activeStreak: '5 dias',
@@ -37,23 +34,6 @@ const mockData = {
 };
 
 export default function HomeContent() {
-  const { logger } = useDependencies();
-  const { createTaskUseCase } = useTask();
-
-  const handleFABPress = () => {
-    // TODO: remover isso assim que a criação de tarefa for implementada
-    createTaskUseCase.execute({
-      title: 'Nova tarefa',
-      description: 'Nova tarefa',
-      status: TaskStatus.TODO,
-      timeSpent: 0,
-      timeType: 'minutes',
-    });
-
-    // TODO: Implementar ação do FAB
-    logger.log('FAB pressed');
-  };
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
@@ -207,11 +187,7 @@ export default function HomeContent() {
           </View>
         </ScrollView>
 
-        <FloatingActionButton
-          onPress={handleFABPress}
-          accessibilityLabel="Adicionar novo item"
-          accessibilityHint="Abre a tela para adicionar um novo item"
-        />
+        <FloatingActionButton />
       </SafeAreaView>
     </View>
   );
