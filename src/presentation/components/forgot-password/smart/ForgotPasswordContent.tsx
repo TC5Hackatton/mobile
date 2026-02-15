@@ -1,25 +1,74 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { router, useLocalSearchParams } from 'expo-router';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
+import { forgotPasswordSchema, type ForgotPasswordFormData } from './forgot-password-schema';
+
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
-import { router } from 'expo-router';
-import { useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
 
 export default function ForgotPasswordContent() {
+  const params = useLocalSearchParams<{ success?: string; message?: string }>();
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',
     },
   });
 
+  useEffect(() => {
+    if (params.success === 'true' && params.message) {
+      Toast.show({
+        type: 'success',
+        text1: params.message,
+      });
+    }
+  }, [params.success, params.message]);
+
   const onSubmit = async (data: { email: string }) => {
-    console.log('Email para recuperação de senha:', data.email);
+    const auth = getAuth();
+
+    try {
+      await sendPasswordResetEmail(auth, data.email);
+
+      //Caso o envio de email funcione;
+      Toast.show({
+        type: 'success',
+        text1: 'Link de redefinição de senha enviado!',
+        text2: 'Verifique seu e-mail para redefinir sua senha.',
+        position: 'top',
+      });
+
+      router.back();
+    } catch (error: any) {
+      console.error('Erro ao recuperar senha:', error.code);
+
+      //Caso falhe o envio de email, verificamos o código de erro para mostrar uma mensagem mais amigável ao usuário.
+      let errorMessage = 'Ocorreu um erro ao tentar enviar o e-mail.';
+
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'O e-mail digitado não está cadastrado.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'O formato do e-mail é inválido.';
+      }
+
+      Toast.show({
+        type: 'error',
+        text1: 'Ops!',
+        text2: errorMessage,
+        position: 'top',
+      });
+    }
   };
 
   return (
