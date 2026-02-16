@@ -1,61 +1,52 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Badge, Button, Card, Text } from 'react-native-paper';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Task, TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
-import { ContentCard } from '@/src/presentation/components/shared/content-card';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
-import { useState } from 'react';
+
+import TasksListCard from '../presentational/TasksListCard';
+
+type TaskState = Record<TaskStatus, Task[]>;
 
 export default function TasksContent() {
-  const { createTaskUseCase, fetchAllTasksUseCase } = useTask();
+  const { fetchAllTasksUseCase } = useTask();
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<TaskState>({
+    [TaskStatus.TODO]: [],
+    [TaskStatus.DOING]: [],
+    [TaskStatus.DONE]: [],
+  });
 
-  const handleFABPress = () => {
-    // TODO: remover UseCases assim que a criação de tarefa for implementada
-    createTaskUseCase.execute({
-      title: `[${Math.random().toString(36).substring(2, 9)}] Título de exemplo`,
-      description: 'Descrição de exemplo',
-      status: TaskStatus.TODO,
-      timeSpent: 0,
-      timeType: 'minutes',
-    });
+  useEffect(() => {
+    async function fetchTasks() {
+      const localTasks = await fetchAllTasksUseCase.execute();
 
-    fetchAllTasksUseCase.execute().then((tasks) => {
-      setTasks(tasks);
-    });
-  };
+      const groupedTasks = localTasks.reduce(
+        (acc: TaskState, task: Task) => {
+          acc[task.status].push(task);
+          return acc;
+        },
+        { [TaskStatus.TODO]: [], [TaskStatus.DOING]: [], [TaskStatus.DONE]: [] },
+      );
+
+      setTasks(groupedTasks);
+    }
+
+    fetchTasks();
+  }, []);
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
         <AppHeader title="Tarefas" />
 
-        <Button onPress={handleFABPress}>Exemplo Demonstrativo</Button>
-
         <View style={styles.content}>
-          {!!tasks.length && (
-            <ContentCard>
-              <View style={styles.tasksHeader}>
-                <Badge>{tasks.length}</Badge>
-                <Text>A Fazer</Text>
-              </View>
-
-              <ScrollView>
-                {tasks.map((task) => (
-                  <Card key={task.id} style={styles.taskCard}>
-                    <Card.Content>
-                      <Text variant="headlineSmall">{task.title}</Text>
-                      <Text variant="bodyMedium">{task.description}</Text>
-                    </Card.Content>
-                  </Card>
-                ))}
-              </ScrollView>
-            </ContentCard>
-          )}
+          <TasksListCard tasks={tasks[TaskStatus.TODO]} status={TaskStatus.TODO} />
+          <TasksListCard tasks={tasks[TaskStatus.DOING]} status={TaskStatus.DOING} />
+          <TasksListCard tasks={tasks[TaskStatus.DONE]} status={TaskStatus.DONE} />
         </View>
       </SafeAreaView>
     </View>
@@ -73,14 +64,5 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  tasksHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 24,
-  },
-  taskCard: {
-    marginBottom: 16,
   },
 });

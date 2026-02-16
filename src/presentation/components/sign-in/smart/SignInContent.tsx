@@ -23,10 +23,7 @@ export default function SignInContent() {
     formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { email: '', password: '' },
   });
 
   useEffect(() => {
@@ -40,15 +37,15 @@ export default function SignInContent() {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      const response = await signInUseCase.execute(data.email, data.password);
-      console.log('Response:', response);
-      console.log('Mais detalhes:', { token: response.stsTokenManager.accessToken, uid: response.uid });
-
-      // Navegar para a tela principal após login bem-sucedido
+      await signInUseCase.execute(data.email, data.password);
       router.replace('/(tabs)/home');
     } catch (error) {
-      console.error('Login error:', error);
-      // TODO: Mostrar erro ao usuário
+      Toast.show({
+        type: 'error',
+        text1: 'Ops! Ocorreu um erro ao tentar fazer login!',
+        text2: 'Revise seu e-mail e senha e tente novamente.',
+        position: 'top',
+      });
     }
   };
 
