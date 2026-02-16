@@ -1,5 +1,4 @@
-import { SignInUseCase, SignUpUseCase } from '@/src/domain';
-import { ForgotPasswordUseCase } from '@/src/domain/usecases/user/ForgotPasswordUseCase';
+import { ForgotPasswordUseCase, SignInUseCase, SignUpUseCase } from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 

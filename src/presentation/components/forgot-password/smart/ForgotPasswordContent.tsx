@@ -21,16 +21,13 @@ export default function ForgotPasswordContent() {
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: '',
-    },
+    defaultValues: { email: '' },
   });
 
   const onSubmit = async (data: { email: string }) => {
     try {
       await forgotPasswordUseCase.execute(data.email);
 
-      //Caso o envio de email funcione;
       Toast.show({
         type: 'success',
         text1: 'Link de redefinição de senha enviado!',
@@ -40,21 +37,10 @@ export default function ForgotPasswordContent() {
 
       router.back();
     } catch (error: any) {
-      console.error('Erro ao recuperar senha:', error.code);
-
-      //Caso falhe o envio de email, verificamos o código de erro para mostrar uma mensagem mais amigável ao usuário.
-      let errorMessage = 'Ocorreu um erro ao tentar enviar o e-mail.';
-
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = 'O e-mail digitado não está cadastrado.';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'O formato do e-mail é inválido.';
-      }
-
       Toast.show({
         type: 'error',
         text1: 'Ops!',
-        text2: errorMessage,
+        text2: 'Ocorreu um erro ao tentar enviar o e-mail.',
         position: 'top',
       });
     }

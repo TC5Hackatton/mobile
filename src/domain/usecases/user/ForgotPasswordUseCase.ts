@@ -7,6 +7,7 @@ export class ForgotPasswordUseCase {
     if (!this.isValidEmail(email)) {
       throw new Error('E-mail Inválido! Por favor, verifique a digitação.');
     }
+
     return this.authRepository.forgotPassword(email);
   }
 
