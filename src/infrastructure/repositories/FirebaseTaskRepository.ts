@@ -18,6 +18,10 @@ export class FirebaseTaskRepository implements TaskRepository {
   }
 
   async createTask(dto: CreateTaskDTO, uid: string): Promise<Task> {
+    if (!dto.title || !dto.description || !dto.timeType) {
+      throw new Error('Por favor, preencha todos os campos!');
+    }
+
     const response = await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
     // TODO: clean and adapt the return
     console.log('## CL ## response', response);

@@ -1,16 +1,46 @@
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
+import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { customColors } from '@/src/presentation/constants/paper-theme';
 
+import { useTask } from '../../contexts/TaskContext';
+
 export default function TaskCreationContent() {
-  const router = useRouter();
-  const [tab, setTab] = useState<'cronometro' | 'fixo'>('cronometro');
+  const { createTaskUseCase } = useTask();
+
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [timeType, setTimeType] = useState<'cronometro' | 'fixo'>('cronometro');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+  const submitTaskCreation = async () => {
+    try {
+      await createTaskUseCase.execute({
+        title,
+        description,
+        status: TaskStatus.TODO,
+        timeSpent: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
+      });
+
+      Toast.show({
+        type: 'success',
+        text1: 'Tarefa criada com sucesso',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao criar tarefa',
+        text2: String(error).split(':')[1],
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -23,6 +53,8 @@ export default function TaskCreationContent() {
           <TextInput
             label="Nome da Tarefa"
             mode="outlined"
+            value={title}
+            onChangeText={setTitle}
             textColor={customColors.gray}
             outlineColor={customColors.mediumBlue}
             activeOutlineColor={customColors.mediumBlue}
@@ -33,6 +65,8 @@ export default function TaskCreationContent() {
             label="Descrição da Tarefa"
             placeholder="Ex: Criar microcomponente"
             mode="outlined"
+            value={description}
+            onChangeText={setDescription}
             textColor={customColors.gray}
             multiline
             numberOfLines={6}
@@ -42,22 +76,21 @@ export default function TaskCreationContent() {
           />
 
           <Text style={styles.labelSection}>Tempo da Tarefa</Text>
-
           <View style={styles.tabContainer}>
             <TouchableOpacity
-              style={[styles.tabButton, tab === 'cronometro' ? styles.tabActiveCron : styles.tabInactive]}
-              onPress={() => setTab('cronometro')}>
-              <Text style={[styles.tabText, tab === 'cronometro' && styles.textWhite]}>Cronômetro</Text>
+              style={[styles.tabButton, timeType === 'cronometro' ? styles.tabActiveCron : styles.tabInactive]}
+              onPress={() => setTimeType('cronometro')}>
+              <Text style={[styles.tabText, timeType === 'cronometro' && styles.textWhite]}>Cronômetro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.tabButton, tab === 'fixo' ? styles.tabActiveFixo : styles.tabInactive]}
-              onPress={() => setTab('fixo')}>
-              <Text style={[styles.tabText, tab === 'fixo' && styles.textWhite]}>Tempo fixo</Text>
+              style={[styles.tabButton, timeType === 'fixo' ? styles.tabActiveFixo : styles.tabInactive]}
+              onPress={() => setTimeType('fixo')}>
+              <Text style={[styles.tabText, timeType === 'fixo' && styles.textWhite]}>Tempo fixo</Text>
             </TouchableOpacity>
           </View>
 
-          {tab === 'cronometro' ? (
+          {timeType === 'cronometro' ? (
             <View style={styles.timerWrapper}>
               <Text style={styles.timerDisplay}>00:00:00</Text>
             </View>
@@ -75,8 +108,12 @@ export default function TaskCreationContent() {
           )}
 
           <View style={styles.footer}>
-            <Button mode="contained" onPress={() => {}} style={styles.btnSave} contentStyle={styles.btnContent}>
-              {tab === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
+            <Button
+              mode="contained"
+              onPress={submitTaskCreation}
+              style={styles.btnSave}
+              contentStyle={styles.btnContent}>
+              {timeType === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
             </Button>
 
             <Button
