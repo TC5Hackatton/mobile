@@ -1,25 +1,49 @@
-import { CustomButton } from '@/src/presentation/components/shared/custom-button';
-import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
-import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
-import { customColors } from '@/src/presentation/constants/paper-theme';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
+import { forgotPasswordSchema, type ForgotPasswordFormData } from './forgot-password-schema';
+
+import { CustomButton } from '@/src/presentation/components/shared/custom-button';
+import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
+import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
+import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useUser } from '@/src/presentation/contexts/UserContext';
 
 export default function ForgotPasswordContent() {
+  const { forgotPasswordUseCase } = useUser();
+
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({
-    defaultValues: {
-      email: '',
-    },
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: '' },
   });
 
   const onSubmit = async (data: { email: string }) => {
-    console.log('Email para recuperação de senha:', data.email);
+    try {
+      await forgotPasswordUseCase.execute(data.email);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Link de redefinição de senha enviado!',
+        text2: 'Verifique seu e-mail para redefinir sua senha.',
+        position: 'top',
+      });
+
+      router.back();
+    } catch (error: any) {
+      Toast.show({
+        type: 'error',
+        text1: 'Ops!',
+        text2: 'Ocorreu um erro ao tentar enviar o e-mail.',
+        position: 'top',
+      });
+    }
   };
 
   return (

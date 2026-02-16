@@ -1,6 +1,6 @@
 import firebaseConfig from '@/firebaseConfig';
 import { AuthRepository, User } from '@/src/domain';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 
 type PartialUser = Omit<User, 'password' | 'email' | 'displayName'>;
 
@@ -19,6 +19,10 @@ export class FirebaseAuthRepository implements AuthRepository {
     const firebaseResponse = await signInWithEmailAndPassword(firebaseConfig.auth, email, password);
     this.currentUser = firebaseResponse.user;
     return firebaseResponse.user;
+  }
+
+  async forgotPassword(email: string): Promise<any> {
+    await sendPasswordResetEmail(firebaseConfig.auth, email);
   }
 
   signOut(): Promise<void> {
