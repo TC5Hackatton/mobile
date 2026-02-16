@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, useLocalSearchParams } from 'expo-router';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import { useEffect } from 'react';
+import { router } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -12,9 +10,11 @@ import { CustomButton } from '@/src/presentation/components/shared/custom-button
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useUser } from '@/src/presentation/contexts/UserContext';
 
 export default function ForgotPasswordContent() {
-  const params = useLocalSearchParams<{ success?: string; message?: string }>();
+  const { forgotPasswordUseCase } = useUser();
+
   const {
     control,
     handleSubmit,
@@ -26,20 +26,9 @@ export default function ForgotPasswordContent() {
     },
   });
 
-  useEffect(() => {
-    if (params.success === 'true' && params.message) {
-      Toast.show({
-        type: 'success',
-        text1: params.message,
-      });
-    }
-  }, [params.success, params.message]);
-
   const onSubmit = async (data: { email: string }) => {
-    const auth = getAuth();
-
     try {
-      await sendPasswordResetEmail(auth, data.email);
+      await forgotPasswordUseCase.execute(data.email);
 
       //Caso o envio de email funcione;
       Toast.show({
