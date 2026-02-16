@@ -1,5 +1,7 @@
 import firebaseConfig from '@/firebaseConfig';
 import { CreateTaskDTO } from '@/src/data';
+import { ResponseTaskDTO } from '@/src/data/dtos/task/ResponseTaskDTO';
+import { TaskMapper } from '@/src/data/mappers/task/TaskMapper';
 import { Task, TaskRepository } from '@/src/domain';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 
@@ -9,9 +11,7 @@ export class FirebaseTaskRepository implements TaskRepository {
 
     const tasks: Task[] = [];
     querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-      // TODO: call the mapper here
-      tasks.push({ ...doc.data(), id: doc.id } as Task);
+      tasks.push(TaskMapper.fromDtoToDomain({ ...doc.data(), id: doc.id } as ResponseTaskDTO));
     });
 
     return tasks;
