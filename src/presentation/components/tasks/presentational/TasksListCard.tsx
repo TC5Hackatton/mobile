@@ -30,7 +30,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   }
 
   return (
-    <ContentCard>
+    <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
         <Badge style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
         <Text>{statusVisualProperties.label}</Text>
@@ -59,5 +59,8 @@ const styles = StyleSheet.create({
   },
   taskCard: {
     marginBottom: 16,
+  },
+  contentCard: {
+    maxHeight: 200,
   },
 });
