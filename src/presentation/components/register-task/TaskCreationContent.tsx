@@ -33,6 +33,7 @@ export default function TaskCreationContent() {
         type: 'success',
         text1: 'Tarefa criada com sucesso',
       });
+      router.push('/tasks');
     } catch (error) {
       Toast.show({
         type: 'error',
