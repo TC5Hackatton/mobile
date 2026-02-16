@@ -4,6 +4,7 @@
 node_modules/
 
 # Expo
+app.json
 .expo/
 dist/
 web-build/
