@@ -13,20 +13,20 @@ const UserContext = createContext<UserUseCases | null>(null);
 
 // Component (Provider) that provides auth dependencies instantiated through context
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const { authRepository, taskRepository, sessionRepository } = useDependencies(); // Modified
+  const { authRepository, taskRepository, sessionRepository } = useDependencies();
 
-  const useCases = useMemo<UserUseCases>( // Modified variable name and type
+  const useCases = useMemo<UserUseCases>(
     () => ({
-      signUpUseCase: new SignUpUseCase(authRepository), // Order changed
-      signInUseCase: new SignInUseCase(authRepository, sessionRepository), // Modified
+      signUpUseCase: new SignUpUseCase(authRepository),
+      signInUseCase: new SignInUseCase(authRepository, sessionRepository),
       forgotPasswordUseCase: new ForgotPasswordUseCase(authRepository),
-      createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository), // Added
-      fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository), // Added
+      createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
+      fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
     }),
-    [authRepository, taskRepository, sessionRepository], // Modified dependency array
+    [authRepository, taskRepository, sessionRepository],
   );
 
-  return <UserContext.Provider value={useCases}>{children}</UserContext.Provider>; // Modified value prop
+  return <UserContext.Provider value={useCases}>{children}</UserContext.Provider>;
 }
 
 // Custom hook to use auth dependencies
