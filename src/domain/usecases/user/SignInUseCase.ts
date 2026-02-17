@@ -1,13 +1,20 @@
+import { Session } from '../../entities/Session';
 import { AuthRepository } from '../../repositories/AuthRepository';
+import { SessionRepository } from '../../repositories/SessionRepository';
 
 export class SignInUseCase {
-  constructor(private authRepository: AuthRepository) {}
+  constructor(
+    private authRepository: AuthRepository,
+    private sessionRepository: SessionRepository,
+  ) {}
 
-  execute(email: string, password: string): Promise<any> {
+  async execute(email: string, password: string): Promise<Session> {
     if (!email || !password) {
       throw new Error('E-mail e senha são obrigatórios!');
     }
 
-    return this.authRepository.signIn(email, password);
+    const session = await this.authRepository.signIn(email, password);
+    await this.sessionRepository.saveSession(session);
+    return session;
   }
 }

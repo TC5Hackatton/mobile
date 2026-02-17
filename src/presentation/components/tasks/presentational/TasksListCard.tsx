@@ -14,7 +14,7 @@ type TaskListCardProps = {
 
 export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   const colors = useThemeColors();
-  
+
   const statusVisualProperties = useMemo(() => {
     if (status === TaskStatus.TODO) {
       return { color: colors.tertiary, label: 'A Fazer' };
@@ -34,23 +34,23 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   return (
     <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
-        <Badge style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
+        <Badge size={30} style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
         <Text style={{ color: colors.text }}>{statusVisualProperties.label}</Text>
       </View>
 
       <ScrollView>
         {tasks.map((task) => (
-          <Card 
-            key={task.id} 
+          <Card
+            key={task.id}
             style={[styles.taskCard, { backgroundColor: colors.surfaceVariant }]}
             theme={{ colors: { surface: colors.surfaceVariant } }}>
             <Card.Content>
-              <Text 
-                variant="headlineSmall"
+              <Text
+                variant="titleSmall"
                 theme={{ colors: { onSurface: colors.text } }}>
                 {task.title}
               </Text>
-              <Text 
+              <Text
                 variant="bodyMedium"
                 theme={{ colors: { onSurface: colors.textSecondary } }}>
                 {task.description}

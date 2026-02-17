@@ -1,12 +1,13 @@
 import { router } from 'expo-router';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Menu } from 'react-native-paper';
 
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
+import { useSession } from '@/src/presentation/contexts/SessionContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { IconSymbol } from './icon-symbol';
 
@@ -17,7 +18,10 @@ interface AppHeaderProps {
 
 export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHeaderProps) {
   const { logger } = useDependencies();
+  const { clearSession } = useSession();
   const { isDark, toggleTheme } = useTheme();
+
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const handleBackPress = useCallback(() => {
     router.back();
@@ -32,6 +36,13 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
     logger.log('Theme toggle pressed');
     toggleTheme();
   }, [logger, toggleTheme]);
+
+  const handleLogout = useCallback(async () => {
+    setMenuVisible(false);
+    logger.log('Logout pressed');
+    await clearSession();
+    router.replace('/sign-in');
+  }, [logger, clearSession]);
 
   // Cores dinâmicas baseadas no tema
   const backgroundColor = isDark ? customColors.darkNavy : customColors.white;
@@ -85,10 +96,27 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
           <IconButton icon="circle-half-full" iconColor={iconColor} size={24} style={styles.icon} />
         </TouchableOpacity>
 
-        <View style={styles.profileContainer} accessibilityRole="button" accessibilityLabel="Perfil do usuário">
-          <IconSymbol size={36} name="person.circle.fill" color={iconColor} />
-          <View style={[styles.statusIndicator, { borderColor: statusIndicatorBorderColor }]} />
-        </View>
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          anchor={
+            <TouchableOpacity
+              onPress={() => setMenuVisible(true)}
+              style={styles.profileContainer}
+              accessibilityRole="button"
+              accessibilityLabel="Menu do usuário">
+              <IconSymbol size={36} name="person.circle.fill" color={iconColor} />
+              <View style={[styles.statusIndicator, { borderColor: statusIndicatorBorderColor }]} />
+            </TouchableOpacity>
+          }
+          contentStyle={{ backgroundColor: isDark ? customColors.darkNavy : customColors.white }}>
+          <Menu.Item
+            onPress={handleLogout}
+            title="Sair"
+            leadingIcon="logout"
+            titleStyle={{ color: isDark ? customColors.darkText : customColors.darkNavy }}
+          />
+        </Menu>
       </View>
     </View>
   );

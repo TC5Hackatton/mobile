@@ -15,11 +15,11 @@ import {
 // NOTE: maybe here we can render the some sections directly, and use a reducer to control the state
 export default function PreferencesContent() {
   const colors = useThemeColors();
-  
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
-        <AppHeader title="Preferências" showBackButton />
+        <AppHeader title="Preferências" />
         <ScrollView
           style={[styles.scrollView, { backgroundColor: colors.background }]}
           contentContainerStyle={styles.scrollContent}

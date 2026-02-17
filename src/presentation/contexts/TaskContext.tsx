@@ -12,14 +12,14 @@ const TaskContext = createContext<TaskUseCases | null>(null);
 
 // Component (Provider) that provides Task dependencies instantiated through context
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const { authRepository, taskRepository } = useDependencies();
+  const { sessionRepository, taskRepository } = useDependencies();
 
   const taskUseCases = useMemo<TaskUseCases>(
     () => ({
       fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
-      createTaskUseCase: new CreateTaskUseCase(authRepository, taskRepository),
+      createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
     }),
-    [authRepository, taskRepository],
+    [sessionRepository, taskRepository],
   );
 
   return <TaskContext.Provider value={taskUseCases}>{children}</TaskContext.Provider>;

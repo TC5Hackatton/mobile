@@ -10,12 +10,14 @@ import { CustomButton } from '@/src/presentation/components/shared/custom-button
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LinkText } from '@/src/presentation/components/shared/link-text';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
+import { useSession } from '@/src/presentation/contexts/SessionContext';
 import { useUser } from '@/src/presentation/contexts/UserContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
 
 export default function SignInContent() {
   const { signInUseCase } = useUser();
+  const { setSession } = useSession();
   const colors = useThemeColors();
   const params = useLocalSearchParams<{ success?: string; message?: string }>();
 
@@ -39,12 +41,13 @@ export default function SignInContent() {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      await signInUseCase.execute(data.email, data.password);
+      const session = await signInUseCase.execute(data.email, data.password);
+      setSession(session);
       router.replace('/(tabs)/home');
     } catch (error) {
       const appError = ErrorHandler.handle(error, 'SignInContent');
       const friendlyMessage = ErrorHandler.getUserFriendlyMessage(appError);
-      
+
       Toast.show({
         type: 'error',
         text1: 'Erro ao fazer login',
