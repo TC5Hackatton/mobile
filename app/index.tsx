@@ -1,19 +1,28 @@
 import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useSession } from '@/src/presentation/contexts/SessionContext';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Index() {
+  const { isAuthenticated, isLoading } = useSession();
+
   useEffect(() => {
-    // Navegar para a tela de login após um tempo mínimo de exibição
+    if (isLoading) return;
+
     const timer = setTimeout(() => {
-      console.log('Navegando para a tela de login...');
-      router.replace('/sign-in');
+      if (isAuthenticated) {
+        console.log('User authenticated, navigating to home...');
+        router.replace('/(tabs)/home');
+      } else {
+        console.log('User not authenticated, navigating to sign-in...');
+        router.replace('/sign-in');
+      }
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isAuthenticated, isLoading]);
 
   return (
     <View style={styles.container}>
