@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import { Switch, Text } from 'react-native-paper';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface ToggleLineProps {
   title: string;
@@ -13,13 +13,21 @@ interface ToggleLineProps {
 }
 
 export function ToggleLine({ title, description, value, onValueChange }: ToggleLineProps) {
+  const colors = useThemeColors();
+  
   return (
     <View style={styles.item}>
       <View style={styles.itemContent}>
-        <Text variant="titleMedium" style={styles.itemTitle}>
+        <Text 
+          variant="titleMedium" 
+          style={styles.itemTitle}
+          theme={{ colors: { onSurface: colors.text } }}>
           {title}
         </Text>
-        <Text variant="bodySmall" style={styles.itemSubtitle}>
+        <Text 
+          variant="bodySmall" 
+          style={styles.itemSubtitle}
+          theme={{ colors: { onSurface: colors.textSecondary } }}>
           {description}
         </Text>
       </View>
@@ -41,12 +49,10 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
-    color: customColors.darkNavy,
     marginBottom: spacing.xs,
   },
   itemSubtitle: {
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.regular,
-    color: customColors.mediumGray,
   },
 });

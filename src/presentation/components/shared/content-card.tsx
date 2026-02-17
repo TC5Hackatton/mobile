@@ -1,24 +1,27 @@
-import { StyleSheet, View } from 'react-native';
+import { AccessibilityRole, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
-import { spacing } from '@/src/presentation/constants/spacing';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface ContentCardProps {
   children?: React.ReactNode;
+  style?: ViewStyle;
   testID?: string;
   accessibilityLabel?: string;
-  accessibilityRole?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
 export function ContentCard({
   children,
+  style,
   testID,
   accessibilityLabel,
   accessibilityRole = 'none',
 }: ContentCardProps) {
+  const colors = useThemeColors();
+  
   return (
     <View
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.surface }, style]}
       testID={testID}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole={accessibilityRole}>
@@ -29,7 +32,6 @@ export function ContentCard({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: customColors.white,
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,

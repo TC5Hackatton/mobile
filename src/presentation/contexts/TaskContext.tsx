@@ -1,8 +1,9 @@
-import { CreateTaskUseCase } from '@/src/domain';
+import { CreateTaskUseCase, FetchAllTasksUseCase } from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
 export interface TaskUseCases {
+  fetchAllTasksUseCase: FetchAllTasksUseCase;
   createTaskUseCase: CreateTaskUseCase;
 }
 
@@ -15,6 +16,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 
   const taskUseCases = useMemo<TaskUseCases>(
     () => ({
+      fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
       createTaskUseCase: new CreateTaskUseCase(authRepository, taskRepository),
     }),
     [authRepository, taskRepository],

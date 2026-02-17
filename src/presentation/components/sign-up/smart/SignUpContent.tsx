@@ -3,16 +3,19 @@ import { router } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
+import { ErrorHandler } from '@/src/infrastructure/error-handler';
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useUser } from '@/src/presentation/contexts/UserContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
 export default function SignUpContent() {
   const { signUpUseCase } = useUser();
+  const colors = useThemeColors();
 
   const {
     control,
@@ -40,8 +43,15 @@ export default function SignUpContent() {
         params: { success: 'true', message: 'Conta criada com sucesso!' },
       });
     } catch (error) {
-      console.error('Sign up error:', error);
-      // TODO: Mostrar erro ao usuário
+      const appError = ErrorHandler.handle(error, 'SignUpContent');
+      const friendlyMessage = ErrorHandler.getUserFriendlyMessage(appError);
+      
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao cadastrar',
+        text2: friendlyMessage,
+        position: 'top',
+      });
     }
   };
 
@@ -51,7 +61,7 @@ export default function SignUpContent() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: customColors.lightGray }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -65,9 +75,9 @@ export default function SignUpContent() {
               accessibilityRole="button"
               accessibilityLabel="Voltar"
               accessibilityHint="Volta para a tela anterior">
-              <IconButton icon="chevron-left" iconColor={customColors.skyBlue} size={24} />
+              <IconButton icon="chevron-left" iconColor={colors.tertiary} size={24} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Cadastre-se</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>Cadastre-se</Text>
           </View>
 
           <LoginLogo />
@@ -88,7 +98,7 @@ export default function SignUpContent() {
               />
               {errors.email && (
                 <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.email.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.email.message}</Text>
                 </View>
               )}
             </View>
@@ -107,7 +117,7 @@ export default function SignUpContent() {
               />
               {errors.password && (
                 <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.password.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.password.message}</Text>
                 </View>
               )}
             </View>
@@ -126,7 +136,7 @@ export default function SignUpContent() {
               />
               {errors.confirmPassword && (
                 <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.confirmPassword.message}</Text>
                 </View>
               )}
             </View>
@@ -183,7 +193,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Raleway_600SemiBold',
-    color: customColors.skyBlue,
     marginLeft: 8,
   },
   formContainer: {
@@ -201,7 +210,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    color: customColors.coral,
     fontFamily: 'Raleway_400Regular',
   },
 });

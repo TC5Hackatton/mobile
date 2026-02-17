@@ -1,33 +1,76 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { Icon } from 'react-native-paper';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
-
-const toastConfig = {
-  success: ({ text1 }: { text1?: string }) => (
-    <View style={styles.successContainer}>
-      <Text style={styles.successText}>{text1}</Text>
-    </View>
-  ),
-};
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export function CustomToast() {
+  const colors = useThemeColors();
+  
+  const toastConfig = {
+    success: ({ text1, text2 }: { text1?: string; text2?: string }) => (
+      <View style={[styles.container, styles.successContainer, { backgroundColor: colors.lightGreen }]}>
+        <Icon source="check-circle" size={20} color={colors.white} />
+        <View style={styles.textContainer}>
+          {text1 && <Text style={[styles.text, styles.successText, { color: colors.white }]}>{text1}</Text>}
+          {text2 && <Text style={[styles.text, styles.successSubtext, { color: colors.white }]}>{text2}</Text>}
+        </View>
+      </View>
+    ),
+    error: ({ text1, text2 }: { text1?: string; text2?: string }) => (
+      <View style={[styles.container, styles.errorContainer, { backgroundColor: colors.error }]}>
+        <Icon source="alert-circle" size={20} color={colors.white} />
+        <View style={styles.textContainer}>
+          {text1 && <Text style={[styles.text, styles.errorText, { color: colors.white }]}>{text1}</Text>}
+          {text2 && <Text style={[styles.text, styles.errorSubtext, { color: colors.white }]}>{text2}</Text>}
+        </View>
+      </View>
+    ),
+  };
+
   return <Toast config={toastConfig} topOffset={60} visibilityTime={5000} />;
 }
 
 const styles = StyleSheet.create({
-  successContainer: {
+  container: {
     width: '90%',
     maxWidth: 400,
-    backgroundColor: customColors.lightGreen,
     padding: 16,
     borderRadius: 8,
     alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  successContainer: {
+    // Estilo específico para sucesso já está no backgroundColor
+  },
+  errorContainer: {
+    // Estilo específico para erro já está no backgroundColor
+  },
+  textContainer: {
+    flex: 1,
+  },
+  text: {
+    fontSize: 14,
+    fontFamily: 'Raleway_500Medium',
   },
   successText: {
-    fontSize: 14,
-    color: customColors.white,
-    fontFamily: 'Raleway_500Medium',
-    textAlign: 'center',
+    textAlign: 'left',
+  },
+  successSubtext: {
+    fontSize: 12,
+    fontFamily: 'Raleway_400Regular',
+    marginTop: 2,
+    opacity: 0.9,
+  },
+  errorText: {
+    textAlign: 'left',
+  },
+  errorSubtext: {
+    fontSize: 12,
+    fontFamily: 'Raleway_400Regular',
+    marginTop: 2,
+    opacity: 0.9,
   },
 });
