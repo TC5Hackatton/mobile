@@ -7,12 +7,12 @@ import Toast from 'react-native-toast-message';
 
 import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
-import { customColors } from '@/src/presentation/constants/paper-theme';
-
-import { useTask } from '../../contexts/TaskContext';
+import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
+  const colors = useThemeColors();
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -44,7 +44,7 @@ export default function TaskCreationContent() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <SafeAreaView style={styles.safeArea} edges={[]}>
         <AppHeader title="Criar Tarefa" showBackButton />
         <ScrollView
@@ -56,10 +56,10 @@ export default function TaskCreationContent() {
             mode="outlined"
             value={title}
             onChangeText={setTitle}
-            textColor={customColors.gray}
-            outlineColor={customColors.mediumBlue}
-            activeOutlineColor={customColors.mediumBlue}
-            style={styles.input}
+            textColor={colors.text}
+            outlineColor={colors.tertiary}
+            activeOutlineColor={colors.tertiary}
+            style={[styles.input, { backgroundColor: colors.surface }]}
           />
 
           <TextInput
@@ -68,41 +68,53 @@ export default function TaskCreationContent() {
             mode="outlined"
             value={description}
             onChangeText={setDescription}
-            textColor={customColors.gray}
+            textColor={colors.text}
             multiline
             numberOfLines={6}
-            outlineColor={customColors.mediumBlue}
-            activeOutlineColor={customColors.mediumBlue}
-            style={styles.textArea}
+            outlineColor={colors.tertiary}
+            activeOutlineColor={colors.tertiary}
+            style={[styles.textArea, { backgroundColor: colors.surface }]}
           />
 
-          <Text style={styles.labelSection}>Tempo da Tarefa</Text>
+          <Text style={[styles.labelSection, { color: colors.text }]}>Tempo da Tarefa</Text>
           <View style={styles.tabContainer}>
             <TouchableOpacity
-              style={[styles.tabButton, timeType === 'cronometro' ? styles.tabActiveCron : styles.tabInactive]}
+              style={[
+                styles.tabButton,
+                { backgroundColor: colors.surfaceVariant },
+                timeType === 'cronometro' && { backgroundColor: colors.background },
+              ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text style={[styles.tabText, timeType === 'cronometro' && styles.textWhite]}>Cronômetro</Text>
+              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.text }]}>Cronômetro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.tabButton, timeType === 'fixo' ? styles.tabActiveFixo : styles.tabInactive]}
+              style={[
+                styles.tabButton,
+                { backgroundColor: colors.surfaceVariant },
+                timeType === 'fixo' && { backgroundColor: colors.secondary },
+              ]}
               onPress={() => setTimeType('fixo')}>
-              <Text style={[styles.tabText, timeType === 'fixo' && styles.textWhite]}>Tempo fixo</Text>
+              <Text style={[styles.tabText, { color: colors.text }, timeType === 'fixo' && { color: colors.white }]}>Tempo fixo</Text>
             </TouchableOpacity>
           </View>
 
           {timeType === 'cronometro' ? (
             <View style={styles.timerWrapper}>
-              <Text style={styles.timerDisplay}>00:00:00</Text>
+              <Text style={[styles.timerDisplay, { color: colors.text }]}>00:00:00</Text>
             </View>
           ) : (
             <View style={styles.fixedTimeList}>
               {['15 min', '25 min', '45 min', '1 hora'].map((time) => (
                 <TouchableOpacity
                   key={time}
-                  style={[styles.timeOption, selectedTime === time && styles.timeOptionSelected]}
+                  style={[
+                    styles.timeOption,
+                    { borderColor: colors.tertiary },
+                    selectedTime === time && { backgroundColor: colors.tertiary },
+                  ]}
                   onPress={() => setSelectedTime(time)}>
-                  <Text style={[styles.timeOptionText, selectedTime === time && styles.textWhite]}>{time}</Text>
+                  <Text style={[styles.timeOptionText, { color: colors.text }, selectedTime === time && { color: colors.white }]}>{time}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -112,16 +124,20 @@ export default function TaskCreationContent() {
             <Button
               mode="contained"
               onPress={submitTaskCreation}
-              style={styles.btnSave}
-              contentStyle={styles.btnContent}>
+              style={[styles.btnSave, { backgroundColor: colors.tertiary }]}
+              contentStyle={styles.btnContent}
+              buttonColor={colors.tertiary}
+              textColor={colors.white}>
               {timeType === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
             </Button>
 
             <Button
               mode="contained"
               onPress={() => router.back()}
-              style={styles.btnCancel}
-              contentStyle={styles.btnContent}>
+              style={[styles.btnCancel, { backgroundColor: colors.coral }]}
+              contentStyle={styles.btnContent}
+              buttonColor={colors.coral}
+              textColor={colors.white}>
               Cancelar
             </Button>
           </View>
@@ -134,7 +150,6 @@ export default function TaskCreationContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: customColors.lightGray,
   },
   safeArea: {
     flex: 1,
@@ -145,30 +160,24 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
   },
-  input: { marginBottom: 16, backgroundColor: customColors.white },
-  textArea: { marginBottom: 24, backgroundColor: customColors.white, height: 120 },
-  labelSection: { fontSize: 16, fontWeight: '600', color: customColors.mediumBlue, marginBottom: 12 },
+  input: { marginBottom: 16 },
+  textArea: { marginBottom: 24, height: 120 },
+  labelSection: { fontSize: 16, fontWeight: '600', marginBottom: 12 },
   tabContainer: { flexDirection: 'row', gap: 12, marginBottom: 30 },
   tabButton: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: 'center' },
-  tabInactive: { backgroundColor: customColors.lightGray },
-  tabActiveCron: { backgroundColor: customColors.darkNavy },
-  tabActiveFixo: { backgroundColor: customColors.lightGreen },
-  tabText: { fontWeight: '500', color: customColors.mediumBlue },
-  textWhite: { color: customColors.white },
+  tabText: { fontWeight: '500' },
   timerWrapper: { alignItems: 'center', marginVertical: 40 },
-  timerDisplay: { fontSize: 64, fontWeight: 'bold', color: customColors.darkNavy },
+  timerDisplay: { fontSize: 64, fontWeight: 'bold' },
   fixedTimeList: { gap: 10 },
   timeOption: {
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: customColors.mediumBlue,
     alignItems: 'center',
   },
-  timeOptionSelected: { backgroundColor: customColors.skyBlue },
-  timeOptionText: { color: customColors.mediumBlue, fontSize: 16 },
+  timeOptionText: { fontSize: 16 },
   footer: { marginTop: 40, gap: 12 },
-  btnSave: { backgroundColor: customColors.skyBlue, borderRadius: 25 },
-  btnCancel: { backgroundColor: customColors.coral, borderRadius: 25 },
+  btnSave: { borderRadius: 25 },
+  btnCancel: { borderRadius: 25 },
   btnContent: { paddingVertical: 8 },
 });

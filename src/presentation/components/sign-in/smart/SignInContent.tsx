@@ -5,16 +5,18 @@ import { useForm } from 'react-hook-form';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
+import { ErrorHandler } from '@/src/infrastructure/error-handler';
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LinkText } from '@/src/presentation/components/shared/link-text';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useUser } from '@/src/presentation/contexts/UserContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
 
 export default function SignInContent() {
   const { signInUseCase } = useUser();
+  const colors = useThemeColors();
   const params = useLocalSearchParams<{ success?: string; message?: string }>();
 
   const {
@@ -40,10 +42,13 @@ export default function SignInContent() {
       await signInUseCase.execute(data.email, data.password);
       router.replace('/(tabs)/home');
     } catch (error) {
+      const appError = ErrorHandler.handle(error, 'SignInContent');
+      const friendlyMessage = ErrorHandler.getUserFriendlyMessage(appError);
+      
       Toast.show({
         type: 'error',
-        text1: 'Ops! Ocorreu um erro ao tentar fazer login!',
-        text2: 'Revise seu e-mail e senha e tente novamente.',
+        text1: 'Erro ao fazer login',
+        text2: friendlyMessage,
         position: 'top',
       });
     }
@@ -59,7 +64,7 @@ export default function SignInContent() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: customColors.lightGray }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}

@@ -7,6 +7,7 @@ import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
+import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { IconSymbol } from './icon-symbol';
 
 interface AppHeaderProps {
@@ -16,6 +17,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHeaderProps) {
   const { logger } = useDependencies();
+  const { isDark, toggleTheme } = useTheme();
 
   const handleBackPress = useCallback(() => {
     router.back();
@@ -28,11 +30,24 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
 
   const handleThemeTogglePress = useCallback(() => {
     logger.log('Theme toggle pressed');
-    // TODO: Implementar toggle de tema
-  }, [logger]);
+    toggleTheme();
+  }, [logger, toggleTheme]);
+
+  // Cores dinâmicas baseadas no tema
+  const backgroundColor = isDark ? customColors.darkNavy : customColors.white;
+  const titleColor = isDark
+    ? showBackButton
+      ? customColors.darkText
+      : customColors.lightBlue
+    : showBackButton
+      ? customColors.darkNavy
+      : customColors.skyBlue;
+  const backButtonColor = isDark ? customColors.darkText : customColors.darkNavy;
+  const iconColor = isDark ? customColors.lightBlue : customColors.gray;
+  const statusIndicatorBorderColor = isDark ? customColors.darkNavy : customColors.white;
 
   return (
-    <View style={styles.container} accessibilityLabel="Cabeçalho da aplicação">
+    <View style={[styles.container, { backgroundColor }]} accessibilityLabel="Cabeçalho da aplicação">
       <View style={styles.leftSection}>
         {showBackButton && (
           <TouchableOpacity
@@ -40,12 +55,14 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
             style={styles.backButton}
             accessibilityRole="button"
             accessibilityLabel="Voltar">
-            <IconButton icon="arrow-left" iconColor={customColors.darkNavy} size={24} style={styles.icon} />
+            <IconButton icon="arrow-left" iconColor={backButtonColor} size={24} style={styles.icon} />
           </TouchableOpacity>
         )}
       </View>
 
-      <Text style={[styles.title, showBackButton && styles.titleWithBack]} accessibilityRole="header">
+      <Text
+        style={[styles.title, showBackButton && styles.titleWithBack, { color: titleColor }]}
+        accessibilityRole="header">
         {title}
       </Text>
 
@@ -65,12 +82,12 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
           accessibilityRole="button"
           accessibilityLabel="Alternar tema"
           accessibilityHint="Alterna entre tema claro e escuro">
-          <IconButton icon="circle-half-full" iconColor={customColors.gray} size={24} style={styles.icon} />
+          <IconButton icon="circle-half-full" iconColor={iconColor} size={24} style={styles.icon} />
         </TouchableOpacity>
 
         <View style={styles.profileContainer} accessibilityRole="button" accessibilityLabel="Perfil do usuário">
-          <IconSymbol size={36} name="person.circle.fill" color={customColors.gray} />
-          <View style={styles.statusIndicator} />
+          <IconSymbol size={36} name="person.circle.fill" color={iconColor} />
+          <View style={[styles.statusIndicator, { borderColor: statusIndicatorBorderColor }]} />
         </View>
       </View>
     </View>
@@ -84,7 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
-    backgroundColor: customColors.white,
   },
   leftSection: {
     width: 40,
@@ -96,12 +112,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize.xl,
     fontFamily: typography.fontFamily.semiBold,
-    color: customColors.skyBlue,
     flex: 1,
   },
   titleWithBack: {
     textAlign: 'center',
-    color: customColors.darkNavy,
     fontSize: typography.fontSize.lg,
   },
   rightSection: {
@@ -134,6 +148,5 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: customColors.lightGreen,
     borderWidth: 2,
-    borderColor: customColors.white,
   },
 });

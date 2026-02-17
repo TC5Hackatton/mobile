@@ -14,7 +14,7 @@ import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
 import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
-import { useColorScheme } from '@/src/presentation/hooks/use-color-scheme';
+import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
 import {
   Raleway_400Regular,
   Raleway_500Medium,
@@ -29,9 +29,9 @@ export const unstable_settings = {
   anchor: '(tabs)',
 };
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const paperTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
+function RootLayoutContent() {
+  const { isDark } = useTheme();
+  const paperTheme = isDark ? darkTheme : lightTheme;
 
   const [fontsLoaded, fontError] = useFonts({
     Raleway_400Regular,
@@ -48,37 +48,49 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      RNStatusBar.setBackgroundColor(customColors.darkNavy);
-      RNStatusBar.setBarStyle('light-content');
-      NavigationBar.setBackgroundColorAsync(customColors.darkNavy);
-      NavigationBar.setButtonStyleAsync('light');
+      const statusBarColor = isDark ? customColors.darkNavy : customColors.white;
+      const statusBarStyle = isDark ? 'light-content' : 'dark-content';
+      const navBarStyle = isDark ? 'light' : 'dark';
+
+      RNStatusBar.setBackgroundColor(statusBarColor);
+      RNStatusBar.setBarStyle(statusBarStyle);
+      NavigationBar.setBackgroundColorAsync(statusBarColor);
+      NavigationBar.setButtonStyleAsync(navBarStyle);
     }
-  }, []);
+  }, [isDark]);
 
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+        <PaperProvider key={isDark ? 'dark' : 'light'} theme={paperTheme}>
+          <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+              <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+            <StatusBar style={isDark ? 'light' : 'dark'} />
+            <CustomToast />
+          </ThemeProvider>
+        </PaperProvider>
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
     <ErrorBoundary>
       <DependenciesProvider>
-        <SafeAreaProvider>
-          <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-            <PaperProvider theme={paperTheme}>
-              <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <Stack>
-                  <Stack.Screen name="index" options={{ headerShown: false }} />
-                  <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-                  <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-                  <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                </Stack>
-                <StatusBar style="dark" />
-                <CustomToast />
-              </ThemeProvider>
-            </PaperProvider>
-          </SafeAreaView>
-        </SafeAreaProvider>
+        <AppThemeProvider>
+          <RootLayoutContent />
+        </AppThemeProvider>
       </DependenciesProvider>
     </ErrorBoundary>
   );

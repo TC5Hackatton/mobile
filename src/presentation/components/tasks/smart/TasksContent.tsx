@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Task, TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 import TasksListCard from '../presentational/TasksListCard';
 
@@ -13,6 +13,7 @@ type TaskState = Record<TaskStatus, Task[]>;
 
 export default function TasksContent() {
   const { fetchAllTasksUseCase } = useTask();
+  const colors = useThemeColors();
 
   const [tasks, setTasks] = useState<TaskState>({
     [TaskStatus.TODO]: [],
@@ -39,8 +40,8 @@ export default function TasksContent() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea} edges={[]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={[]}>
         <AppHeader title="Tarefas" />
 
         <View style={styles.content}>
@@ -56,11 +57,9 @@ export default function TasksContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: customColors.darkNavy,
   },
   safeArea: {
     flex: 1,
-    backgroundColor: customColors.lightGray,
   },
   content: {
     flex: 1,

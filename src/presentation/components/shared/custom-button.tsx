@@ -1,8 +1,8 @@
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface CustomButtonProps {
   label: string;
@@ -25,19 +25,23 @@ export function CustomButton({
   accessibilityLabel,
   accessibilityHint,
 }: CustomButtonProps) {
-  const buttonStyle =
-    variant === 'primary'
-      ? styles.primaryButton
-      : variant === 'cancel'
-        ? styles.cancelButton
-        : styles.secondaryButton;
-  const textStyle = styles.buttonText;
+  const colors = useThemeColors();
+  
+  const getButtonStyle = () => {
+    if (variant === 'primary') {
+      return { backgroundColor: colors.lightGreen };
+    } else if (variant === 'cancel') {
+      return { backgroundColor: colors.coral };
+    } else {
+      return { backgroundColor: colors.primary };
+    }
+  };
 
   const isDisabled = loading || disabled;
 
   return (
     <TouchableOpacity
-      style={[styles.buttonBase, buttonStyle, isDisabled && styles.buttonDisabled]}
+      style={[styles.buttonBase, getButtonStyle(), isDisabled && styles.buttonDisabled]}
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.8}
@@ -47,9 +51,9 @@ export function CustomButton({
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: isDisabled, busy: loading }}>
       {loading ? (
-        <ActivityIndicator color={customColors.white} />
+        <ActivityIndicator color={colors.white} />
       ) : (
-        <Text style={textStyle}>{label}</Text>
+        <Text style={[styles.buttonText, { color: colors.white }]}>{label}</Text>
       )}
     </TouchableOpacity>
   );
@@ -64,22 +68,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  // Variantes - apenas cores e características específicas
-  primaryButton: {
-    backgroundColor: customColors.lightGreen,
-  },
-  secondaryButton: {
-    backgroundColor: customColors.mediumBlue,
-  },
-  cancelButton: {
-    backgroundColor: customColors.coral,
-  },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
-    color: customColors.white,
     fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.regular,
   },

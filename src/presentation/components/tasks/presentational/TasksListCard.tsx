@@ -1,10 +1,10 @@
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Badge, Card, Text } from 'react-native-paper';
 
 import { Task, TaskStatus } from '@/src/domain';
-import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-import { useMemo } from 'react';
 import { ContentCard } from '../../shared/content-card';
 
 type TaskListCardProps = {
@@ -13,17 +13,19 @@ type TaskListCardProps = {
 };
 
 export default function TasksListCard({ tasks, status }: TaskListCardProps) {
+  const colors = useThemeColors();
+  
   const statusVisualProperties = useMemo(() => {
     if (status === TaskStatus.TODO) {
-      return { color: customColors.skyBlue, label: 'A Fazer' };
+      return { color: colors.tertiary, label: 'A Fazer' };
     }
 
     if (status === TaskStatus.DOING) {
-      return { color: customColors.yellow, label: 'Fazendo' };
+      return { color: colors.yellow, label: 'Fazendo' };
     }
 
-    return { color: customColors.tealGreen, label: 'Concluído' };
-  }, [status]);
+    return { color: colors.secondary, label: 'Concluído' };
+  }, [status, colors]);
 
   if (!tasks.length) {
     return null;
@@ -33,15 +35,26 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
     <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
         <Badge style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
-        <Text>{statusVisualProperties.label}</Text>
+        <Text style={{ color: colors.text }}>{statusVisualProperties.label}</Text>
       </View>
 
       <ScrollView>
         {tasks.map((task) => (
-          <Card key={task.id} style={styles.taskCard}>
+          <Card 
+            key={task.id} 
+            style={[styles.taskCard, { backgroundColor: colors.surfaceVariant }]}
+            theme={{ colors: { surface: colors.surfaceVariant } }}>
             <Card.Content>
-              <Text variant="headlineSmall">{task.title}</Text>
-              <Text variant="bodyMedium">{task.description}</Text>
+              <Text 
+                variant="headlineSmall"
+                theme={{ colors: { onSurface: colors.text } }}>
+                {task.title}
+              </Text>
+              <Text 
+                variant="bodyMedium"
+                theme={{ colors: { onSurface: colors.textSecondary } }}>
+                {task.description}
+              </Text>
             </Card.Content>
           </Card>
         ))}

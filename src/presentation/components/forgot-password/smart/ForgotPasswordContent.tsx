@@ -9,11 +9,12 @@ import { forgotPasswordSchema, type ForgotPasswordFormData } from './forgot-pass
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { useUser } from '@/src/presentation/contexts/UserContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function ForgotPasswordContent() {
   const { forgotPasswordUseCase } = useUser();
+  const colors = useThemeColors();
 
   const {
     control,
@@ -48,7 +49,7 @@ export default function ForgotPasswordContent() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: customColors.lightGray }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
@@ -59,14 +60,14 @@ export default function ForgotPasswordContent() {
               accessibilityRole="button"
               accessibilityLabel="Voltar"
               accessibilityHint="Volta para a tela anterior">
-              <IconButton icon="chevron-left" iconColor={customColors.skyBlue} size={24} />
+              <IconButton icon="chevron-left" iconColor={colors.tertiary} size={24} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Esqueceu sua senha?</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>Esqueceu sua senha?</Text>
           </View>
 
           <LoginLogo />
 
-          <Text style={styles.tagline}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
+          <Text style={[styles.tagline, { color: colors.text }]}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
 
           <View style={styles.formContainer}>
             <CustomTextInput
@@ -83,7 +84,7 @@ export default function ForgotPasswordContent() {
             />
             {errors.email && (
               <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{errors.email.message}</Text>
+                <Text style={[styles.errorText, { color: colors.error }]}>{errors.email.message}</Text>
               </View>
             )}
 
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Raleway_600SemiBold',
-    color: customColors.skyBlue,
     marginLeft: 8,
   },
   formContainer: {
@@ -143,13 +143,11 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    color: customColors.coral,
     fontFamily: 'Raleway_400Regular',
   },
   tagline: {
     fontSize: 24,
     maxWidth: '95%',
-    color: customColors.mediumBlue,
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',
     marginTop: 32,

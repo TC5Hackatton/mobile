@@ -3,20 +3,22 @@ import React from 'react';
 
 import { HapticTab } from '@/src/presentation/components/shared/haptic-tab';
 import { IconSymbol } from '@/src/presentation/components/shared/icon-symbol';
-import { customColors } from '@/src/presentation/constants/paper-theme';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function TabLayout() {
+  const colors = useThemeColors();
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: customColors.coral,
-        tabBarInactiveTintColor: customColors.mediumGray,
+        tabBarActiveTintColor: colors.tabBarActive,
+        tabBarInactiveTintColor: colors.tabBarInactive,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: {
-          backgroundColor: customColors.white,
+          backgroundColor: colors.tabBarBackground,
           borderTopWidth: 1,
-          borderTopColor: customColors.lightGray,
+          borderTopColor: colors.tabBarBorder,
           paddingBottom: 8,
           paddingTop: 8,
         },
