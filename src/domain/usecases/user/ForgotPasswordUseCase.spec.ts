@@ -11,7 +11,6 @@ describe('ForgotPasswordUseCase', () => {
       signIn: jest.fn(),
       signOut: jest.fn(),
       forgotPassword: jest.fn(),
-      getCurrentUser: jest.fn(),
     };
 
     forgotPasswordUseCase = new ForgotPasswordUseCase(mockAuthRepository);
