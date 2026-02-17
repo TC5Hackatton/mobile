@@ -3,42 +3,58 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
 
 export function ProductivitySection() {
+  const colors = useThemeColors();
   const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
   const [highContrast, setHighContrast] = useState(false);
 
   return (
-    <Card style={styles.card} mode="elevated" elevation={2}>
+    <Card 
+      style={[styles.card, { backgroundColor: colors.surface }]} 
+      mode="elevated" 
+      elevation={2}
+      theme={{ colors: { surface: colors.surface } }}>
       <Card.Content style={styles.content}>
         <View style={styles.header}>
-          <MaterialIcons name="access-time" size={24} color={customColors.darkNavy} />
-          <Text variant="titleLarge" style={styles.sectionTitle}>
+          <MaterialIcons name="access-time" size={24} color={colors.text} />
+          <Text 
+            variant="titleLarge" 
+            style={styles.sectionTitle}
+            theme={{ colors: { onSurface: colors.text } }}>
             Tempo e Produtividade
           </Text>
         </View>
 
         <View style={styles.pomodoroContainer}>
-          <Text variant="titleMedium" style={styles.itemTitle}>
+          <Text 
+            variant="titleMedium" 
+            style={styles.itemTitle}
+            theme={{ colors: { onSurface: colors.text } }}>
             Pomodoro Padrão
           </Text>
           <View style={styles.pomodoroButtons}>
             {(['15 min', '25 min', '35 min', '45 min'] as PomodoroTime[]).map((time) => (
               <TouchableOpacity
                 key={time}
-                style={[styles.pomodoroButton, pomodoroTime === time && styles.pomodoroButtonActive]}
+                style={[
+                  styles.pomodoroButton,
+                  { backgroundColor: colors.surfaceVariant },
+                  pomodoroTime === time && { backgroundColor: colors.primary },
+                ]}
                 onPress={() => setPomodoroTime(time)}
                 accessibilityRole="button"
                 accessibilityLabel={`Pomodoro de ${time}`}>
                 <Text
                   style={[
                     styles.pomodoroButtonText,
-                    pomodoroTime === time && styles.pomodoroButtonTextActive,
+                    { color: colors.textSecondary },
+                    pomodoroTime === time && { color: colors.white },
                   ]}>
                   {time}
                 </Text>
@@ -49,10 +65,16 @@ export function ProductivitySection() {
 
         <View style={styles.item}>
           <View style={styles.itemContent}>
-            <Text variant="titleMedium" style={styles.itemTitle}>
+            <Text 
+              variant="titleMedium" 
+              style={styles.itemTitle}
+              theme={{ colors: { onSurface: colors.text } }}>
               Alto Contraste
             </Text>
-            <Text variant="bodySmall" style={styles.itemSubtitle}>
+            <Text 
+              variant="bodySmall" 
+              style={styles.itemSubtitle}
+              theme={{ colors: { onSurface: colors.textSecondary } }}>
               Para melhor legibilidade
             </Text>
           </View>
@@ -66,7 +88,6 @@ export function ProductivitySection() {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    backgroundColor: customColors.white,
     marginHorizontal: spacing.md,
     marginTop: spacing.lg,
     marginBottom: spacing.lg,
@@ -83,7 +104,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.fontSize.lg,
     fontFamily: typography.fontFamily.bold,
-    color: customColors.darkNavy,
   },
   pomodoroContainer: {
     marginTop: spacing.md,
@@ -91,7 +111,6 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
-    color: customColors.darkNavy,
     marginBottom: spacing.sm,
   },
   pomodoroButtons: {
@@ -103,20 +122,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
     borderRadius: 8,
-    backgroundColor: '#F0F5F9',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  pomodoroButtonActive: {
-    backgroundColor: customColors.mediumBlue,
   },
   pomodoroButtonText: {
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.medium,
-    color: customColors.mediumGray,
-  },
-  pomodoroButtonTextActive: {
-    color: customColors.white,
   },
   item: {
     flexDirection: 'row',
@@ -130,6 +141,5 @@ const styles = StyleSheet.create({
   itemSubtitle: {
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.regular,
-    color: customColors.mediumGray,
   },
 });

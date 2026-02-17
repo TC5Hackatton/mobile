@@ -2,9 +2,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { ToggleLine } from './ToggleLine';
 
 interface ToggleItem {
@@ -22,12 +22,21 @@ interface ToggleOnlyCardProps {
 }
 
 export function ToggleOnlyCard({ title, icon, items, cardStyle }: ToggleOnlyCardProps) {
+  const colors = useThemeColors();
+  
   return (
-    <Card style={[styles.card, cardStyle]} mode="elevated" elevation={2}>
+    <Card 
+      style={[styles.card, { backgroundColor: colors.surface }, cardStyle]} 
+      mode="elevated" 
+      elevation={2}
+      theme={{ colors: { surface: colors.surface } }}>
       <Card.Content style={styles.content}>
         <View style={styles.header}>
-          <MaterialIcons name={icon} size={24} color={customColors.darkNavy} />
-          <Text variant="titleLarge" style={styles.sectionTitle}>
+          <MaterialIcons name={icon} size={24} color={colors.text} />
+          <Text 
+            variant="titleLarge" 
+            style={styles.sectionTitle}
+            theme={{ colors: { onSurface: colors.text } }}>
             {title}
           </Text>
         </View>
@@ -49,7 +58,6 @@ export function ToggleOnlyCard({ title, icon, items, cardStyle }: ToggleOnlyCard
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    backgroundColor: customColors.white,
     marginHorizontal: spacing.md,
     marginTop: spacing.lg,
   },
@@ -65,7 +73,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.fontSize.lg,
     fontFamily: typography.fontFamily.bold,
-    color: customColors.darkNavy,
     flex: 1,
   },
 });

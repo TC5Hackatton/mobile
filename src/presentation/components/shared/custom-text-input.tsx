@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Control, Controller, FieldPath } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
-import { TextInput, useTheme } from 'react-native-paper';
+import { TextInput, useTheme as usePaperTheme } from 'react-native-paper';
 
-import { customColors } from '@/src/presentation/constants/paper-theme';
 import { typography } from '@/src/presentation/constants/typography';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface CustomTextInputProps {
   label: string;
@@ -40,7 +40,8 @@ export function CustomTextInput({
   accessibilityLabel,
   accessibilityHint,
 }: CustomTextInputProps) {
-  const theme = useTheme();
+  const theme = usePaperTheme();
+  const colors = useThemeColors();
   const [showPassword, setShowPassword] = useState(false);
 
   // Se usar com react-hook-form
@@ -67,7 +68,7 @@ export function CustomTextInput({
               autoCapitalize={autoCapitalize}
               keyboardType={keyboardType}
               error={hasError}
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.surface }]}
               contentStyle={styles.inputContent}
               testID={testID}
               accessibilityLabel={accessibilityLabel || label}
@@ -86,12 +87,12 @@ export function CustomTextInput({
               }
               theme={{
                 colors: {
-                  primary: customColors.skyBlue,
+                  primary: colors.tertiary,
                   error: theme.colors.error,
-                  onSurface: fieldValue ? customColors.gray : customColors.mediumGray,
-                  placeholder: customColors.skyBlue,
-                  outline: customColors.skyBlue,
-                  onSurfaceVariant: customColors.skyBlue,
+                  onSurface: fieldValue ? colors.text : colors.textSecondary,
+                  placeholder: colors.tertiary,
+                  outline: colors.tertiary,
+                  onSurfaceVariant: colors.tertiary,
                 },
               }}
             />
@@ -117,7 +118,7 @@ export function CustomTextInput({
       autoCapitalize={autoCapitalize}
       keyboardType={keyboardType}
       error={error}
-      style={styles.input}
+      style={[styles.input, { backgroundColor: colors.surface }]}
       contentStyle={styles.inputContent}
       testID={testID}
       accessibilityLabel={accessibilityLabel || label}
@@ -136,12 +137,12 @@ export function CustomTextInput({
       }
       theme={{
         colors: {
-          primary: customColors.skyBlue,
+          primary: colors.tertiary,
           error: theme.colors.error,
-          onSurface: value ? customColors.gray : customColors.mediumGray,
-          placeholder: customColors.skyBlue,
-          outline: customColors.skyBlue,
-          onSurfaceVariant: customColors.skyBlue,
+          onSurface: value ? colors.text : colors.textSecondary,
+          placeholder: colors.tertiary,
+          outline: colors.tertiary,
+          onSurfaceVariant: colors.tertiary,
         },
       }}
     />
@@ -151,7 +152,6 @@ export function CustomTextInput({
 const styles = StyleSheet.create({
   input: {
     width: '100%',
-    backgroundColor: customColors.white,
   },
   inputContent: {
     fontFamily: typography.fontFamily.regular,

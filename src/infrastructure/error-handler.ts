@@ -29,6 +29,14 @@ export class ErrorHandler {
       appError.message = error.message;
       appError.code = error.name;
       appError.originalError = __DEV__ ? error : undefined;
+
+      // Tratar erros do Firebase Auth
+      // Firebase errors têm a propriedade 'code' no objeto de erro
+      const firebaseError = error as Error & { code?: string };
+      if (firebaseError.code) {
+        appError.code = firebaseError.code;
+        appError.message = ErrorHandler.getFirebaseErrorMessage(firebaseError.code);
+      }
     } else if (typeof error === 'string') {
       appError.message = error;
     }
@@ -44,9 +52,34 @@ export class ErrorHandler {
   }
 
   /**
+   * Mapeia códigos de erro do Firebase Auth para mensagens amigáveis
+   */
+  private static getFirebaseErrorMessage(code: string): string {
+    const firebaseErrorMessages: Record<string, string> = {
+      'auth/invalid-email': 'E-mail inválido. Verifique o formato do e-mail.',
+      'auth/user-disabled': 'Esta conta foi desabilitada. Entre em contato com o suporte.',
+      'auth/user-not-found': 'E-mail não encontrado. Verifique se o e-mail está correto.',
+      'auth/wrong-password': 'Senha incorreta. Tente novamente.',
+      'auth/email-already-in-use': 'Este e-mail já está em uso. Tente fazer login ou use outro e-mail.',
+      'auth/weak-password': 'Senha muito fraca. Use pelo menos 6 caracteres.',
+      'auth/network-request-failed': 'Erro de conexão. Verifique sua internet e tente novamente.',
+      'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+      'auth/invalid-credential': 'Credenciais inválidas. Verifique seu e-mail e senha.',
+      'auth/operation-not-allowed': 'Operação não permitida. Entre em contato com o suporte.',
+    };
+
+    return firebaseErrorMessages[code] || 'Ocorreu um erro ao processar sua solicitação. Tente novamente.';
+  }
+
+  /**
    * Cria uma mensagem de erro amigável para o usuário
    */
   static getUserFriendlyMessage(error: AppError): string {
+    // Se já foi tratado pelo getFirebaseErrorMessage, retorna a mensagem
+    if (error.message && !error.message.includes('Ocorreu um erro inesperado')) {
+      return error.message;
+    }
+
     // Mapear códigos de erro conhecidos para mensagens amigáveis
     const errorMessages: Record<string, string> = {
       NETWORK_ERROR: 'Erro de conexão. Verifique sua internet.',
