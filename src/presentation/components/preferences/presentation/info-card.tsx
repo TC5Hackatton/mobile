@@ -1,6 +1,6 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
@@ -8,22 +8,22 @@ import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export function InfoCard() {
   const colors = useThemeColors();
-  
+
   return (
-    <Card style={[styles.card, { backgroundColor: colors.secondary }]} mode="flat">
+    <Card style={[styles.card, { backgroundColor: colors.secondary }]} mode="elevated">
       <Card.Content style={styles.content}>
         <MaterialIcons name="settings" size={24} color={colors.text} style={styles.icon} />
         <View style={styles.textContainer}>
-          <Text 
-            variant="titleMedium" 
+          <Text
+            variant="titleMedium"
             style={styles.title}
             theme={{ colors: { onSurface: colors.text } }}>
             Configurações pensadas para você
           </Text>
-          <Text 
-            variant="bodySmall" 
+          <Text
+            variant="bodySmall"
             style={styles.description}
-            theme={{ colors: { onSurface: colors.textSecondary } }}>
+            theme={{ colors: { onSurface: colors.text } }}>
             Ajuste conforme sua necessidade. Não existe 'jeito certo' - o que funciona para você é o melhor.
           </Text>
         </View>
