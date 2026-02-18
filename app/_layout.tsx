@@ -14,6 +14,7 @@ import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
 import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
+import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
 import {
@@ -91,7 +92,9 @@ export default function RootLayout() {
       <DependenciesProvider>
         <SessionProvider>
           <AppThemeProvider>
-            <RootLayoutContent />
+            <FontSizeProvider>
+              <RootLayoutContent />
+            </FontSizeProvider>
           </AppThemeProvider>
         </SessionProvider>
       </DependenciesProvider>
