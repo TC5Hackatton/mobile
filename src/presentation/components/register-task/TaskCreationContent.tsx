@@ -9,10 +9,12 @@ import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -79,7 +81,7 @@ export default function TaskCreationContent() {
             style={[styles.textArea, { backgroundColor: colors.surface }]}
           />
 
-          <Text style={[styles.labelSection, { color: colors.text }]}>Tempo da Tarefa</Text>
+          <Text style={[styles.labelSection, { color: colors.text, fontSize: fontSize.md }]}>Tempo da Tarefa</Text>
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[
@@ -88,10 +90,7 @@ export default function TaskCreationContent() {
                 timeType === 'cronometro' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text
-                style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>
-                Cronômetro
-              </Text>
+              <Text style={[styles.tabText, { color: colors.text, fontSize: fontSize.md }, timeType === 'cronometro' && { color: colors.text }]}>Cronômetro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -101,15 +100,13 @@ export default function TaskCreationContent() {
                 timeType === 'fixo' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('fixo')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'fixo' && { color: colors.white }]}>
-                Tempo fixo
-              </Text>
+              <Text style={[styles.tabText, { color: colors.text, fontSize: fontSize.md }, timeType === 'fixo' && { color: colors.white }]}>Tempo fixo</Text>
             </TouchableOpacity>
           </View>
 
           {timeType === 'cronometro' ? (
             <View style={styles.timerWrapper}>
-              <Text style={[styles.timerDisplay, { color: colors.text }]}>00:00:00</Text>
+              <Text style={[styles.timerDisplay, { color: colors.text, fontSize: fontSize.xxxl }]}>00:00:00</Text>
             </View>
           ) : (
             <View style={styles.fixedTimeList}>
@@ -122,14 +119,7 @@ export default function TaskCreationContent() {
                     selectedTime === time && { backgroundColor: colors.tertiary },
                   ]}
                   onPress={() => setSelectedTime(time)}>
-                  <Text
-                    style={[
-                      styles.timeOptionText,
-                      { color: colors.text },
-                      selectedTime === time && { color: colors.white },
-                    ]}>
-                    {time}
-                  </Text>
+                  <Text style={[styles.timeOptionText, { color: colors.text, fontSize: fontSize.md }, selectedTime === time && { color: colors.white }]}>{time}</Text>
                 </TouchableOpacity>
               ))}
             </View>

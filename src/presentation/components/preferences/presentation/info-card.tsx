@@ -5,9 +5,11 @@ import { Card, Text } from 'react-native-paper';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 export function InfoCard() {
   const colors = useThemeColors();
+  const { fontSize, lineHeight } = useFontSize();
 
   return (
     <Card style={[styles.card, { backgroundColor: colors.secondary }]} mode="elevated">
@@ -16,13 +18,13 @@ export function InfoCard() {
         <View style={styles.textContainer}>
           <Text
             variant="titleMedium"
-            style={styles.title}
+            style={[styles.title, { fontSize: fontSize.md }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Configurações pensadas para você
           </Text>
           <Text
             variant="bodySmall"
-            style={styles.description}
+            style={[styles.description, { fontSize: fontSize.sm, lineHeight: lineHeight.sm }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Ajuste conforme sua necessidade. Não existe 'jeito certo' - o que funciona para você é o melhor.
           </Text>
@@ -50,13 +52,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: typography.fontSize.md,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.xs,
   },
   description: {
-    fontSize: typography.fontSize.sm,
+    // fontSize e lineHeight definidos dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
-    lineHeight: typography.lineHeight.sm,
   },
 });

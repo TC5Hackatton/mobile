@@ -4,6 +4,7 @@ import { Badge, Card, Text } from 'react-native-paper';
 
 import { Task, TaskStatus } from '@/src/domain';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 import { ContentCard } from '../../shared/content-card';
 import { TaskWithLabel } from '../smart/TasksContent';
@@ -24,6 +25,7 @@ type TaskListCardProps = {
 
 export default function TasksListCard({ tasks, status, onPressStart, onPressFinish, onPressPause }: TaskListCardProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const statusVisualProperties = useMemo(() => {
     if (status === TaskStatus.TODO) {
@@ -43,7 +45,7 @@ export default function TasksListCard({ tasks, status, onPressStart, onPressFini
         <Badge testID="status-badge" size={30} style={{ backgroundColor: statusVisualProperties.color }}>
           {tasks.length}
         </Badge>
-        <Text variant="titleLarge" style={{ color: colors.text }}>
+        <Text variant="titleLarge" style={{ color: colors.text, fontSize: fontSize.md }}>
           {statusVisualProperties.label}
         </Text>
       </View>

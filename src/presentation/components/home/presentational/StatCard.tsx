@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface StatCardProps {
@@ -15,6 +16,7 @@ interface StatCardProps {
 
 export default function StatCard({ icon, iconColor, value, label }: StatCardProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   return (
     <View testID="stat-card" style={[styles.container, { backgroundColor: colors.surfaceVariant }]}>
@@ -22,14 +24,14 @@ export default function StatCard({ icon, iconColor, value, label }: StatCardProp
       <Text
         testID="stat-card-value"
         variant="headlineMedium"
-        style={styles.value}
+        style={[styles.value, { fontSize: fontSize.xl }]}
         theme={{ colors: { onSurface: colors.text } }}>
         {value}
       </Text>
       <Text
         testID="stat-card-label"
         variant="bodySmall"
-        style={styles.label}
+        style={[styles.label, { fontSize: fontSize.sm }]}
         theme={{ colors: { onSurface: colors.textSecondary } }}>
         {label}
       </Text>
@@ -45,13 +47,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   value: {
-    fontSize: typography.fontSize.xl,
     fontFamily: typography.fontFamily.semiBold,
     marginTop: spacing.sm,
     marginBottom: spacing.xs,
   },
   label: {
-    fontSize: typography.fontSize.sm,
     textAlign: 'center',
   },
 });
