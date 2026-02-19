@@ -4,19 +4,25 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
-import { typography } from '@/src/presentation/constants/typography';
+import { typography, type FontSizeScale } from '@/src/presentation/constants/typography';
+import { useFontSizeContext } from '@/src/presentation/contexts/FontSizeContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
-
-type FontSize = 'P' | 'M' | 'G';
 
 export function AppearanceSection() {
   const colors = useThemeColors();
   const { isDark, setTheme } = useTheme();
-  const [fontSize, setFontSize] = useState<FontSize>('M');
-
+  const { fontSizeScale, setFontSizeScale } = useFontSizeContext();
+  const { fontSize } = useFontSize();
+  const [highContrast, setHighContrast] = useState(false);
+  
   const handleThemeToggle = () => {
     setTheme(isDark ? 'light' : 'dark');
+  };
+
+  const handleFontSizeChange = (size: FontSizeScale) => {
+    setFontSizeScale(size);
   };
 
   return (
@@ -28,19 +34,25 @@ export function AppearanceSection() {
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="brightness-3" size={24} color={colors.text} />
-          <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
+          <Text 
+            variant="titleLarge" 
+            style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+            theme={{ colors: { onSurface: colors.text } }}>
             Aparência
           </Text>
         </View>
 
         <View style={styles.item}>
           <View style={styles.itemContent}>
-            <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
+            <Text 
+              variant="titleMedium" 
+              style={[styles.itemTitle, { fontSize: fontSize.md }]}
+              theme={{ colors: { onSurface: colors.text } }}>
               Modo Escuro
             </Text>
-            <Text
-              variant="bodySmall"
-              style={styles.itemSubtitle}
+            <Text 
+              variant="bodySmall" 
+              style={[styles.itemSubtitle, { fontSize: fontSize.sm }]}
               theme={{ colors: { onSurface: colors.textSecondary } }}>
               Reduz luz da tela
             </Text>
@@ -49,26 +61,29 @@ export function AppearanceSection() {
         </View>
 
         <View style={styles.fontSizeContainer}>
-          <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
+          <Text variant="titleMedium" style={[styles.itemTitle, { fontSize: fontSize.md }]} theme={{ colors: { onSurface: colors.text } }}>
             Tamanho da Fonte
           </Text>
           <View style={styles.fontSizeButtons}>
-            {(['P', 'M', 'G'] as FontSize[]).map((size) => (
+            {(['P', 'M', 'G'] as FontSizeScale[]).map((size) => (
               <TouchableOpacity
                 key={size}
                 style={[
                   styles.fontSizeButton,
                   { backgroundColor: colors.surfaceVariant },
-                  fontSize === size && { backgroundColor: colors.primary },
+                  fontSizeScale === size && { backgroundColor: colors.primary },
                 ]}
-                onPress={() => setFontSize(size)}
+                onPress={() => handleFontSizeChange(size)}
                 accessibilityRole="button"
                 accessibilityLabel={`Tamanho ${size === 'P' ? 'Pequeno' : size === 'M' ? 'Médio' : 'Grande'}`}>
                 <Text
                   style={[
                     styles.fontSizeButtonText,
-                    { color: colors.textSecondary },
-                    fontSize === size && { color: colors.white },
+                    { 
+                      color: colors.textSecondary,
+                      fontSize: fontSize.md,
+                    },
+                    fontSizeScale === size && { color: colors.white },
                   ]}>
                   {size}
                 </Text>
@@ -97,7 +112,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
     fontFamily: typography.fontFamily.bold,
   },
   item: {
@@ -110,12 +124,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemTitle: {
-    fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   itemSubtitle: {
-    fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.regular,
   },
   fontSizeContainer: {
@@ -135,7 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fontSizeButtonText: {
-    fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
   },
 });

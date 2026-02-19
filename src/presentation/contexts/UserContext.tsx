@@ -15,7 +15,7 @@ const UserContext = createContext<UserUseCases | null>(null);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { authRepository, sessionRepository } = useDependencies();
 
-  const userUseCases = useMemo<UserUseCases>(
+  const useCases = useMemo<UserUseCases>(
     () => ({
       signUpUseCase: new SignUpUseCase(authRepository),
       signInUseCase: new SignInUseCase(authRepository, sessionRepository),
@@ -24,7 +24,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     [authRepository, sessionRepository],
   );
 
-  return <UserContext.Provider value={userUseCases}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={useCases}>{children}</UserContext.Provider>;
 }
 
 // Custom hook to use auth dependencies
