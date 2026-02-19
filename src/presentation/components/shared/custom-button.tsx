@@ -2,6 +2,7 @@ import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-nat
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface CustomButtonProps {
@@ -26,6 +27,7 @@ export function CustomButton({
   accessibilityHint,
 }: CustomButtonProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   
   const getButtonStyle = () => {
     if (variant === 'primary') {
@@ -53,7 +55,7 @@ export function CustomButton({
       {loading ? (
         <ActivityIndicator color={colors.white} />
       ) : (
-        <Text style={[styles.buttonText, { color: colors.white }]}>{label}</Text>
+        <Text style={[styles.buttonText, { color: colors.white, fontSize: fontSize.md }]}>{label}</Text>
       )}
     </TouchableOpacity>
   );
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontSize: typography.fontSize.md,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
   },
 });

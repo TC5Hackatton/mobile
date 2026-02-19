@@ -11,10 +11,12 @@ import { CustomTextInput } from '@/src/presentation/components/shared/custom-tex
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { useUser } from '@/src/presentation/contexts/UserContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 export default function ForgotPasswordContent() {
   const { forgotPasswordUseCase } = useUser();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const {
     control,
@@ -62,12 +64,12 @@ export default function ForgotPasswordContent() {
               accessibilityHint="Volta para a tela anterior">
               <IconButton icon="chevron-left" iconColor={colors.tertiary} size={24} />
             </TouchableOpacity>
-            <Text style={[styles.headerTitle, { color: colors.text }]}>Esqueceu sua senha?</Text>
+            <Text style={[styles.headerTitle, { color: colors.text, fontSize: fontSize.xl }]}>Esqueceu sua senha?</Text>
           </View>
 
           <LoginLogo />
 
-          <Text style={[styles.tagline, { color: colors.text }]}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
+          <Text style={[styles.tagline, { color: colors.text, fontSize: fontSize.xl }]}>Utilize esta tela para enviar um link de redefinição de senha.</Text>
 
           <View style={styles.formContainer}>
             <CustomTextInput
@@ -84,7 +86,7 @@ export default function ForgotPasswordContent() {
             />
             {errors.email && (
               <View style={styles.errorContainer}>
-                <Text style={[styles.errorText, { color: colors.error }]}>{errors.email.message}</Text>
+                <Text style={[styles.errorText, { color: colors.error, fontSize: fontSize.xs }]}>{errors.email.message}</Text>
               </View>
             )}
 
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   headerTitle: {
-    fontSize: 20,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_600SemiBold',
     marginLeft: 8,
   },
@@ -142,11 +144,11 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   errorText: {
-    fontSize: 12,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_400Regular',
   },
   tagline: {
-    fontSize: 24,
+    // fontSize definido dinamicamente via useFontSize hook
     maxWidth: '95%',
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',

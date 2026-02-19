@@ -9,6 +9,7 @@ import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { useSession } from '@/src/presentation/contexts/SessionContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { IconSymbol } from './icon-symbol';
 
 interface AppHeaderProps {
@@ -20,6 +21,7 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
   const { logger } = useDependencies();
   const { clearSession } = useSession();
   const { isDark, toggleTheme } = useTheme();
+  const { fontSize } = useFontSize();
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -39,10 +41,12 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
 
   const handleLogout = useCallback(async () => {
     setMenuVisible(false);
+    logger.log('Logout pressed');
     await clearSession();
     router.replace('/sign-in');
   }, [logger, clearSession]);
 
+  // Cores dinâmicas baseadas no tema
   const backgroundColor = isDark ? customColors.darkNavy : customColors.white;
   const titleColor = isDark
     ? showBackButton
@@ -70,7 +74,11 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
       </View>
 
       <Text
-        style={[styles.title, showBackButton && styles.titleWithBack, { color: titleColor }]}
+        style={[
+          styles.title,
+          showBackButton && styles.titleWithBack,
+          { color: titleColor, fontSize: showBackButton ? fontSize.lg : fontSize.xl },
+        ]}
         accessibilityRole="header">
         {title}
       </Text>
@@ -136,13 +144,13 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   title: {
-    fontSize: typography.fontSize.xl,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     flex: 1,
   },
   titleWithBack: {
     textAlign: 'center',
-    fontSize: typography.fontSize.lg,
+    // fontSize definido dinamicamente via useFontSize hook
   },
   rightSection: {
     flexDirection: 'row',

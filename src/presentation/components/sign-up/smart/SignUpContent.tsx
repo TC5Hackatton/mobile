@@ -11,11 +11,13 @@ import { CustomTextInput } from '@/src/presentation/components/shared/custom-tex
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { useUser } from '@/src/presentation/contexts/UserContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { signUpSchema, type SignUpFormData } from './sign-up-schema';
 
 export default function SignUpContent() {
   const { signUpUseCase } = useUser();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const {
     control,
@@ -77,7 +79,7 @@ export default function SignUpContent() {
               accessibilityHint="Volta para a tela anterior">
               <IconButton icon="chevron-left" iconColor={colors.tertiary} size={24} />
             </TouchableOpacity>
-            <Text style={[styles.headerTitle, { color: colors.text }]}>Cadastre-se</Text>
+            <Text style={[styles.headerTitle, { color: colors.text, fontSize: fontSize.xl }]}>Cadastre-se</Text>
           </View>
 
           <LoginLogo />
@@ -98,7 +100,7 @@ export default function SignUpContent() {
               />
               {errors.email && (
                 <View style={styles.errorContainer}>
-                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.email.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error, fontSize: fontSize.xs }]}>{errors.email.message}</Text>
                 </View>
               )}
             </View>
@@ -117,7 +119,7 @@ export default function SignUpContent() {
               />
               {errors.password && (
                 <View style={styles.errorContainer}>
-                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.password.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error, fontSize: fontSize.xs }]}>{errors.password.message}</Text>
                 </View>
               )}
             </View>
@@ -136,7 +138,7 @@ export default function SignUpContent() {
               />
               {errors.confirmPassword && (
                 <View style={styles.errorContainer}>
-                  <Text style={[styles.errorText, { color: colors.error }]}>{errors.confirmPassword.message}</Text>
+                  <Text style={[styles.errorText, { color: colors.error, fontSize: fontSize.xs }]}>{errors.confirmPassword.message}</Text>
                 </View>
               )}
             </View>
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   headerTitle: {
-    fontSize: 20,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_600SemiBold',
     marginLeft: 8,
   },
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   errorText: {
-    fontSize: 12,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_400Regular',
   },
 });

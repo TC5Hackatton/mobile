@@ -5,6 +5,7 @@ import { Card, Text } from 'react-native-paper';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { ToggleLine } from './ToggleLine';
 
 interface ToggleItem {
@@ -23,6 +24,7 @@ interface ToggleOnlyCardProps {
 
 export function ToggleOnlyCard({ title, icon, items, cardStyle }: ToggleOnlyCardProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   
   return (
     <Card 
@@ -35,7 +37,7 @@ export function ToggleOnlyCard({ title, icon, items, cardStyle }: ToggleOnlyCard
           <MaterialIcons name={icon} size={24} color={colors.text} />
           <Text 
             variant="titleLarge" 
-            style={styles.sectionTitle}
+            style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
             theme={{ colors: { onSurface: colors.text } }}>
             {title}
           </Text>
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
     flex: 1,
   },

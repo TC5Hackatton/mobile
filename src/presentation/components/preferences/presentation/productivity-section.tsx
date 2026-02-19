@@ -6,11 +6,13 @@ import { Card, Switch, Text } from 'react-native-paper';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
 
 export function ProductivitySection() {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
   const [highContrast, setHighContrast] = useState(false);
 
@@ -25,7 +27,7 @@ export function ProductivitySection() {
           <MaterialIcons name="access-time" size={24} color={colors.text} />
           <Text 
             variant="titleLarge" 
-            style={styles.sectionTitle}
+            style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Tempo e Produtividade
           </Text>
@@ -34,7 +36,7 @@ export function ProductivitySection() {
         <View style={styles.pomodoroContainer}>
           <Text 
             variant="titleMedium" 
-            style={styles.itemTitle}
+            style={[styles.itemTitle, { fontSize: fontSize.md }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Pomodoro Padrão
           </Text>
@@ -53,7 +55,7 @@ export function ProductivitySection() {
                 <Text
                   style={[
                     styles.pomodoroButtonText,
-                    { color: colors.textSecondary },
+                    { color: colors.textSecondary, fontSize: fontSize.sm },
                     pomodoroTime === time && { color: colors.white },
                   ]}>
                   {time}
@@ -67,13 +69,13 @@ export function ProductivitySection() {
           <View style={styles.itemContent}>
             <Text 
               variant="titleMedium" 
-              style={styles.itemTitle}
+              style={[styles.itemTitle, { fontSize: fontSize.md }]}
               theme={{ colors: { onSurface: colors.text } }}>
               Alto Contraste
             </Text>
             <Text 
               variant="bodySmall" 
-              style={styles.itemSubtitle}
+              style={[styles.itemSubtitle, { fontSize: fontSize.sm }]}
               theme={{ colors: { onSurface: colors.textSecondary } }}>
               Para melhor legibilidade
             </Text>
@@ -102,14 +104,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
   },
   pomodoroContainer: {
     marginTop: spacing.md,
   },
   itemTitle: {
-    fontSize: typography.fontSize.md,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.sm,
   },
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pomodoroButtonText: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
   },
   item: {
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemSubtitle: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
   },
 });
