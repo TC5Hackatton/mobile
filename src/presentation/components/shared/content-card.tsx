@@ -18,7 +18,7 @@ export function ContentCard({
   accessibilityRole = 'none',
 }: ContentCardProps) {
   const colors = useThemeColors();
-  
+
   return (
     <View
       style={[styles.container, { backgroundColor: colors.surface }, style]}
@@ -45,6 +45,5 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    // Card vazio por padrão
   },
 });
