@@ -6,13 +6,18 @@ import { Task } from '@/src/domain';
 import { spacing } from '@/src/presentation/constants';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import OldestEmptyCard from './OldestEmptyCard';
 
 type OldestTaskCardProps = {
-  task: Task;
+  task: Task | null;
 };
 
 export default function OldestTaskCard({ task }: OldestTaskCardProps) {
   const colors = useThemeColors();
+
+  if (!task) {
+    return <OldestEmptyCard />;
+  }
 
   return (
     <View style={[styles.innerCard, { backgroundColor: colors.surfaceVariant }]}>

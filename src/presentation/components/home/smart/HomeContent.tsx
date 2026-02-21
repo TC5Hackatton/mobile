@@ -1,14 +1,16 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Task, TaskStatus, TimeType } from '@/src/domain';
+import { Task } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import OldestTaskCard from '../presentational/OldestTaskCard';
 
@@ -18,18 +20,6 @@ const mockData = {
     timeWorked: '45 min',
     pomodoroSessions: 2,
   },
-  // TODO: remover e trocar pela tarefa mais antiga retornada pelo Firebase
-  priorityTask: Task.create(
-    'Estudar React',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus convallis non orci id cursus. Integer non iaculis magna. Duis ultricies, lorem quis pulvinar vulputate, erat mauris egestas sem.',
-    TimeType.TEMPO_FIXO,
-    60,
-    0,
-    TaskStatus.TODO,
-    new Date(),
-    'asdasdasdasda',
-    'user-1',
-  ),
   weekly: {
     progress: 0.67,
     tasksCompleted: 15,
@@ -41,6 +31,15 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
+  const { fetchOldestTodoStatusUseCase } = useTask();
+
+  const [oldestTask, setOldestTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    fetchOldestTodoStatusUseCase.execute().then((task) => {
+      setOldestTask(task);
+    });
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -118,7 +117,7 @@ export default function HomeContent() {
                   Tarefa Mais Antiga
                 </Text>
 
-                <OldestTaskCard task={mockData.priorityTask} />
+                <OldestTaskCard task={oldestTask} />
               </Card.Content>
             </Card>
           </View>

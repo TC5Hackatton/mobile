@@ -2,8 +2,8 @@ import firebaseConfig from '@/firebaseConfig';
 import { CreateTaskDTO } from '@/src/data';
 import { ResponseTaskDTO } from '@/src/data/dtos/task/ResponseTaskDTO';
 import { TaskMapper } from '@/src/data/mappers/task/TaskMapper';
-import { Task, TaskRepository } from '@/src/domain';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { Task, TaskRepository, TaskStatus } from '@/src/domain';
+import { addDoc, collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
 
 export class FirebaseTaskRepository implements TaskRepository {
   async fetchAll(): Promise<Task[]> {
@@ -17,15 +17,25 @@ export class FirebaseTaskRepository implements TaskRepository {
     return tasks;
   }
 
-  async createTask(dto: CreateTaskDTO, uid: string): Promise<Task> {
+  async fetchOldestTodoStatus(): Promise<Task | null> {
+    // Note: interesting enough, to be able to perform this query, we need to create an index in Firebase
+    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), where('status', '==', TaskStatus.TODO), orderBy("createdAt", "asc"), limit(1));
+    const querySnapshot = await getDocs(builtQuery);
+
+    if (!querySnapshot.empty) {
+      const oldestDoc = querySnapshot.docs[0];
+      return TaskMapper.fromDtoToDomain({ ...oldestDoc.data(), id: oldestDoc.id, createdAt: oldestDoc.data()?.createdAt?.toDate() } as ResponseTaskDTO);
+    } else {
+      return null;
+    }
+  }
+
+  async createTask(dto: CreateTaskDTO, uid: string): Promise<void> {
     if (!dto.title || !dto.description || !dto.timeType) {
       throw new Error('Por favor, preencha todos os campos!');
     }
 
     const response = await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
-    // TODO: clean and adapt the return
-    console.log('## CL ## response', response);
-
-    return null as unknown as Task;
+    console.log('## CL ## New Task ID', response.id);
   }
 }
