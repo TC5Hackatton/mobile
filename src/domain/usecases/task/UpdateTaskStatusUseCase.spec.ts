@@ -87,4 +87,21 @@ describe('UpdateTaskStatusUseCase', () => {
       })
     );
   });
+
+  it('should round timeSpend to 2 decimal places when leaving DOING state', async () => {
+    const startTime = new Date(2024, 0, 1, 12, 0, 0);
+    const task = Task.create('Title', 'Desc', TimeType.CRONOMETRO, 100, 10, TaskStatus.DOING, new Date(), 'id', 'uid', startTime);
+
+    // 13 seconds = 0.21666666666666667 minutes -> should be 10.22 after rounding
+    const finishTime = new Date(2024, 0, 1, 12, 0, 13);
+    jest.setSystemTime(finishTime);
+
+    await updateTaskStatusUseCase.execute(task, TaskStatus.DONE);
+
+    expect(mockTaskRepository.updateTask).toHaveBeenCalledWith(
+      expect.objectContaining({
+        timeSpend: 10.22,
+      })
+    );
+  });
 });
