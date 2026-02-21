@@ -120,4 +120,47 @@ describe('Task Entity', () => {
     expect(doingTask.status).toBe(TaskStatus.DOING);
     expect(doneTask.status).toBe(TaskStatus.DONE);
   });
+
+  describe('getters', () => {
+    it('should return correct statusLabel', () => {
+      const todoTask = Task.create('Task 1', 'Desc', TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
+      const doingTask = Task.create('Task 2', 'Desc', TimeType.CRONOMETRO, 60, 30, TaskStatus.DOING, date);
+      const doneTask = Task.create('Task 3', 'Desc', TimeType.CRONOMETRO, 60, 60, TaskStatus.DONE, date);
+
+      expect(todoTask.statusLabel).toBe('A Fazer');
+      expect(doingTask.statusLabel).toBe('Em Andamento');
+      expect(doneTask.statusLabel).toBe('Concluído');
+    });
+
+    it('should return correct createdAtLabel', () => {
+      const fixedDate = new Date(2024, 0, 1);
+      const task = Task.create('Task 1', 'Desc', TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, fixedDate);
+
+      expect(task.createdAtLabel).toBe(fixedDate.toLocaleDateString());
+    });
+
+    describe('shortDescription', () => {
+      it('should return full description if length is within limit (20 chars)', () => {
+        const description = 'Short description';
+        const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
+
+        expect(task.shortDescription).toBe(description);
+      });
+
+      it('should return truncated description if length exceeds limit', () => {
+        const description = 'This is a very long description that exceeds twenty characters';
+        const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
+
+        const expected = description.substring(0, 20) + '...';
+        expect(task.shortDescription).toBe(expected);
+      });
+
+      it('should return full description if length is exactly 20 characters', () => {
+        const description = '12345678901234567890'; // 20 chars
+        const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
+
+        expect(task.shortDescription).toBe(description);
+      });
+    });
+  });
 });

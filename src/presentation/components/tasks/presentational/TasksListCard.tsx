@@ -21,7 +21,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
     }
 
     if (status === TaskStatus.DOING) {
-      return { color: colors.yellow, label: 'Fazendo' };
+      return { color: colors.yellow, label: 'Em Andamento' };
     }
 
     return { color: colors.secondary, label: 'Concluído' };
@@ -34,7 +34,9 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   return (
     <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
-        <Badge size={30} style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
+        <Badge size={30} style={{ backgroundColor: statusVisualProperties.color }}>
+          {tasks.length}
+        </Badge>
         <Text style={{ color: colors.text }}>{statusVisualProperties.label}</Text>
       </View>
 
@@ -45,14 +47,10 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
             style={[styles.taskCard, { backgroundColor: colors.surfaceVariant }]}
             theme={{ colors: { surface: colors.surfaceVariant } }}>
             <Card.Content>
-              <Text
-                variant="titleSmall"
-                theme={{ colors: { onSurface: colors.text } }}>
-                {task.title} - {task.createdAt?.toLocaleDateString()}
+              <Text variant="titleSmall" theme={{ colors: { onSurface: colors.text } }}>
+                {task.title} - {task.createdAtLabel}
               </Text>
-              <Text
-                variant="bodyMedium"
-                theme={{ colors: { onSurface: colors.textSecondary } }}>
+              <Text variant="bodyMedium" theme={{ colors: { onSurface: colors.textSecondary } }}>
                 {task.description}
               </Text>
             </Card.Content>

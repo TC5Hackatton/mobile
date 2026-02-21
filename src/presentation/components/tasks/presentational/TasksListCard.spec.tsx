@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { Task, TaskStatus } from '@/src/domain';
+import { Task, TaskStatus, TimeType } from '@/src/domain';
 
 jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   useThemeColors: jest.fn(),
@@ -10,18 +10,30 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
 jest.mock('../../shared/content-card', () => ({
   ContentCard: ({ children, style }: any) => {
     const { View } = require('react-native');
-    return <View testID="content-card" style={style}>{children}</View>;
+    return (
+      <View testID="content-card" style={style}>
+        {children}
+      </View>
+    );
   },
 }));
 
 jest.mock('react-native-paper', () => ({
   Badge: ({ children, style, size }: any) => {
     const { Text } = require('react-native');
-    return <Text testID="badge" style={style}>{children}</Text>;
+    return (
+      <Text testID="badge" style={style}>
+        {children}
+      </Text>
+    );
   },
   Card: ({ children, style, theme }: any) => {
     const { View } = require('react-native');
-    return <View testID="task-card" style={style}>{children}</View>;
+    return (
+      <View testID="task-card" style={style}>
+        {children}
+      </View>
+    );
   },
   Text: ({ children, theme, variant }: any) => {
     const { Text: RNText } = require('react-native');
@@ -49,7 +61,7 @@ const mockColors = {
 } as any;
 
 const createTask = (id: string, status: TaskStatus): Task =>
-  Task.create('Task ' + id, 'Description ' + id, 'FIXED' as any, 60, 0, status, id, 'user-1');
+  Task.create('Task ' + id, 'Description ' + id, TimeType.TEMPO_FIXO, 60, 0, status, new Date(), id, 'user-1');
 
 describe('TasksListCard', () => {
   beforeEach(() => {
@@ -70,8 +82,8 @@ describe('TasksListCard', () => {
     render(<TasksListCard tasks={tasks} status={TaskStatus.TODO} />);
 
     expect(screen.getAllByTestId('task-card')).toHaveLength(2);
-    expect(screen.getByText('Task 1')).toBeTruthy();
-    expect(screen.getByText('Description 1')).toBeTruthy();
+    expect(screen.getByText(/Task 1/)).toBeTruthy();
+    expect(screen.getByText(/Description 1/)).toBeTruthy();
   });
 
   it('should display the correct task count in the badge', () => {
@@ -90,9 +102,9 @@ describe('TasksListCard', () => {
     render(<TasksListCard tasks={tasks} status={TaskStatus.TODO} />);
 
     expect(screen.getAllByTestId('task-card')).toHaveLength(3);
-    expect(screen.getByText('Task 1')).toBeTruthy();
-    expect(screen.getByText('Task 2')).toBeTruthy();
-    expect(screen.getByText('Task 3')).toBeTruthy();
+    expect(screen.getByText(/Task 1/)).toBeTruthy();
+    expect(screen.getByText(/Task 2/)).toBeTruthy();
+    expect(screen.getByText(/Task 3/)).toBeTruthy();
   });
 
   describe('status label and badge color', () => {
@@ -105,10 +117,10 @@ describe('TasksListCard', () => {
       );
     });
 
-    it('should display "Fazendo" label with yellow color for DOING status', () => {
+    it('should display "Em Andamento" label with yellow color for DOING status', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.DOING)]} status={TaskStatus.DOING} />);
 
-      expect(screen.getByText('Fazendo')).toBeTruthy();
+      expect(screen.getByText('Em Andamento')).toBeTruthy();
       expect(screen.getByTestId('badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.yellow }),
       );
