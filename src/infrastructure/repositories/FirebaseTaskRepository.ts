@@ -7,7 +7,8 @@ import { addDoc, collection, getDocs, limit, orderBy, query, where } from 'fireb
 
 export class FirebaseTaskRepository implements TaskRepository {
   async fetchAll(): Promise<Task[]> {
-    const querySnapshot = await getDocs(collection(firebaseConfig.db, 'tasks'));
+    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(builtQuery);
 
     const tasks: Task[] = [];
     querySnapshot.forEach((doc) => {
