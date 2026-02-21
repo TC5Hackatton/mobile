@@ -1,28 +1,23 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Task } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-// Dados mockados
 const mockData = {
   daily: {
     tasksCompleted: { current: 3, total: 8 },
     timeWorked: '45 min',
     pomodoroSessions: 2,
-  },
-  priorityTask: {
-    title: 'Estudar React',
-    status: 'A Fazer',
-    time: '25 min',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus convallis non orci id cursus. Integer non iaculis magna. Duis ultricies, lorem quis pulvinar vulputate, erat mauris egestas sem.',
   },
   weekly: {
     progress: 0.67,
@@ -35,6 +30,15 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
+  const { fetchOldestTodoStatusUseCase } = useTask();
+
+  const [oldestTask, setOldestTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    fetchOldestTodoStatusUseCase.execute().then((task) => {
+      setOldestTask(task);
+    });
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -44,7 +48,6 @@ export default function HomeContent() {
         <ScrollView
           style={[styles.scrollView, { backgroundColor: colors.background }]}
           contentContainerStyle={styles.scrollContent}>
-          {/* Cards de Resumo Diário */}
           <View style={styles.dailyCardsContainer}>
             <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
@@ -83,9 +86,27 @@ export default function HomeContent() {
                 </Text>
               </Card.Content>
             </Card>
+
+            <Card
+              style={[styles.dailyCard, { backgroundColor: colors.surface }]}
+              theme={{ colors: { surface: colors.surface } }}>
+              <Card.Content style={styles.dailyCardContent}>
+                <Text
+                  variant="headlineLarge"
+                  style={styles.dailyCardValue}
+                  theme={{ colors: { onSurface: colors.coral } }}>
+                  {mockData.daily.pomodoroSessions}
+                </Text>
+                <Text
+                  variant="bodySmall"
+                  style={styles.dailyCardLabel}
+                  theme={{ colors: { onSurface: colors.textSecondary } }}>
+                  Sessões Pomodoro
+                </Text>
+              </Card.Content>
+            </Card>
           </View>
 
-          {/* Seção Tarefas Prioritárias */}
           <View style={styles.section}>
             <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
@@ -136,7 +157,6 @@ export default function HomeContent() {
             </Card>
           </View>
 
-          {/* Seção Progresso Semanal */}
           <View style={styles.section}>
             <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
@@ -319,42 +339,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     width: '48%',
-  },
-  priorityTaskHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.sm,
-  },
-  priorityTaskTitle: {
-    fontSize: typography.fontSize.md,
-    fontFamily: typography.fontFamily.semiBold,
-    flex: 1,
-  },
-  priorityTaskMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  priorityTaskTime: {
-    fontSize: typography.fontSize.sm,
-  },
-  priorityTaskTagContainer: {
-    marginBottom: spacing.md,
-  },
-  priorityTaskTag: {
-    borderRadius: 16,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    alignSelf: 'flex-start',
-  },
-  priorityTaskTagText: {
-    fontSize: typography.fontSize.xs,
-    fontFamily: typography.fontFamily.medium,
-  },
-  priorityTaskDescription: {
-    fontSize: typography.fontSize.sm,
-    lineHeight: typography.lineHeight.sm,
   },
   progressBarContainer: {
     height: 16,

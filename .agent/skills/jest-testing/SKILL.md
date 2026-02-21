@@ -19,7 +19,7 @@ This skill document captures best practices and common patterns for writing effe
 // ❌ DON'T: Unnecessary nested describe when there's only one method
 describe('MyUseCase', () => {
   beforeEach(() => { /* setup */ });
-  
+
   describe('execute', () => {  // ← Unnecessary nesting
     it('should do something', () => {});
   });
@@ -28,7 +28,7 @@ describe('MyUseCase', () => {
 // ✅ DO: Keep it flat when testing a single method
 describe('MyUseCase', () => {
   beforeEach(() => { /* setup */ });
-  
+
   it('should do something', () => {});
   it('should handle errors', () => {});
 });
@@ -168,10 +168,10 @@ describe('SignInUseCase', () => {
   // Null/undefined
   it('should throw error when email is null', () => {});
   it('should throw error when email is undefined', () => {});
-  
+
   // Empty strings
   it('should throw error when email is empty string', () => {});
-  
+
   // Error propagation
   it('should propagate errors from repository', async () => {});
 });
@@ -225,7 +225,7 @@ describe('CreateTaskUseCase', () => {
   // 1. Mock all dependencies (repositories)
   let mockAuthRepo: jest.Mocked<AuthRepository>;
   let mockTaskRepo: jest.Mocked<TaskRepository>;
-  
+
   beforeEach(() => {
     // 2. Setup fresh mocks for each test
     mockAuthRepo = { /* all methods */ };
@@ -236,10 +236,10 @@ describe('CreateTaskUseCase', () => {
   it('should validate user before creating task', async () => {
     // Arrange: Setup mock responses
     mockAuthRepo.getCurrentUser.mockResolvedValue(mockUser);
-    
+
     // Act: Execute use case
     await useCase.execute(taskDTO);
-    
+
     // Assert: Verify behavior
     expect(mockAuthRepo.getCurrentUser).toHaveBeenCalled();
     expect(mockTaskRepo.createTask).toHaveBeenCalledWith(taskDTO, mockUser.uid);
@@ -248,7 +248,7 @@ describe('CreateTaskUseCase', () => {
   // 4. Test error scenarios
   it('should throw error when user is missing', async () => {
     mockAuthRepo.getCurrentUser.mockResolvedValue(null);
-    
+
     await expect(useCase.execute(taskDTO)).rejects.toThrow('User is missing');
     expect(mockTaskRepo.createTask).not.toHaveBeenCalled();
   });
@@ -319,7 +319,7 @@ const mockDTO = {
 // ✅ CORRECT: Match the actual DTO interface
 const mockDTO: CreateTaskDTO = {
   timeType: TimeType.FIXED,  // Correct!
-  timeSpent: 0,
+  timeSpend: 0,
 };
 ```
 

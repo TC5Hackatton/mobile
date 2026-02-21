@@ -1,9 +1,9 @@
 import { TaskRepository } from '../../repositories/TaskRepository';
 
 export class FetchAllTasksUseCase {
-  constructor(private taskRepository: TaskRepository) {}
+  constructor(private taskRepository: TaskRepository) { }
 
   execute() {
-    return this.taskRepository.getAll();
+    return this.taskRepository.fetchAll();
   }
 }

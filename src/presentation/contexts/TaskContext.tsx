@@ -1,9 +1,10 @@
-import { CreateTaskUseCase, FetchAllTasksUseCase } from '@/src/domain';
+import { CreateTaskUseCase, FetchAllTasksUseCase, FetchOldestTodoStatusUseCase } from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
 export interface TaskUseCases {
   fetchAllTasksUseCase: FetchAllTasksUseCase;
+  fetchOldestTodoStatusUseCase: FetchOldestTodoStatusUseCase;
   createTaskUseCase: CreateTaskUseCase;
 }
 
@@ -17,6 +18,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   const taskUseCases = useMemo<TaskUseCases>(
     () => ({
       fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
+      fetchOldestTodoStatusUseCase: new FetchOldestTodoStatusUseCase(taskRepository),
       createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
     }),
     [sessionRepository, taskRepository],

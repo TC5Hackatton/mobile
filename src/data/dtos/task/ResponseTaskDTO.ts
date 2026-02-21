@@ -3,7 +3,9 @@ export interface ResponseTaskDTO {
   title: string;
   description: string;
   timeType: string;
-  timeSpent: number;
+  timeValue?: number;
+  timeSpend: number;
   status: string;
   uid: string;
+  createdAt: Date;
 }

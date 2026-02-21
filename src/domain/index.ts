@@ -17,6 +17,7 @@ export * from './repositories/TaskRepository';
 // Use Cases
 export * from './usecases/task/CreateTaskUseCase';
 export * from './usecases/task/FetchAllTasksUseCase';
+export * from './usecases/task/FetchOldestTodoStatusUseCase';
 export * from './usecases/user/ForgotPasswordUseCase';
 export * from './usecases/user/GetStoredSessionUseCase';
 export * from './usecases/user/SignInUseCase';
