@@ -40,7 +40,6 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
 
   const handleLogout = useCallback(async () => {
     setMenuVisible(false);
-    logger.log('Logout pressed');
     await clearSession();
     router.replace('/sign-in');
   }, [logger, clearSession]);
