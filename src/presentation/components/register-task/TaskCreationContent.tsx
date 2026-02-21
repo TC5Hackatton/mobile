@@ -83,10 +83,10 @@ export default function TaskCreationContent() {
               style={[
                 styles.tabButton,
                 { backgroundColor: colors.surfaceVariant },
-                timeType === 'cronometro' && { backgroundColor: colors.background },
+                timeType === 'cronometro' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.text }]}>Cronômetro</Text>
+              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>Cronômetro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
