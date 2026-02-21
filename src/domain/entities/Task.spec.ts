@@ -18,11 +18,11 @@ describe('Task Entity', () => {
 
     expect(task.title).toBe('Test Task');
     expect(task.description).toBe('Test Description');
-    expect(task.time_type).toBe(TimeType.CRONOMETRO);
-    expect(task.time_value).toBe(60);
-    expect(task.time_spend).toBe(30);
+    expect(task.timeType).toBe(TimeType.CRONOMETRO);
+    expect(task.timeValue).toBe(60);
+    expect(task.timeSpend).toBe(30);
     expect(task.status).toBe(TaskStatus.TODO);
-    expect(task.created_at).toEqual(date);
+    expect(task.createdAt).toEqual(date);
     expect(task.id).toBeUndefined();
     expect(task.uid).toBeUndefined();
   });
@@ -39,7 +39,7 @@ describe('Task Entity', () => {
       'task-123'
     );
 
-    expect(task.created_at).toEqual(date);
+    expect(task.createdAt).toEqual(date);
     expect(task.id).toBe('task-123');
     expect(task.uid).toBeUndefined();
   });
@@ -57,7 +57,7 @@ describe('Task Entity', () => {
       'user-456'
     );
 
-    expect(task.created_at).toEqual(date);
+    expect(task.createdAt).toEqual(date);
     expect(task.id).toBeUndefined();
     expect(task.uid).toBe('user-456');
   });
@@ -77,11 +77,11 @@ describe('Task Entity', () => {
 
     expect(task.title).toBe('Complete Task');
     expect(task.description).toBe('Detailed Description');
-    expect(task.time_type).toBe(TimeType.TEMPO_FIXO);
-    expect(task.time_value).toBe(180);
-    expect(task.time_spend).toBe(180);
+    expect(task.timeType).toBe(TimeType.TEMPO_FIXO);
+    expect(task.timeValue).toBe(180);
+    expect(task.timeSpend).toBe(180);
     expect(task.status).toBe(TaskStatus.DONE);
-    expect(task.created_at).toEqual(date);
+    expect(task.createdAt).toEqual(date);
     expect(task.id).toBe('task-789');
     expect(task.uid).toBe('user-101');
   });
@@ -107,8 +107,8 @@ describe('Task Entity', () => {
       date
     );
 
-    expect(cronometroTask.time_type).toBe(TimeType.CRONOMETRO);
-    expect(tempoFixoTask.time_type).toBe(TimeType.TEMPO_FIXO);
+    expect(cronometroTask.timeType).toBe(TimeType.CRONOMETRO);
+    expect(tempoFixoTask.timeType).toBe(TimeType.TEMPO_FIXO);
   });
 
   it('should create tasks with different statuses', () => {
