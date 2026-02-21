@@ -3,15 +3,21 @@ import { CreateTaskDTO } from '@/src/data';
 import { ResponseTaskDTO } from '@/src/data/dtos/task/ResponseTaskDTO';
 import { TaskMapper } from '@/src/data/mappers/task/TaskMapper';
 import { Task, TaskRepository, TaskStatus } from '@/src/domain';
-import { addDoc, collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore';
 
 export class FirebaseTaskRepository implements TaskRepository {
   async fetchAll(): Promise<Task[]> {
-    const querySnapshot = await getDocs(collection(firebaseConfig.db, 'tasks'));
+    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(builtQuery);
 
     const tasks: Task[] = [];
     querySnapshot.forEach((doc) => {
-      tasks.push(TaskMapper.fromDtoToDomain({ ...doc.data(), id: doc.id, createdAt: doc.data()?.createdAt?.toDate() } as ResponseTaskDTO));
+      tasks.push(TaskMapper.fromDtoToDomain({
+        ...doc.data(),
+        id: doc.id,
+        createdAt: doc.data()?.createdAt?.toDate(),
+        statusChangedAt: doc.data()?.statusChangedAt?.toDate(),
+      } as ResponseTaskDTO));
     });
 
     return tasks;
@@ -24,7 +30,12 @@ export class FirebaseTaskRepository implements TaskRepository {
 
     if (!querySnapshot.empty) {
       const oldestDoc = querySnapshot.docs[0];
-      return TaskMapper.fromDtoToDomain({ ...oldestDoc.data(), id: oldestDoc.id, createdAt: oldestDoc.data()?.createdAt?.toDate() } as ResponseTaskDTO);
+      return TaskMapper.fromDtoToDomain({
+        ...oldestDoc.data(),
+        id: oldestDoc.id,
+        createdAt: oldestDoc.data()?.createdAt?.toDate(),
+        statusChangedAt: oldestDoc.data()?.statusChangedAt?.toDate(),
+      } as ResponseTaskDTO);
     } else {
       return null;
     }
@@ -35,7 +46,17 @@ export class FirebaseTaskRepository implements TaskRepository {
       throw new Error('Por favor, preencha todos os campos!');
     }
 
-    const response = await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
-    console.log('## CL ## New Task ID', response.id);
+    await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
+  }
+
+  async updateTask(task: Task): Promise<void> {
+    if (!task.id) throw new Error('Task ID is required for update');
+
+    const taskRef = doc(firebaseConfig.db, 'tasks', task.id);
+    await updateDoc(taskRef, {
+      status: task.status,
+      timeSpend: task.timeSpend,
+      statusChangedAt: task.statusChangedAt || null,
+    });
   }
 }

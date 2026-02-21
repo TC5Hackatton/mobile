@@ -140,23 +140,23 @@ describe('Task Entity', () => {
     });
 
     describe('shortDescription', () => {
-      it('should return full description if length is within limit (20 chars)', () => {
+      it('should return full description if length is within limit (30 chars)', () => {
         const description = 'Short description';
         const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
 
         expect(task.shortDescription).toBe(description);
       });
 
-      it('should return truncated description if length exceeds limit', () => {
-        const description = 'This is a very long description that exceeds twenty characters';
+      it('should return truncated description if length exceeds limit (30 chars)', () => {
+        const description = 'This is a very long description that exceeds thirty characters';
         const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
 
-        const expected = description.substring(0, 20) + '...';
+        const expected = description.substring(0, 30) + '...';
         expect(task.shortDescription).toBe(expected);
       });
 
-      it('should return full description if length is exactly 20 characters', () => {
-        const description = '12345678901234567890'; // 20 chars
+      it('should return full description if length is exactly 30 characters', () => {
+        const description = '123456789012345678901234567890'; // 30 chars
         const task = Task.create('Task 1', description, TimeType.CRONOMETRO, 60, 0, TaskStatus.TODO, date);
 
         expect(task.shortDescription).toBe(description);

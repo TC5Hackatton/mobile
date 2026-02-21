@@ -19,10 +19,10 @@ jest.mock('../../shared/content-card', () => ({
 }));
 
 jest.mock('react-native-paper', () => ({
-  Badge: ({ children, style, size }: any) => {
+  Badge: ({ children, style, size, testID }: any) => {
     const { Text } = require('react-native');
     return (
-      <Text testID="badge" style={style}>
+      <Text testID={testID || 'badge'} style={style}>
         {children}
       </Text>
     );
@@ -39,6 +39,10 @@ jest.mock('react-native-paper', () => ({
     const { Text: RNText } = require('react-native');
     return <RNText>{children}</RNText>;
   },
+  IconButton: (props: any) => {
+    const { View } = require('react-native');
+    return <View testID="icon-button" {...props} />;
+  },
 }));
 
 const { Card } = require('react-native-paper');
@@ -48,6 +52,7 @@ Card.Content = ({ children }: any) => {
 };
 
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { TaskWithLabel } from '../smart/TasksContent';
 import TasksListCard from './TasksListCard';
 
 const mockUseThemeColors = useThemeColors as jest.MockedFunction<typeof useThemeColors>;
@@ -60,8 +65,26 @@ const mockColors = {
   surfaceVariant: '#FAFBFC',
 } as any;
 
-const createTask = (id: string, status: TaskStatus): Task =>
-  Task.create('Task ' + id, 'Description ' + id, TimeType.TEMPO_FIXO, 60, 0, status, new Date(), id, 'user-1');
+const createTask = (id: string, status: TaskStatus): TaskWithLabel => {
+  const task = Task.create(
+    'Task ' + id,
+    'Description ' + id,
+    TimeType.TEMPO_FIXO,
+    60,
+    0,
+    status,
+    new Date(),
+    id,
+    'user-1',
+  );
+  return {
+    ...task,
+    labels: [],
+    statusLabel: task.statusLabel,
+    createdAtLabel: task.createdAtLabel,
+    shortDescription: task.shortDescription,
+  };
+};
 
 describe('TasksListCard', () => {
   beforeEach(() => {
@@ -72,9 +95,9 @@ describe('TasksListCard', () => {
     jest.clearAllMocks();
   });
 
-  it('should return null when tasks list is empty', () => {
-    const { toJSON } = render(<TasksListCard tasks={[]} status={TaskStatus.TODO} />);
-    expect(toJSON()).toBeNull();
+  it('should render empty list message when tasks list is empty', () => {
+    render(<TasksListCard tasks={[]} status={TaskStatus.TODO} />);
+    expect(screen.getByText(/Nenhuma tarefa a fazer/i)).toBeTruthy();
   });
 
   it('should render a card per task with title and description', () => {
@@ -90,7 +113,7 @@ describe('TasksListCard', () => {
     const tasks = [createTask('1', TaskStatus.TODO), createTask('2', TaskStatus.TODO)];
     render(<TasksListCard tasks={tasks} status={TaskStatus.TODO} />);
 
-    expect(screen.getByTestId('badge').props.children).toBe(2);
+    expect(screen.getByTestId('status-badge').props.children).toBe(2);
   });
 
   it('should render multiple tasks', () => {
@@ -112,7 +135,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.TODO)]} status={TaskStatus.TODO} />);
 
       expect(screen.getByText('A Fazer')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.tertiary }),
       );
     });
@@ -121,7 +144,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.DOING)]} status={TaskStatus.DOING} />);
 
       expect(screen.getByText('Em Andamento')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.yellow }),
       );
     });
@@ -130,7 +153,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.DONE)]} status={TaskStatus.DONE} />);
 
       expect(screen.getByText('Concluído')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.secondary }),
       );
     });

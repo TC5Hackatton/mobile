@@ -1,6 +1,7 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,11 +36,13 @@ export default function HomeContent() {
 
   const [oldestTask, setOldestTask] = useState<Task | null>(null);
 
-  useEffect(() => {
-    fetchOldestTodoStatusUseCase.execute().then((task) => {
-      setOldestTask(task);
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchOldestTodoStatusUseCase.execute().then((task) => {
+        setOldestTask(task);
+      });
+    }, [fetchOldestTodoStatusUseCase]),
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

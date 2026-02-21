@@ -8,4 +8,5 @@ export interface CreateTaskDTO {
   timeType: string;
   title: string;
   createdAt: Date;
+  statusChangedAt?: Date;
 }

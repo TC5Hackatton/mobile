@@ -1,4 +1,9 @@
-import { CreateTaskUseCase, FetchAllTasksUseCase, FetchOldestTodoStatusUseCase } from '@/src/domain';
+import {
+  CreateTaskUseCase,
+  FetchAllTasksUseCase,
+  FetchOldestTodoStatusUseCase,
+  UpdateTaskStatusUseCase,
+} from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
@@ -6,6 +11,7 @@ export interface TaskUseCases {
   fetchAllTasksUseCase: FetchAllTasksUseCase;
   fetchOldestTodoStatusUseCase: FetchOldestTodoStatusUseCase;
   createTaskUseCase: CreateTaskUseCase;
+  updateTaskStatusUseCase: UpdateTaskStatusUseCase;
 }
 
 // Create a context for Task dependencies
@@ -20,6 +26,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
       fetchOldestTodoStatusUseCase: new FetchOldestTodoStatusUseCase(taskRepository),
       createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
+      updateTaskStatusUseCase: new UpdateTaskStatusUseCase(taskRepository),
     }),
     [sessionRepository, taskRepository],
   );
