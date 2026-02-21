@@ -7,6 +7,7 @@ import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
+import { FloatingActionButton } from '../../shared/floating-action-button';
 import TasksListCard from '../presentational/TasksListCard';
 
 type TaskState = Record<TaskStatus, Task[]>;
@@ -50,6 +51,8 @@ export default function TasksContent() {
           <TasksListCard tasks={tasks[TaskStatus.DONE]} status={TaskStatus.DONE} />
         </View>
       </SafeAreaView>
+
+      <FloatingActionButton />
     </View>
   );
 }
