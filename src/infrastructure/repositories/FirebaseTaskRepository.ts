@@ -46,8 +46,7 @@ export class FirebaseTaskRepository implements TaskRepository {
       throw new Error('Por favor, preencha todos os campos!');
     }
 
-    const response = await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
-    console.log('## CL ## New Task ID', response.id);
+    await addDoc(collection(firebaseConfig.db, 'tasks'), { ...dto, uid });
   }
 
   async updateTask(task: Task): Promise<void> {
