@@ -10,7 +10,8 @@ export class TaskMapper {
       Number(task.timeValue || 0),
       Number(task.timeSpend || 0),
       task.status === 'todo' ? TaskStatus.TODO : task.status === 'doing' ? TaskStatus.DOING : TaskStatus.DONE,
-      String(task.id),
+      task.createdAt,
+      task.id,
       task.uid,
     );
   }

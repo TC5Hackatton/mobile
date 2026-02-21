@@ -7,4 +7,5 @@ export interface CreateTaskDTO {
   timeSpend: number;
   timeType: string;
   title: string;
+  createdAt: Date;
 }

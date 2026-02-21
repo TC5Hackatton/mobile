@@ -28,6 +28,7 @@ export default function TaskCreationContent() {
         timeValue: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
         timeSpend: 0,
         timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
+        createdAt: new Date(),
       });
 
       Toast.show({

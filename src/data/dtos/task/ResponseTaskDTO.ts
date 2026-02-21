@@ -7,4 +7,5 @@ export interface ResponseTaskDTO {
   timeSpend: number;
   status: string;
   uid: string;
+  createdAt: Date;
 }
