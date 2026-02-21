@@ -1,12 +1,10 @@
 import { renderHook } from '@testing-library/react-native';
 import React from 'react';
 
-// Mock DependenciesContext
 jest.mock('./DependenciesContext', () => ({
   useDependencies: jest.fn(),
 }));
 
-// Mock domain use cases
 jest.mock('@/src/domain', () => ({
   CreateTaskUseCase: jest.fn(),
   FetchAllTasksUseCase: jest.fn(),
