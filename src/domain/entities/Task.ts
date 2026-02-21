@@ -7,7 +7,7 @@ export class Task {
     public readonly description: string,
     public readonly time_type: TimeType,
     public readonly time_value: number,
-    public readonly time_spent: number,
+    public readonly time_spend: number,
     public readonly status: TaskStatus,
     public readonly id?: string,
     public readonly uid?: string,
@@ -18,11 +18,11 @@ export class Task {
     description: string,
     time_type: TimeType,
     time_value: number,
-    time_spent: number,
+    time_spend: number,
     status: TaskStatus,
     id?: string,
     uid?: string,
   ) {
-    return new Task(title, description, time_type, time_value, time_spent, status, id, uid);
+    return new Task(title, description, time_type, time_value, time_spend, status, id, uid);
   }
 }

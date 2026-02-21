@@ -10,7 +10,7 @@ describe('TaskMapper', () => {
         title: 'Test Task',
         description: 'Test Description',
         timeType: 'cronometro',
-        timeSpent: 3600,
+        timeSpend: 3600,
         status: 'todo',
         uid: 'user-123',
       };
@@ -21,7 +21,7 @@ describe('TaskMapper', () => {
       expect(task.title).toBe('Test Task');
       expect(task.description).toBe('Test Description');
       expect(task.time_type).toBe(TimeType.CRONOMETRO);
-      expect(task.time_spent).toBe(3600);
+      expect(task.time_spend).toBe(3600);
       expect(task.status).toBe(TaskStatus.TODO);
       expect(task.uid).toBe('user-123');
     });
@@ -32,7 +32,7 @@ describe('TaskMapper', () => {
         title: 'Fixed Time Task',
         description: 'Task with fixed time',
         timeType: 'tempo_fixo',
-        timeSpent: 1800,
+        timeSpend: 1800,
         status: 'doing',
         uid: 'user-456',
       };
@@ -49,7 +49,7 @@ describe('TaskMapper', () => {
         title: 'Todo Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'todo',
         uid: 'user-789',
       };
@@ -65,7 +65,7 @@ describe('TaskMapper', () => {
         title: 'Doing Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'doing',
         uid: 'user-789',
       };
@@ -81,7 +81,7 @@ describe('TaskMapper', () => {
         title: 'Done Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'done',
         uid: 'user-789',
       };
@@ -97,7 +97,7 @@ describe('TaskMapper', () => {
         title: 'Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'todo',
         uid: 'user-123',
       };
@@ -108,21 +108,21 @@ describe('TaskMapper', () => {
       expect(typeof task.id).toBe('string');
     });
 
-    it('should map timeSpent correctly', () => {
+    it('should map timeSpend correctly', () => {
       const dto: ResponseTaskDTO = {
         id: '6',
         title: 'Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 7200,
+        timeSpend: 7200,
         status: 'todo',
         uid: 'user-123',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
 
-      expect(task.time_spent).toBe(7200);
-      expect(typeof task.time_spent).toBe('number');
+      expect(task.time_spend).toBe(7200);
+      expect(typeof task.time_spend).toBe('number');
     });
 
     it('should handle empty description', () => {
@@ -131,7 +131,7 @@ describe('TaskMapper', () => {
         title: 'Task with no description',
         description: '',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'todo',
         uid: 'user-123',
       };
@@ -147,7 +147,7 @@ describe('TaskMapper', () => {
         title: 'Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'todo',
         uid: 'specific-user-uid-123',
       };
@@ -163,7 +163,7 @@ describe('TaskMapper', () => {
         title: 'Task',
         description: 'Description',
         timeType: 'cronometro',
-        timeSpent: 0,
+        timeSpend: 0,
         status: 'todo',
         uid: 'user-123',
       };

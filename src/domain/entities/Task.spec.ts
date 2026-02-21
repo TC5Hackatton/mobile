@@ -1,6 +1,6 @@
-import { Task } from './Task';
 import { TaskStatus } from '../enums/TaskStatus';
 import { TimeType } from '../enums/TimeType';
+import { Task } from './Task';
 
 describe('Task Entity', () => {
   describe('create', () => {
@@ -18,7 +18,7 @@ describe('Task Entity', () => {
       expect(task.description).toBe('Test Description');
       expect(task.time_type).toBe(TimeType.CRONOMETRO);
       expect(task.time_value).toBe(60);
-      expect(task.time_spent).toBe(30);
+      expect(task.time_spend).toBe(30);
       expect(task.status).toBe(TaskStatus.TODO);
       expect(task.id).toBeUndefined();
       expect(task.uid).toBeUndefined();
@@ -71,7 +71,7 @@ describe('Task Entity', () => {
       expect(task.description).toBe('Detailed Description');
       expect(task.time_type).toBe(TimeType.TEMPO_FIXO);
       expect(task.time_value).toBe(180);
-      expect(task.time_spent).toBe(180);
+      expect(task.time_spend).toBe(180);
       expect(task.status).toBe(TaskStatus.DONE);
       expect(task.id).toBe('task-789');
       expect(task.uid).toBe('user-101');

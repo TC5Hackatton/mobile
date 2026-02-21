@@ -16,7 +16,7 @@ describe('CreateTaskUseCase', () => {
     title: 'Test Task',
     description: 'Test Description',
     timeType: TimeType.CRONOMETRO,
-    timeSpent: 0,
+    timeSpend: 0,
     status: TaskStatus.TODO,
   };
 

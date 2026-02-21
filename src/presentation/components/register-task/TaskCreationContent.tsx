@@ -25,7 +25,8 @@ export default function TaskCreationContent() {
         title,
         description,
         status: TaskStatus.TODO,
-        timeSpent: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeValue: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeSpend: 0,
         timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
       });
 

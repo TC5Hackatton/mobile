@@ -7,8 +7,8 @@ export class TaskMapper {
       task.title,
       task.description,
       task.timeType === 'cronometro' ? TimeType.CRONOMETRO : TimeType.TEMPO_FIXO,
-      0, // TODO: vou ter que implementar o time_value
-      Number(task.timeSpent),
+      Number(task.timeValue || 0),
+      Number(task.timeSpend || 0),
       task.status === 'todo' ? TaskStatus.TODO : task.status === 'doing' ? TaskStatus.DOING : TaskStatus.DONE,
       String(task.id),
       task.uid,
