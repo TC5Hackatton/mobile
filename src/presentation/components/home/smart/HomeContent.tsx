@@ -32,16 +32,25 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
-  const { fetchOldestTodoStatusUseCase } = useTask();
+  const { fetchOldestTodoStatusUseCase, getTaskProgressUseCase, getTotalFocusTimeUseCase } = useTask();
 
   const [oldestTask, setOldestTask] = useState<Task | null>(null);
 
+  const [progress, setProgress] = useState({ completed: 0, total: 0 });
+  const [totalTime, setTotalTime] = useState('0 min');
+
   useFocusEffect(
     useCallback(() => {
-      fetchOldestTodoStatusUseCase.execute().then((task) => {
+      Promise.all([
+        fetchOldestTodoStatusUseCase.execute(),
+        getTaskProgressUseCase.execute(),
+        getTotalFocusTimeUseCase.execute(),
+      ]).then(([task, progressData, time]) => {
         setOldestTask(task);
+        setProgress(progressData);
+        setTotalTime(time);
       });
-    }, [fetchOldestTodoStatusUseCase]),
+    }, [fetchOldestTodoStatusUseCase, getTaskProgressUseCase, getTotalFocusTimeUseCase]),
   );
 
   return (
@@ -61,7 +70,7 @@ export default function HomeContent() {
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.primary } }}>
-                  {mockData.daily.tasksCompleted.current}/{mockData.daily.tasksCompleted.total}
+                  {progress.total > 0 ? `${progress.completed}/${progress.total}` : '0'}
                 </Text>
                 <Text
                   variant="bodySmall"
@@ -80,32 +89,13 @@ export default function HomeContent() {
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.secondary } }}>
-                  {mockData.daily.timeWorked}
+                  {totalTime}
                 </Text>
                 <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tempo Trabalhado
-                </Text>
-              </Card.Content>
-            </Card>
-
-            <Card
-              style={[styles.dailyCard, { backgroundColor: colors.surface }]}
-              theme={{ colors: { surface: colors.surface } }}>
-              <Card.Content style={styles.dailyCardContent}>
-                <Text
-                  variant="headlineLarge"
-                  style={styles.dailyCardValue}
-                  theme={{ colors: { onSurface: colors.coral } }}>
-                  {mockData.daily.pomodoroSessions}
-                </Text>
-                <Text
-                  variant="bodySmall"
-                  style={styles.dailyCardLabel}
-                  theme={{ colors: { onSurface: colors.textSecondary } }}>
-                  Sessões Pomodoro
                 </Text>
               </Card.Content>
             </Card>
