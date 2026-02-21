@@ -24,7 +24,7 @@ export default function TaskCreationContent() {
       await createTaskUseCase.execute({
         title,
         description,
-        status: TaskStatus.TODO,
+        status: timeType === 'cronometro' ? TaskStatus.DOING : TaskStatus.TODO,
         timeValue: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
         timeSpend: 0,
         timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
@@ -87,7 +87,10 @@ export default function TaskCreationContent() {
                 timeType === 'cronometro' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>Cronômetro</Text>
+              <Text
+                style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>
+                Cronômetro
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -97,7 +100,9 @@ export default function TaskCreationContent() {
                 timeType === 'fixo' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('fixo')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'fixo' && { color: colors.white }]}>Tempo fixo</Text>
+              <Text style={[styles.tabText, { color: colors.text }, timeType === 'fixo' && { color: colors.white }]}>
+                Tempo fixo
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -116,7 +121,14 @@ export default function TaskCreationContent() {
                     selectedTime === time && { backgroundColor: colors.tertiary },
                   ]}
                   onPress={() => setSelectedTime(time)}>
-                  <Text style={[styles.timeOptionText, { color: colors.text }, selectedTime === time && { color: colors.white }]}>{time}</Text>
+                  <Text
+                    style={[
+                      styles.timeOptionText,
+                      { color: colors.text },
+                      selectedTime === time && { color: colors.white },
+                    ]}>
+                    {time}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
