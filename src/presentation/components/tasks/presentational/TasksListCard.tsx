@@ -2,10 +2,11 @@ import { useMemo } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { Badge, Card, Text } from 'react-native-paper';
 
-import { Task, TaskStatus } from '@/src/domain';
+import { TaskStatus } from '@/src/domain';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 import { ContentCard } from '../../shared/content-card';
+import { TaskWithLabel } from '../smart/TasksContent';
 import { TaskActionButton } from './TaskActionButton';
 import { TaskLabelsList } from './TaskLabelsList';
 
@@ -13,7 +14,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.8;
 
 type TaskListCardProps = {
-  tasks: Task[];
+  tasks: TaskWithLabel[];
   status: TaskStatus;
 };
 
@@ -55,9 +56,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
                   <Text variant="titleMedium" style={{ color: colors.text }}>
                     {task.title}
                   </Text>
-                  <TaskLabelsList
-                    labels={[{ icon: 'clock-outline', text: `${task.timeValue} min`, color: colors.primary }]}
-                  />
+                  <TaskLabelsList labels={task.labels} />
                 </View>
                 <View style={styles.headerActions}>
                   <TaskActionButton

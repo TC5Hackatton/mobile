@@ -1,11 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 
-export interface TaskLabel {
-  icon: string;
-  text: string;
-  color: string;
-}
+import { TaskLabel } from '../types/TaskLabel';
 
 interface TaskLabelsListProps {
   labels: TaskLabel[];

@@ -48,6 +48,7 @@ Card.Content = ({ children }: any) => {
 };
 
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { TaskWithLabel } from '../smart/TasksContent';
 import TasksListCard from './TasksListCard';
 
 const mockUseThemeColors = useThemeColors as jest.MockedFunction<typeof useThemeColors>;
@@ -60,8 +61,26 @@ const mockColors = {
   surfaceVariant: '#FAFBFC',
 } as any;
 
-const createTask = (id: string, status: TaskStatus): Task =>
-  Task.create('Task ' + id, 'Description ' + id, TimeType.TEMPO_FIXO, 60, 0, status, new Date(), id, 'user-1');
+const createTask = (id: string, status: TaskStatus): TaskWithLabel => {
+  const task = Task.create(
+    'Task ' + id,
+    'Description ' + id,
+    TimeType.TEMPO_FIXO,
+    60,
+    0,
+    status,
+    new Date(),
+    id,
+    'user-1',
+  );
+  return {
+    ...task,
+    labels: [],
+    statusLabel: task.statusLabel,
+    createdAtLabel: task.createdAtLabel,
+    shortDescription: task.shortDescription,
+  };
+};
 
 describe('TasksListCard', () => {
   beforeEach(() => {

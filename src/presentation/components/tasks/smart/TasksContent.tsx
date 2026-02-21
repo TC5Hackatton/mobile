@@ -8,13 +8,17 @@ import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 import { FloatingActionButton } from '../../shared/floating-action-button';
+import useTaskLabels from '../hooks/useTaskLabels';
 import TasksListCard from '../presentational/TasksListCard';
+import { TaskLabel } from '../types/TaskLabel';
 
-type TaskState = Record<TaskStatus, Task[]>;
+export type TaskWithLabel = Task & { labels: TaskLabel[] };
+type TaskState = Record<TaskStatus, TaskWithLabel[]>;
 
 export default function TasksContent() {
-  const { fetchAllTasksUseCase } = useTask();
   const colors = useThemeColors();
+  const { calculateLabels } = useTaskLabels();
+  const { fetchAllTasksUseCase } = useTask();
 
   const [tasks, setTasks] = useState<TaskState>({
     [TaskStatus.TODO]: [],
@@ -28,7 +32,13 @@ export default function TasksContent() {
 
       const groupedTasks = localTasks.reduce(
         (acc: TaskState, task: Task) => {
-          acc[task.status].push(task);
+          acc[task.status].push({
+            ...task,
+            labels: calculateLabels(task),
+            statusLabel: task.statusLabel,
+            createdAtLabel: task.createdAtLabel,
+            shortDescription: task.shortDescription,
+          });
           return acc;
         },
         { [TaskStatus.TODO]: [], [TaskStatus.DOING]: [], [TaskStatus.DONE]: [] },
