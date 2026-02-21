@@ -1,7 +1,7 @@
 import { TaskStatus } from '../enums/TaskStatus';
 import { TimeType } from '../enums/TimeType';
 
-const SHORT_DESCRIPTION_DISPLAY_LENGTH = 20;
+const SHORT_DESCRIPTION_DISPLAY_LENGTH = 30;
 
 export class Task {
   private constructor(

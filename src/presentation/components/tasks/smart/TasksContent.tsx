@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Task, TaskStatus } from '@/src/domain';
@@ -38,7 +38,7 @@ export default function TasksContent() {
     }
 
     fetchTasks();
-  }, []);
+  }, [fetchAllTasksUseCase]);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -46,9 +46,16 @@ export default function TasksContent() {
         <AppHeader title="Tarefas" />
 
         <View style={styles.content}>
-          <TasksListCard tasks={tasks[TaskStatus.TODO]} status={TaskStatus.TODO} />
-          <TasksListCard tasks={tasks[TaskStatus.DOING]} status={TaskStatus.DOING} />
-          <TasksListCard tasks={tasks[TaskStatus.DONE]} status={TaskStatus.DONE} />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToStart
+            decelerationRate="fast"
+            contentContainerStyle={styles.scrollContent}>
+            <TasksListCard tasks={tasks[TaskStatus.TODO]} status={TaskStatus.TODO} />
+            <TasksListCard tasks={tasks[TaskStatus.DOING]} status={TaskStatus.DOING} />
+            <TasksListCard tasks={tasks[TaskStatus.DONE]} status={TaskStatus.DONE} />
+          </ScrollView>
         </View>
       </SafeAreaView>
 
@@ -66,5 +73,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 8,
+    paddingTop: 8,
   },
 });
