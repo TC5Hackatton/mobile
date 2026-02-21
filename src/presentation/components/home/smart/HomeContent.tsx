@@ -26,6 +26,12 @@ const mockData = {
     activeStreak: '5 dias',
     vsLastWeek: '+20%',
   },
+  priorityTask: {
+    title: 'Estudar React',
+    time: '25 min',
+    status: 'Em andamento',
+    description: 'Revisar hooks, context API e arquitetura limpa.',
+  },
 };
 
 export default function HomeContent() {
@@ -83,25 +89,6 @@ export default function HomeContent() {
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tempo Trabalhado
-                </Text>
-              </Card.Content>
-            </Card>
-
-            <Card
-              style={[styles.dailyCard, { backgroundColor: colors.surface }]}
-              theme={{ colors: { surface: colors.surface } }}>
-              <Card.Content style={styles.dailyCardContent}>
-                <Text
-                  variant="headlineLarge"
-                  style={styles.dailyCardValue}
-                  theme={{ colors: { onSurface: colors.coral } }}>
-                  {mockData.daily.pomodoroSessions}
-                </Text>
-                <Text
-                  variant="bodySmall"
-                  style={styles.dailyCardLabel}
-                  theme={{ colors: { onSurface: colors.textSecondary } }}>
-                  Sessões Pomodoro
                 </Text>
               </Card.Content>
             </Card>
