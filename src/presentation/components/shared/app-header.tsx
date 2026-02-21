@@ -45,7 +45,6 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
     router.replace('/sign-in');
   }, [logger, clearSession]);
 
-  // Cores dinâmicas baseadas no tema
   const backgroundColor = isDark ? customColors.darkNavy : customColors.white;
   const titleColor = isDark
     ? showBackButton
