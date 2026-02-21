@@ -4,6 +4,8 @@ import {
   FetchOldestTodoStatusUseCase,
   UpdateTaskStatusUseCase,
 } from '@/src/domain';
+import { GetTaskProgressUseCase } from '@/src/domain/usecases/home/GetTaskProgressUseCase';
+import { GetTotalFocusTimeUseCase } from '@/src/domain/usecases/home/GetTotalFocusTimeUseCase';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
@@ -12,6 +14,8 @@ export interface TaskUseCases {
   fetchOldestTodoStatusUseCase: FetchOldestTodoStatusUseCase;
   createTaskUseCase: CreateTaskUseCase;
   updateTaskStatusUseCase: UpdateTaskStatusUseCase;
+  getTotalFocusTimeUseCase: GetTotalFocusTimeUseCase;
+  getTaskProgressUseCase: GetTaskProgressUseCase;
 }
 
 // Create a context for Task dependencies
@@ -27,6 +31,8 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       fetchOldestTodoStatusUseCase: new FetchOldestTodoStatusUseCase(sessionRepository, taskRepository),
       createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
       updateTaskStatusUseCase: new UpdateTaskStatusUseCase(taskRepository),
+      getTotalFocusTimeUseCase: new GetTotalFocusTimeUseCase(taskRepository),
+      getTaskProgressUseCase: new GetTaskProgressUseCase(taskRepository),
     }),
     [sessionRepository, taskRepository],
   );
