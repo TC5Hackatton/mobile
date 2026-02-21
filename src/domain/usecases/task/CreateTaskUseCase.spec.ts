@@ -31,6 +31,7 @@ describe('CreateTaskUseCase', () => {
     mockTaskRepository = {
       fetchAll: jest.fn(),
       createTask: jest.fn(),
+      fetchOldestTodoStatus: jest.fn(),
     };
 
     createTaskUseCase = new CreateTaskUseCase(mockSessionRepository, mockTaskRepository);
@@ -52,13 +53,12 @@ describe('CreateTaskUseCase', () => {
     );
 
     mockSessionRepository.getStoredSession.mockResolvedValue(mockSession);
-    mockTaskRepository.createTask.mockResolvedValue(mockTask);
+    mockTaskRepository.createTask.mockResolvedValue(undefined);
 
-    const result = await createTaskUseCase.execute(mockTaskDTO);
+    await createTaskUseCase.execute(mockTaskDTO);
 
     expect(mockSessionRepository.getStoredSession).toHaveBeenCalledTimes(1);
     expect(mockTaskRepository.createTask).toHaveBeenCalledWith(mockTaskDTO, 'user-123');
-    expect(result).toBe(mockTask);
   });
 
   it('should throw error when session is null', async () => {
