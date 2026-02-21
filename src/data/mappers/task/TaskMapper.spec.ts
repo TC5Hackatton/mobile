@@ -3,55 +3,54 @@ import { ResponseTaskDTO } from '../../dtos/task/ResponseTaskDTO';
 import { TaskMapper } from './TaskMapper';
 
 describe('TaskMapper', () => {
+  const mockDate = new Date();
+  const baseDto: ResponseTaskDTO = {
+    id: '1',
+    title: 'Test Task',
+    description: 'Test Description',
+    timeType: 'cronometro',
+    timeSpend: 3600,
+    status: 'todo',
+    uid: 'user-123',
+    createdAt: mockDate,
+  };
+
   describe('fromDtoToDomain', () => {
     it('should map ResponseTaskDTO to Task domain entity with CRONOMETRO time type', () => {
-      const dto: ResponseTaskDTO = {
-        id: '1',
-        title: 'Test Task',
-        description: 'Test Description',
-        timeType: 'cronometro',
-        timeSpent: 3600,
-        status: 'todo',
-        uid: 'user-123',
-      };
+      const task = TaskMapper.fromDtoToDomain(baseDto);
 
-      const task = TaskMapper.fromDtoToDomain(dto);
-
-      expect(task.id).toBe('1');
-      expect(task.title).toBe('Test Task');
-      expect(task.description).toBe('Test Description');
-      expect(task.time_type).toBe(TimeType.CRONOMETRO);
-      expect(task.time_spent).toBe(3600);
+      expect(task.id).toBe(baseDto.id);
+      expect(task.title).toBe(baseDto.title);
+      expect(task.description).toBe(baseDto.description);
+      expect(task.timeType).toBe(TimeType.CRONOMETRO);
+      expect(task.timeSpend).toBe(baseDto.timeSpend);
       expect(task.status).toBe(TaskStatus.TODO);
-      expect(task.uid).toBe('user-123');
+      expect(task.uid).toBe(baseDto.uid);
+      expect(task.createdAt).toEqual(mockDate);
     });
 
     it('should map ResponseTaskDTO to Task domain entity with TEMPO_FIXO time type', () => {
       const dto: ResponseTaskDTO = {
+        ...baseDto,
         id: '2',
         title: 'Fixed Time Task',
         description: 'Task with fixed time',
         timeType: 'tempo_fixo',
-        timeSpent: 1800,
+        timeSpend: 1800,
         status: 'doing',
-        uid: 'user-456',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
 
-      expect(task.time_type).toBe(TimeType.TEMPO_FIXO);
+      expect(task.timeType).toBe(TimeType.TEMPO_FIXO);
       expect(task.status).toBe(TaskStatus.DOING);
+      expect(task.id).toBe('2');
     });
 
     it('should map status "todo" to TaskStatus.TODO', () => {
       const dto: ResponseTaskDTO = {
-        id: '3',
-        title: 'Todo Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
+        ...baseDto,
         status: 'todo',
-        uid: 'user-789',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
@@ -61,13 +60,8 @@ describe('TaskMapper', () => {
 
     it('should map status "doing" to TaskStatus.DOING', () => {
       const dto: ResponseTaskDTO = {
-        id: '4',
-        title: 'Doing Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
+        ...baseDto,
         status: 'doing',
-        uid: 'user-789',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
@@ -77,13 +71,8 @@ describe('TaskMapper', () => {
 
     it('should map status "done" to TaskStatus.DONE', () => {
       const dto: ResponseTaskDTO = {
-        id: '5',
-        title: 'Done Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
+        ...baseDto,
         status: 'done',
-        uid: 'user-789',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
@@ -93,13 +82,8 @@ describe('TaskMapper', () => {
 
     it('should preserve id as string', () => {
       const dto: ResponseTaskDTO = {
+        ...baseDto,
         id: '999',
-        title: 'Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
-        status: 'todo',
-        uid: 'user-123',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
@@ -108,32 +92,22 @@ describe('TaskMapper', () => {
       expect(typeof task.id).toBe('string');
     });
 
-    it('should map timeSpent correctly', () => {
+    it('should map timeSpend correctly', () => {
       const dto: ResponseTaskDTO = {
-        id: '6',
-        title: 'Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 7200,
-        status: 'todo',
-        uid: 'user-123',
+        ...baseDto,
+        timeSpend: 7200,
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
 
-      expect(task.time_spent).toBe(7200);
-      expect(typeof task.time_spent).toBe('number');
+      expect(task.timeSpend).toBe(7200);
+      expect(typeof task.timeSpend).toBe('number');
     });
 
     it('should handle empty description', () => {
       const dto: ResponseTaskDTO = {
-        id: '7',
-        title: 'Task with no description',
+        ...baseDto,
         description: '',
-        timeType: 'cronometro',
-        timeSpent: 0,
-        status: 'todo',
-        uid: 'user-123',
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
@@ -143,12 +117,7 @@ describe('TaskMapper', () => {
 
     it('should preserve uid from DTO', () => {
       const dto: ResponseTaskDTO = {
-        id: '8',
-        title: 'Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
-        status: 'todo',
+        ...baseDto,
         uid: 'specific-user-uid-123',
       };
 
@@ -157,21 +126,15 @@ describe('TaskMapper', () => {
       expect(task.uid).toBe('specific-user-uid-123');
     });
 
-    it('should set time_value to 0 (TODO implementation)', () => {
+    it('should set timeValue to 0 (default if not provided)', () => {
       const dto: ResponseTaskDTO = {
-        id: '9',
-        title: 'Task',
-        description: 'Description',
-        timeType: 'cronometro',
-        timeSpent: 0,
-        status: 'todo',
-        uid: 'user-123',
+        ...baseDto,
+        timeValue: undefined,
       };
 
       const task = TaskMapper.fromDtoToDomain(dto);
 
-      // Currently hardcoded to 0 in mapper
-      expect(task.time_value).toBe(0);
+      expect(task.timeValue).toBe(0);
     });
   });
 });

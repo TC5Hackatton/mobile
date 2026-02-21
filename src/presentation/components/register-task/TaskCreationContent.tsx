@@ -25,8 +25,10 @@ export default function TaskCreationContent() {
         title,
         description,
         status: TaskStatus.TODO,
-        timeSpent: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeValue: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeSpend: 0,
         timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
+        createdAt: new Date(),
       });
 
       Toast.show({
@@ -82,10 +84,10 @@ export default function TaskCreationContent() {
               style={[
                 styles.tabButton,
                 { backgroundColor: colors.surfaceVariant },
-                timeType === 'cronometro' && { backgroundColor: colors.background },
+                timeType === 'cronometro' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.text }]}>Cronômetro</Text>
+              <Text style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>Cronômetro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

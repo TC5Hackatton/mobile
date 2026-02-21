@@ -48,7 +48,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
               <Text
                 variant="titleSmall"
                 theme={{ colors: { onSurface: colors.text } }}>
-                {task.title}
+                {task.title} - {task.createdAt?.toLocaleDateString()}
               </Text>
               <Text
                 variant="bodyMedium"

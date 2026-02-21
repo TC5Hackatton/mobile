@@ -6,10 +6,9 @@ export class CreateTaskUseCase {
   constructor(
     private readonly sessionRepository: SessionRepository,
     private readonly taskRepository: TaskRepository,
-  ) {}
+  ) { }
 
   async execute(task: CreateTaskDTO) {
-    // Get stored session instead of fetching from Firebase
     const session = await this.sessionRepository.getStoredSession();
 
     if (!session?.uid) {
