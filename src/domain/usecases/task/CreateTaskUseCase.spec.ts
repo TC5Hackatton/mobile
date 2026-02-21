@@ -18,6 +18,7 @@ describe('CreateTaskUseCase', () => {
     timeType: TimeType.CRONOMETRO,
     timeSpend: 0,
     status: TaskStatus.TODO,
+    createdAt: new Date()
   };
 
   beforeEach(() => {
@@ -28,7 +29,7 @@ describe('CreateTaskUseCase', () => {
     };
 
     mockTaskRepository = {
-      getAll: jest.fn(),
+      fetchAll: jest.fn(),
       createTask: jest.fn(),
     };
 
@@ -45,6 +46,7 @@ describe('CreateTaskUseCase', () => {
       60,
       0,
       TaskStatus.TODO,
+      new Date(),
       'task-456',
       'user-123'
     );

@@ -6,7 +6,7 @@ import { Task, TaskRepository } from '@/src/domain';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 export class FirebaseTaskRepository implements TaskRepository {
-  async getAll(): Promise<Task[]> {
+  async fetchAll(): Promise<Task[]> {
     const querySnapshot = await getDocs(collection(firebaseConfig.db, 'tasks'));
 
     const tasks: Task[] = [];
