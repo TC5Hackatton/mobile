@@ -9,6 +9,7 @@ import { FloatingActionButton } from '@/src/presentation/components/shared/float
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 // Dados mockados
 const mockData = {
@@ -35,6 +36,7 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
+  const { fontSize, lineHeight } = useFontSize();
   
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -52,13 +54,13 @@ export default function HomeContent() {
               <Card.Content style={styles.dailyCardContent}>
                 <Text 
                   variant="headlineLarge"
-                  style={styles.dailyCardValue}
+                  style={[styles.dailyCardValue, { fontSize: fontSize.xxl }]}
                   theme={{ colors: { onSurface: colors.primary } }}>
                   {mockData.daily.tasksCompleted.current}/{mockData.daily.tasksCompleted.total}
                 </Text>
                 <Text 
                   variant="bodySmall"
-                  style={styles.dailyCardLabel}
+                  style={[styles.dailyCardLabel, { fontSize: fontSize.sm }]}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tarefas Concluídas
                 </Text>
@@ -71,13 +73,13 @@ export default function HomeContent() {
               <Card.Content style={styles.dailyCardContent}>
                 <Text 
                   variant="headlineLarge"
-                  style={styles.dailyCardValue}
+                  style={[styles.dailyCardValue, { fontSize: fontSize.xxl }]}
                   theme={{ colors: { onSurface: colors.secondary } }}>
                   {mockData.daily.timeWorked}
                 </Text>
                 <Text 
                   variant="bodySmall"
-                  style={styles.dailyCardLabel}
+                  style={[styles.dailyCardLabel, { fontSize: fontSize.sm }]}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tempo Trabalhado
                 </Text>
@@ -90,13 +92,13 @@ export default function HomeContent() {
               <Card.Content style={styles.dailyCardContent}>
                 <Text 
                   variant="headlineLarge"
-                  style={styles.dailyCardValue}
+                  style={[styles.dailyCardValue, { fontSize: fontSize.xxl }]}
                   theme={{ colors: { onSurface: colors.coral } }}>
                   {mockData.daily.pomodoroSessions}
                 </Text>
                 <Text 
                   variant="bodySmall"
-                  style={styles.dailyCardLabel}
+                  style={[styles.dailyCardLabel, { fontSize: fontSize.sm }]}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Sessões Pomodoro
                 </Text>
@@ -112,7 +114,7 @@ export default function HomeContent() {
               <Card.Content style={styles.sectionCardContent}>
                 <Text 
                   variant="titleLarge"
-                  style={styles.sectionTitle}
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
                   theme={{ colors: { onSurface: colors.text } }}>
                   Tarefas Prioritárias
                 </Text>
@@ -121,7 +123,7 @@ export default function HomeContent() {
                   <View style={styles.priorityTaskHeader}>
                     <Text 
                       variant="titleMedium"
-                      style={styles.priorityTaskTitle}
+                      style={[styles.priorityTaskTitle, { fontSize: fontSize.md }]}
                       theme={{ colors: { onSurface: colors.text } }}>
                       {mockData.priorityTask.title}
                     </Text>
@@ -129,7 +131,7 @@ export default function HomeContent() {
                       <MaterialIcons name="schedule" size={16} color={colors.textSecondary} />
                       <Text 
                         variant="bodySmall"
-                        style={styles.priorityTaskTime}
+                        style={[styles.priorityTaskTime, { fontSize: fontSize.sm }]}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
                         {mockData.priorityTask.time}
                       </Text>
@@ -140,7 +142,7 @@ export default function HomeContent() {
                     <View style={[styles.priorityTaskTag, { backgroundColor: colors.tertiary }]}>
                       <Text 
                         variant="labelSmall"
-                        style={styles.priorityTaskTagText}
+                        style={[styles.priorityTaskTagText, { fontSize: fontSize.xs }]}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.priorityTask.status}
                       </Text>
@@ -149,7 +151,7 @@ export default function HomeContent() {
 
                   <Text 
                     variant="bodyMedium"
-                    style={styles.priorityTaskDescription}
+                    style={[styles.priorityTaskDescription, { fontSize: fontSize.sm, lineHeight: lineHeight.sm }]}
                     theme={{ colors: { onSurface: colors.textSecondary } }}>
                     {mockData.priorityTask.description}
                   </Text>
@@ -166,7 +168,7 @@ export default function HomeContent() {
               <Card.Content style={styles.sectionCardContent}>
                 <Text 
                   variant="titleLarge"
-                  style={styles.sectionTitle}
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
                   theme={{ colors: { onSurface: colors.text } }}>
                   Progresso Semanal
                 </Text>
@@ -189,13 +191,13 @@ export default function HomeContent() {
                       <MaterialIcons name="gps-fixed" size={24} color={colors.secondary} />
                       <Text 
                         variant="headlineMedium"
-                        style={styles.weeklyStatValue}
+                        style={[styles.weeklyStatValue, { fontSize: fontSize.xl }]}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.tasksCompleted}
                       </Text>
                       <Text 
                         variant="bodySmall"
-                        style={styles.weeklyStatLabel}
+                        style={[styles.weeklyStatLabel, { fontSize: fontSize.sm }]}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
                         Tarefas Concluídas
                       </Text>
@@ -207,13 +209,13 @@ export default function HomeContent() {
                       <MaterialIcons name="timer" size={24} color={colors.textSecondary} />
                       <Text 
                         variant="headlineMedium"
-                        style={styles.weeklyStatValue}
+                        style={[styles.weeklyStatValue, { fontSize: fontSize.xl }]}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.focusTime}
                       </Text>
                       <Text 
                         variant="bodySmall"
-                        style={styles.weeklyStatLabel}
+                        style={[styles.weeklyStatLabel, { fontSize: fontSize.sm }]}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
                         Tempo de Foco
                       </Text>
@@ -225,13 +227,13 @@ export default function HomeContent() {
                       <MaterialIcons name="local-fire-department" size={24} color={colors.coral} />
                       <Text 
                         variant="headlineMedium"
-                        style={styles.weeklyStatValue}
+                        style={[styles.weeklyStatValue, { fontSize: fontSize.xl }]}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.activeStreak}
                       </Text>
                       <Text 
                         variant="bodySmall"
-                        style={styles.weeklyStatLabel}
+                        style={[styles.weeklyStatLabel, { fontSize: fontSize.sm }]}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
                         Sequência Ativa
                       </Text>
@@ -243,13 +245,13 @@ export default function HomeContent() {
                       <MaterialIcons name="trending-up" size={24} color={colors.primary} />
                       <Text 
                         variant="headlineMedium"
-                        style={styles.weeklyStatValue}
+                        style={[styles.weeklyStatValue, { fontSize: fontSize.xl }]}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.vsLastWeek}
                       </Text>
                       <Text 
                         variant="bodySmall"
-                        style={styles.weeklyStatLabel}
+                        style={[styles.weeklyStatLabel, { fontSize: fontSize.sm }]}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
                         vs Semana Passada
                       </Text>
@@ -305,12 +307,12 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
   dailyCardValue: {
-    fontSize: 28,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.xs,
   },
   dailyCardLabel: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
     textAlign: 'center',
   },
   section: {
@@ -332,7 +334,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.md,
   },
@@ -352,7 +354,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   priorityTaskTitle: {
-    fontSize: typography.fontSize.md,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     flex: 1,
   },
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   priorityTaskTime: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
   },
   priorityTaskTagContainer: {
     marginBottom: spacing.md,
@@ -374,12 +376,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   priorityTaskTagText: {
-    fontSize: typography.fontSize.xs,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
   },
   priorityTaskDescription: {
-    fontSize: typography.fontSize.sm,
-    lineHeight: typography.lineHeight.sm,
+    // fontSize e lineHeight definidos dinamicamente via useFontSize hook
   },
   progressBarContainer: {
     height: 16,
@@ -410,13 +411,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weeklyStatValue: {
-    fontSize: typography.fontSize.xl,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginTop: spacing.sm,
     marginBottom: spacing.xs,
   },
   weeklyStatLabel: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
     textAlign: 'center',
   },
 });

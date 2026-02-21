@@ -4,6 +4,7 @@ import { Badge, Card, Text } from 'react-native-paper';
 
 import { Task, TaskStatus } from '@/src/domain';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 
 import { ContentCard } from '../../shared/content-card';
 
@@ -14,6 +15,7 @@ type TaskListCardProps = {
 
 export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const statusVisualProperties = useMemo(() => {
     if (status === TaskStatus.TODO) {
@@ -35,7 +37,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
     <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
         <Badge size={30} style={{ backgroundColor: statusVisualProperties.color }}>{tasks.length}</Badge>
-        <Text style={{ color: colors.text }}>{statusVisualProperties.label}</Text>
+        <Text style={{ color: colors.text, fontSize: fontSize.md }}>{statusVisualProperties.label}</Text>
       </View>
 
       <ScrollView>
@@ -47,11 +49,13 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
             <Card.Content>
               <Text
                 variant="titleSmall"
+                style={{ fontSize: fontSize.sm }}
                 theme={{ colors: { onSurface: colors.text } }}>
                 {task.title}
               </Text>
               <Text
                 variant="bodyMedium"
+                style={{ fontSize: fontSize.sm }}
                 theme={{ colors: { onSurface: colors.textSecondary } }}>
                 {task.description}
               </Text>

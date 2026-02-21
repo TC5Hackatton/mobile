@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { TextInput, useTheme as usePaperTheme } from 'react-native-paper';
 
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface CustomTextInputProps {
@@ -42,6 +43,7 @@ export function CustomTextInput({
 }: CustomTextInputProps) {
   const theme = usePaperTheme();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   const [showPassword, setShowPassword] = useState(false);
 
   // Se usar com react-hook-form
@@ -69,7 +71,7 @@ export function CustomTextInput({
               keyboardType={keyboardType}
               error={hasError}
               style={[styles.input, { backgroundColor: colors.surface }]}
-              contentStyle={styles.inputContent}
+              contentStyle={[styles.inputContent, { fontSize: fontSize.md }]}
               testID={testID}
               accessibilityLabel={accessibilityLabel || label}
               accessibilityHint={accessibilityHint}
@@ -119,7 +121,7 @@ export function CustomTextInput({
       keyboardType={keyboardType}
       error={error}
       style={[styles.input, { backgroundColor: colors.surface }]}
-      contentStyle={styles.inputContent}
+      contentStyle={[styles.inputContent, { fontSize: fontSize.md }]}
       testID={testID}
       accessibilityLabel={accessibilityLabel || label}
       accessibilityHint={accessibilityHint}
@@ -155,6 +157,6 @@ const styles = StyleSheet.create({
   },
   inputContent: {
     fontFamily: typography.fontFamily.regular,
-    fontSize: typography.fontSize.md,
+    // fontSize definido dinamicamente via useFontSize hook
   },
 });
