@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 import { Task, TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
@@ -18,7 +19,7 @@ type TaskState = Record<TaskStatus, TaskWithLabel[]>;
 export default function TasksContent() {
   const colors = useThemeColors();
   const { calculateLabels } = useTaskLabels();
-  const { fetchAllTasksUseCase } = useTask();
+  const { fetchAllTasksUseCase, updateTaskStatusUseCase } = useTask();
 
   const [tasks, setTasks] = useState<TaskState>({
     [TaskStatus.TODO]: [],
@@ -26,29 +27,42 @@ export default function TasksContent() {
     [TaskStatus.DONE]: [],
   });
 
+  const fetchTasks = useCallback(async () => {
+    const localTasks = await fetchAllTasksUseCase.execute();
+
+    const groupedTasks = localTasks.reduce(
+      (acc: TaskState, task: Task) => {
+        acc[task.status].push({
+          ...task,
+          labels: calculateLabels(task),
+          statusLabel: task.statusLabel,
+          createdAtLabel: task.createdAtLabel,
+          shortDescription: task.shortDescription,
+        });
+        return acc;
+      },
+      { [TaskStatus.TODO]: [], [TaskStatus.DOING]: [], [TaskStatus.DONE]: [] },
+    );
+
+    setTasks(groupedTasks);
+  }, [fetchAllTasksUseCase, calculateLabels]);
+
   useEffect(() => {
-    async function fetchTasks() {
-      const localTasks = await fetchAllTasksUseCase.execute();
-
-      const groupedTasks = localTasks.reduce(
-        (acc: TaskState, task: Task) => {
-          acc[task.status].push({
-            ...task,
-            labels: calculateLabels(task),
-            statusLabel: task.statusLabel,
-            createdAtLabel: task.createdAtLabel,
-            shortDescription: task.shortDescription,
-          });
-          return acc;
-        },
-        { [TaskStatus.TODO]: [], [TaskStatus.DOING]: [], [TaskStatus.DONE]: [] },
-      );
-
-      setTasks(groupedTasks);
-    }
-
     fetchTasks();
-  }, [fetchAllTasksUseCase]);
+  }, [fetchTasks]);
+
+  const handleUpdateStatus = async (task: Task, newStatus: TaskStatus) => {
+    try {
+      await updateTaskStatusUseCase.execute(task, newStatus);
+      await fetchTasks();
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao atualizar tarefa',
+        text2: 'Ocorreu um erro ao tentar atualizar o status da tarefa.',
+      });
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -62,8 +76,17 @@ export default function TasksContent() {
             snapToStart
             decelerationRate="fast"
             contentContainerStyle={styles.scrollContent}>
-            <TasksListCard tasks={tasks[TaskStatus.TODO]} status={TaskStatus.TODO} />
-            <TasksListCard tasks={tasks[TaskStatus.DOING]} status={TaskStatus.DOING} />
+            <TasksListCard
+              tasks={tasks[TaskStatus.TODO]}
+              status={TaskStatus.TODO}
+              onPressStart={(task: Task) => handleUpdateStatus(task, TaskStatus.DOING)}
+            />
+            <TasksListCard
+              tasks={tasks[TaskStatus.DOING]}
+              status={TaskStatus.DOING}
+              onPressFinish={(task: Task) => handleUpdateStatus(task, TaskStatus.DONE)}
+              onPressPause={(task: Task) => handleUpdateStatus(task, TaskStatus.TODO)}
+            />
             <TasksListCard tasks={tasks[TaskStatus.DONE]} status={TaskStatus.DONE} />
           </ScrollView>
         </View>

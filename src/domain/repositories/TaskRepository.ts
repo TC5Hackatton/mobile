@@ -5,4 +5,5 @@ export interface TaskRepository {
   fetchAll(): Promise<Task[]>;
   fetchOldestTodoStatus(): Promise<Task | null>;
   createTask(dto: CreateTaskDTO, uid: string): Promise<void>;
+  updateTask(task: Task): Promise<void>;
 }

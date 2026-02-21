@@ -2,11 +2,12 @@ import { useMemo } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { Badge, Card, Text } from 'react-native-paper';
 
-import { TaskStatus } from '@/src/domain';
+import { Task, TaskStatus } from '@/src/domain';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 import { ContentCard } from '../../shared/content-card';
 import { TaskWithLabel } from '../smart/TasksContent';
+import { RunningTimer } from './RunningTimer';
 import { TaskActionButton } from './TaskActionButton';
 import { TaskLabelsList } from './TaskLabelsList';
 
@@ -16,9 +17,12 @@ const CARD_WIDTH = SCREEN_WIDTH * 0.8;
 type TaskListCardProps = {
   tasks: TaskWithLabel[];
   status: TaskStatus;
+  onPressStart?: (task: Task) => void;
+  onPressFinish?: (task: Task) => void;
+  onPressPause?: (task: Task) => void;
 };
 
-export default function TasksListCard({ tasks, status }: TaskListCardProps) {
+export default function TasksListCard({ tasks, status, onPressStart, onPressFinish, onPressPause }: TaskListCardProps) {
   const colors = useThemeColors();
 
   const statusVisualProperties = useMemo(() => {
@@ -36,7 +40,7 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
   return (
     <ContentCard style={styles.contentCard}>
       <View style={styles.tasksHeader}>
-        <Badge size={30} style={{ backgroundColor: statusVisualProperties.color }}>
+        <Badge testID="status-badge" size={30} style={{ backgroundColor: statusVisualProperties.color }}>
           {tasks.length}
         </Badge>
         <Text variant="titleLarge" style={{ color: colors.text }}>
@@ -56,14 +60,16 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
                   <Text variant="titleMedium" style={{ color: colors.text }}>
                     {task.title}
                   </Text>
-                  <TaskLabelsList labels={task.labels} />
+                  <View style={styles.labelsRow}>
+                    <TaskLabelsList labels={task.labels} />
+                  </View>
                 </View>
                 <View style={styles.headerActions}>
                   <TaskActionButton
                     status={task.status}
-                    onPressStart={() => console.log('Start task')}
-                    onPressFinish={() => console.log('Finish task')}
-                    onPressPause={() => console.log('Pause task')}
+                    onPressStart={() => onPressStart?.(task)}
+                    onPressFinish={() => onPressFinish?.(task)}
+                    onPressPause={() => onPressPause?.(task)}
                   />
                 </View>
               </View>
@@ -72,9 +78,12 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
                 <Text variant="bodyMedium" style={{ color: colors.textSecondary }}>
                   {task.shortDescription}
                 </Text>
-                <Text variant="bodySmall" style={[styles.dateText, { color: colors.textSecondary }]}>
-                  {task.createdAtLabel}
-                </Text>
+                <View style={styles.footerRow}>
+                  <Text variant="bodySmall" style={[styles.dateText, { color: colors.textSecondary }]}>
+                    {task.createdAtLabel}
+                  </Text>
+                  {task.status === TaskStatus.DOING && <RunningTimer task={task} />}
+                </View>
               </View>
             </Card.Content>
           </Card>
@@ -134,5 +143,20 @@ const styles = StyleSheet.create({
   dateText: {
     marginTop: 8,
     fontStyle: 'italic',
+  },
+  timerContainer: {
+    marginLeft: 'auto',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  labelsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 4,
   },
 });

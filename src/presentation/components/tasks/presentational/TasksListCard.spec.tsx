@@ -19,10 +19,10 @@ jest.mock('../../shared/content-card', () => ({
 }));
 
 jest.mock('react-native-paper', () => ({
-  Badge: ({ children, style, size }: any) => {
+  Badge: ({ children, style, size, testID }: any) => {
     const { Text } = require('react-native');
     return (
-      <Text testID="badge" style={style}>
+      <Text testID={testID || 'badge'} style={style}>
         {children}
       </Text>
     );
@@ -113,7 +113,7 @@ describe('TasksListCard', () => {
     const tasks = [createTask('1', TaskStatus.TODO), createTask('2', TaskStatus.TODO)];
     render(<TasksListCard tasks={tasks} status={TaskStatus.TODO} />);
 
-    expect(screen.getByTestId('badge').props.children).toBe(2);
+    expect(screen.getByTestId('status-badge').props.children).toBe(2);
   });
 
   it('should render multiple tasks', () => {
@@ -135,7 +135,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.TODO)]} status={TaskStatus.TODO} />);
 
       expect(screen.getByText('A Fazer')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.tertiary }),
       );
     });
@@ -144,7 +144,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.DOING)]} status={TaskStatus.DOING} />);
 
       expect(screen.getByText('Em Andamento')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.yellow }),
       );
     });
@@ -153,7 +153,7 @@ describe('TasksListCard', () => {
       render(<TasksListCard tasks={[createTask('1', TaskStatus.DONE)]} status={TaskStatus.DONE} />);
 
       expect(screen.getByText('Concluído')).toBeTruthy();
-      expect(screen.getByTestId('badge').props.style).toEqual(
+      expect(screen.getByTestId('status-badge').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.secondary }),
       );
     });

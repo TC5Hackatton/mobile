@@ -22,7 +22,7 @@ export default function useTaskLabels() {
 
       labels.push({
         icon: isPaused ? 'timer-sand-paused' : 'timer-sand',
-        text: `${task.timeSpend} min`,
+        text: `${Number(task.timeSpend.toFixed(2))} min`,
         color: isDone ? colors.secondary : colors.primary,
       });
     }

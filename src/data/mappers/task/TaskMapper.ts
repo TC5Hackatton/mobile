@@ -13,17 +13,7 @@ export class TaskMapper {
       task.createdAt,
       task.id,
       task.uid,
+      task.statusChangedAt,
     );
   }
-
-  // static fromDomainToDto(entity: User): Partial<UserDTO> {
-  //   return {
-  //     id: Number(entity.id),
-  //     name: entity.name,
-  //     email: entity.email,
-  //     password: entity.password,
-  //     createdAt: entity.createdAt.toISOString(),
-  //     updatedAt: entity.updatedAt.toISOString(),
-  //   };
-  // }
 }

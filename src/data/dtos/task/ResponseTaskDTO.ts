@@ -8,4 +8,5 @@ export interface ResponseTaskDTO {
   status: string;
   uid: string;
   createdAt: Date;
+  statusChangedAt?: Date;
 }
