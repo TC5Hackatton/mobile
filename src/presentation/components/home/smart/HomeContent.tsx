@@ -35,28 +35,28 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
-  
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={[]}>
         <AppHeader title="Início" />
 
-        <ScrollView 
-          style={[styles.scrollView, { backgroundColor: colors.background }]} 
+        <ScrollView
+          style={[styles.scrollView, { backgroundColor: colors.background }]}
           contentContainerStyle={styles.scrollContent}>
           {/* Cards de Resumo Diário */}
           <View style={styles.dailyCardsContainer}>
-            <Card 
+            <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.dailyCardContent}>
-                <Text 
+                <Text
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.primary } }}>
                   {mockData.daily.tasksCompleted.current}/{mockData.daily.tasksCompleted.total}
                 </Text>
-                <Text 
+                <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -65,17 +65,17 @@ export default function HomeContent() {
               </Card.Content>
             </Card>
 
-            <Card 
+            <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.dailyCardContent}>
-                <Text 
+                <Text
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.secondary } }}>
                   {mockData.daily.timeWorked}
                 </Text>
-                <Text 
+                <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -83,43 +83,21 @@ export default function HomeContent() {
                 </Text>
               </Card.Content>
             </Card>
-
-            <Card 
-              style={[styles.dailyCard, { backgroundColor: colors.surface }]}
-              theme={{ colors: { surface: colors.surface } }}>
-              <Card.Content style={styles.dailyCardContent}>
-                <Text 
-                  variant="headlineLarge"
-                  style={styles.dailyCardValue}
-                  theme={{ colors: { onSurface: colors.coral } }}>
-                  {mockData.daily.pomodoroSessions}
-                </Text>
-                <Text 
-                  variant="bodySmall"
-                  style={styles.dailyCardLabel}
-                  theme={{ colors: { onSurface: colors.textSecondary } }}>
-                  Sessões Pomodoro
-                </Text>
-              </Card.Content>
-            </Card>
           </View>
 
           {/* Seção Tarefas Prioritárias */}
           <View style={styles.section}>
-            <Card 
+            <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.sectionCardContent}>
-                <Text 
-                  variant="titleLarge"
-                  style={styles.sectionTitle}
-                  theme={{ colors: { onSurface: colors.text } }}>
+                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
                   Tarefas Prioritárias
                 </Text>
 
                 <View style={[styles.innerCard, { backgroundColor: colors.surfaceVariant }]}>
                   <View style={styles.priorityTaskHeader}>
-                    <Text 
+                    <Text
                       variant="titleMedium"
                       style={styles.priorityTaskTitle}
                       theme={{ colors: { onSurface: colors.text } }}>
@@ -127,7 +105,7 @@ export default function HomeContent() {
                     </Text>
                     <View style={styles.priorityTaskMeta}>
                       <MaterialIcons name="schedule" size={16} color={colors.textSecondary} />
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.priorityTaskTime}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -138,7 +116,7 @@ export default function HomeContent() {
 
                   <View style={styles.priorityTaskTagContainer}>
                     <View style={[styles.priorityTaskTag, { backgroundColor: colors.tertiary }]}>
-                      <Text 
+                      <Text
                         variant="labelSmall"
                         style={styles.priorityTaskTagText}
                         theme={{ colors: { onSurface: colors.text } }}>
@@ -147,7 +125,7 @@ export default function HomeContent() {
                     </View>
                   </View>
 
-                  <Text 
+                  <Text
                     variant="bodyMedium"
                     style={styles.priorityTaskDescription}
                     theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -160,14 +138,11 @@ export default function HomeContent() {
 
           {/* Seção Progresso Semanal */}
           <View style={styles.section}>
-            <Card 
+            <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.sectionCardContent}>
-                <Text 
-                  variant="titleLarge"
-                  style={styles.sectionTitle}
-                  theme={{ colors: { onSurface: colors.text } }}>
+                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
                   Progresso Semanal
                 </Text>
 
@@ -187,13 +162,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="gps-fixed" size={24} color={colors.secondary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.tasksCompleted}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -205,13 +180,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="timer" size={24} color={colors.textSecondary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.focusTime}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -223,13 +198,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="local-fire-department" size={24} color={colors.coral} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.activeStreak}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -241,13 +216,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="trending-up" size={24} color={colors.primary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.vsLastWeek}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
