@@ -28,8 +28,8 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
   }, []);
 
   const handleExpandPress = useCallback(() => {
-    logger.log('Expand pressed');
-    // TODO: Implementar ação de expandir
+    logger.log('Navigating to Focus Mode');
+    router.push('/focus');
   }, [logger]);
 
   const handleThemeTogglePress = useCallback(() => {
