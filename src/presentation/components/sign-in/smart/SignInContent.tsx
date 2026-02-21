@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   errorText: {
-    // fontSize definido dinamicamente via useFontSize hook
     color: '#E89B8C',
     fontFamily: 'Raleway_400Regular',
   },
