@@ -1,7 +1,7 @@
 import { TaskStatus } from '../enums/TaskStatus';
 import { TimeType } from '../enums/TimeType';
 
-const DESCRIPTION_DISPLAY_LENGTH = 20;
+const SHORT_DESCRIPTION_DISPLAY_LENGTH = 20;
 
 export class Task {
   private constructor(
@@ -46,6 +46,6 @@ export class Task {
   }
 
   get shortDescription() {
-    return this.description.length > DESCRIPTION_DISPLAY_LENGTH ? this.description.substring(0, DESCRIPTION_DISPLAY_LENGTH) + '...' : this.description;
+    return this.description.length > SHORT_DESCRIPTION_DISPLAY_LENGTH ? this.description.substring(0, SHORT_DESCRIPTION_DISPLAY_LENGTH) + '...' : this.description;
   }
 }

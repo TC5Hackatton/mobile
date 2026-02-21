@@ -4,26 +4,32 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Task, TaskStatus, TimeType } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import OldestTaskCard from '../presentational/OldestTaskCard';
 
-// Dados mockados
 const mockData = {
   daily: {
     tasksCompleted: { current: 3, total: 8 },
     timeWorked: '45 min',
     pomodoroSessions: 2,
   },
-  priorityTask: {
-    title: 'Estudar React',
-    status: 'A Fazer',
-    time: '25 min',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus convallis non orci id cursus. Integer non iaculis magna. Duis ultricies, lorem quis pulvinar vulputate, erat mauris egestas sem.',
-  },
+  // TODO: remover e trocar pela tarefa mais antiga retornada pelo Firebase
+  priorityTask: Task.create(
+    'Estudar React',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus convallis non orci id cursus. Integer non iaculis magna. Duis ultricies, lorem quis pulvinar vulputate, erat mauris egestas sem.',
+    TimeType.TEMPO_FIXO,
+    60,
+    0,
+    TaskStatus.TODO,
+    new Date(),
+    'asdasdasdasda',
+    'user-1',
+  ),
   weekly: {
     progress: 0.67,
     tasksCompleted: 15,
@@ -35,28 +41,27 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
-  
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={[]}>
         <AppHeader title="Início" />
 
-        <ScrollView 
-          style={[styles.scrollView, { backgroundColor: colors.background }]} 
+        <ScrollView
+          style={[styles.scrollView, { backgroundColor: colors.background }]}
           contentContainerStyle={styles.scrollContent}>
-          {/* Cards de Resumo Diário */}
           <View style={styles.dailyCardsContainer}>
-            <Card 
+            <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.dailyCardContent}>
-                <Text 
+                <Text
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.primary } }}>
                   {mockData.daily.tasksCompleted.current}/{mockData.daily.tasksCompleted.total}
                 </Text>
-                <Text 
+                <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -65,17 +70,17 @@ export default function HomeContent() {
               </Card.Content>
             </Card>
 
-            <Card 
+            <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.dailyCardContent}>
-                <Text 
+                <Text
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.secondary } }}>
                   {mockData.daily.timeWorked}
                 </Text>
-                <Text 
+                <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -84,17 +89,17 @@ export default function HomeContent() {
               </Card.Content>
             </Card>
 
-            <Card 
+            <Card
               style={[styles.dailyCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.dailyCardContent}>
-                <Text 
+                <Text
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.coral } }}>
                   {mockData.daily.pomodoroSessions}
                 </Text>
-                <Text 
+                <Text
                   variant="bodySmall"
                   style={styles.dailyCardLabel}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -104,70 +109,26 @@ export default function HomeContent() {
             </Card>
           </View>
 
-          {/* Seção Tarefas Prioritárias */}
           <View style={styles.section}>
-            <Card 
+            <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
-              <Card.Content style={styles.sectionCardContent}>
-                <Text 
-                  variant="titleLarge"
-                  style={styles.sectionTitle}
-                  theme={{ colors: { onSurface: colors.text } }}>
-                  Tarefas Prioritárias
+              <Card.Content>
+                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
+                  Tarefa Mais Antiga
                 </Text>
 
-                <View style={[styles.innerCard, { backgroundColor: colors.surfaceVariant }]}>
-                  <View style={styles.priorityTaskHeader}>
-                    <Text 
-                      variant="titleMedium"
-                      style={styles.priorityTaskTitle}
-                      theme={{ colors: { onSurface: colors.text } }}>
-                      {mockData.priorityTask.title}
-                    </Text>
-                    <View style={styles.priorityTaskMeta}>
-                      <MaterialIcons name="schedule" size={16} color={colors.textSecondary} />
-                      <Text 
-                        variant="bodySmall"
-                        style={styles.priorityTaskTime}
-                        theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        {mockData.priorityTask.time}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.priorityTaskTagContainer}>
-                    <View style={[styles.priorityTaskTag, { backgroundColor: colors.tertiary }]}>
-                      <Text 
-                        variant="labelSmall"
-                        style={styles.priorityTaskTagText}
-                        theme={{ colors: { onSurface: colors.text } }}>
-                        {mockData.priorityTask.status}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Text 
-                    variant="bodyMedium"
-                    style={styles.priorityTaskDescription}
-                    theme={{ colors: { onSurface: colors.textSecondary } }}>
-                    {mockData.priorityTask.description}
-                  </Text>
-                </View>
+                <OldestTaskCard task={mockData.priorityTask} />
               </Card.Content>
             </Card>
           </View>
 
-          {/* Seção Progresso Semanal */}
           <View style={styles.section}>
-            <Card 
+            <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.sectionCardContent}>
-                <Text 
-                  variant="titleLarge"
-                  style={styles.sectionTitle}
-                  theme={{ colors: { onSurface: colors.text } }}>
+                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
                   Progresso Semanal
                 </Text>
 
@@ -187,13 +148,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="gps-fixed" size={24} color={colors.secondary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.tasksCompleted}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -205,13 +166,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="timer" size={24} color={colors.textSecondary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.focusTime}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -223,13 +184,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="local-fire-department" size={24} color={colors.coral} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.activeStreak}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -241,13 +202,13 @@ export default function HomeContent() {
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
                       <MaterialIcons name="trending-up" size={24} color={colors.primary} />
-                      <Text 
+                      <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
                         {mockData.weekly.vsLastWeek}
                       </Text>
-                      <Text 
+                      <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
@@ -344,42 +305,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     width: '48%',
-  },
-  priorityTaskHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.sm,
-  },
-  priorityTaskTitle: {
-    fontSize: typography.fontSize.md,
-    fontFamily: typography.fontFamily.semiBold,
-    flex: 1,
-  },
-  priorityTaskMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  priorityTaskTime: {
-    fontSize: typography.fontSize.sm,
-  },
-  priorityTaskTagContainer: {
-    marginBottom: spacing.md,
-  },
-  priorityTaskTag: {
-    borderRadius: 16,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    alignSelf: 'flex-start',
-  },
-  priorityTaskTagText: {
-    fontSize: typography.fontSize.xs,
-    fontFamily: typography.fontFamily.medium,
-  },
-  priorityTaskDescription: {
-    fontSize: typography.fontSize.sm,
-    lineHeight: typography.lineHeight.sm,
   },
   progressBarContainer: {
     height: 16,
