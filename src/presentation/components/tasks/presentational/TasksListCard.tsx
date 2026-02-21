@@ -6,6 +6,8 @@ import { Task, TaskStatus } from '@/src/domain';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 import { ContentCard } from '../../shared/content-card';
+import { TaskActionButton } from './TaskActionButton';
+import { TaskLabelsList } from './TaskLabelsList';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.8;
@@ -48,12 +50,33 @@ export default function TasksListCard({ tasks, status }: TaskListCardProps) {
             style={[styles.taskCard, { backgroundColor: colors.surfaceVariant }]}
             theme={{ colors: { surface: colors.surfaceVariant } }}>
             <Card.Content>
-              <Text variant="titleSmall" theme={{ colors: { onSurface: colors.text } }}>
-                {task.title} - {task.createdAtLabel}
-              </Text>
-              <Text variant="bodyMedium" theme={{ colors: { onSurface: colors.textSecondary } }}>
-                {task.shortDescription}
-              </Text>
+              <View style={styles.cardHeader}>
+                <View style={styles.headerInfo}>
+                  <Text variant="titleMedium" style={{ color: colors.text }}>
+                    {task.title}
+                  </Text>
+                  <TaskLabelsList
+                    labels={[{ icon: 'clock-outline', text: `${task.timeValue} min`, color: colors.primary }]}
+                  />
+                </View>
+                <View style={styles.headerActions}>
+                  <TaskActionButton
+                    status={task.status}
+                    onPressStart={() => console.log('Start task')}
+                    onPressFinish={() => console.log('Finish task')}
+                    onPressPause={() => console.log('Pause task')}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.cardBody}>
+                <Text variant="bodyMedium" style={{ color: colors.textSecondary }}>
+                  {task.shortDescription}
+                </Text>
+                <Text variant="bodySmall" style={[styles.dateText, { color: colors.textSecondary }]}>
+                  {task.createdAtLabel}
+                </Text>
+              </View>
             </Card.Content>
           </Card>
         ))}
@@ -80,7 +103,7 @@ const styles = StyleSheet.create({
   },
   contentCard: {
     width: CARD_WIDTH,
-    marginRight: 0, // We'll handle spacing in the parent ScrollView
+    marginRight: 0,
     marginHorizontal: 8,
     flex: 1,
     marginBottom: 16,
@@ -91,6 +114,26 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 20,
+    fontStyle: 'italic',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  headerInfo: {
+    flex: 1,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardBody: {
+    marginTop: 4,
+  },
+  dateText: {
+    marginTop: 8,
     fontStyle: 'italic',
   },
 });
