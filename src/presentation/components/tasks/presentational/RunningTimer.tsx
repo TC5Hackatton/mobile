@@ -26,7 +26,7 @@ export function RunningTimer({ task }: RunningTimerProps) {
     return () => clearInterval(interval);
   }, [task.status, task.statusChangedAt]);
 
-  const totalMinutes = Number((task.timeSpend + elapsed).toFixed(2));
+  const totalMinutes = Number(elapsed.toFixed(2));
   const minutes = Math.floor(totalMinutes);
   const seconds = Math.floor((totalMinutes - minutes) * 60);
 

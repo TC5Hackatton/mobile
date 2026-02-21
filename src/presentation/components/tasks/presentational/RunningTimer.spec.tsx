@@ -19,7 +19,7 @@ describe('RunningTimer', () => {
     jest.useRealTimers();
   });
 
-  it('should render the initial state correctly based on task.timeSpend', () => {
+  it('should render the initial state as 0m 00s regardless of task.timeSpend', () => {
     const task = Task.create(
       'Title',
       'Desc',
@@ -35,7 +35,8 @@ describe('RunningTimer', () => {
 
     render(<RunningTimer task={task} />);
 
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('10m 30s');
+    // Should be 0m 00s even if timeSpend is 10.5
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
   });
 
   it('should update the timer every second', () => {
@@ -56,21 +57,21 @@ describe('RunningTimer', () => {
     jest.setSystemTime(startTime);
     render(<RunningTimer task={task} />);
 
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('10m 00s');
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
 
     // Advance 30 seconds
     act(() => {
       jest.advanceTimersByTime(30000);
     });
 
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('10m 30s');
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 30s');
 
     // Advance 1 minute more
     act(() => {
       jest.advanceTimersByTime(60000);
     });
 
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('11m 30s');
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('1m 30s');
   });
 
   it('should not start the interval if task status is not DOING', () => {
@@ -78,14 +79,14 @@ describe('RunningTimer', () => {
 
     render(<RunningTimer task={task} />);
 
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('10m 00s');
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
 
     // Advance time
     act(() => {
       jest.advanceTimersByTime(10000);
     });
 
-    // Should still be 10m 00s
-    expect(screen.getByTestId('timer-text')).toHaveTextContent('10m 00s');
+    // Should still be 0m 00s
+    expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
   });
 });
