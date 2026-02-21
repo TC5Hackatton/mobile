@@ -39,6 +39,10 @@ jest.mock('react-native-paper', () => ({
     const { Text: RNText } = require('react-native');
     return <RNText>{children}</RNText>;
   },
+  IconButton: (props: any) => {
+    const { View } = require('react-native');
+    return <View testID="icon-button" {...props} />;
+  },
 }));
 
 const { Card } = require('react-native-paper');
@@ -91,9 +95,9 @@ describe('TasksListCard', () => {
     jest.clearAllMocks();
   });
 
-  it('should return null when tasks list is empty', () => {
-    const { toJSON } = render(<TasksListCard tasks={[]} status={TaskStatus.TODO} />);
-    expect(toJSON()).toBeNull();
+  it('should render empty list message when tasks list is empty', () => {
+    render(<TasksListCard tasks={[]} status={TaskStatus.TODO} />);
+    expect(screen.getByText(/Nenhuma tarefa a fazer/i)).toBeTruthy();
   });
 
   it('should render a card per task with title and description', () => {
