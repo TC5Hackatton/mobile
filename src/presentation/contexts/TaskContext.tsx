@@ -2,6 +2,7 @@ import {
   CreateTaskUseCase,
   FetchAllTasksUseCase,
   FetchOldestTodoStatusUseCase,
+  GetStoredSessionUseCase,
   UpdateTaskStatusUseCase,
 } from '@/src/domain';
 import { GetTaskProgressUseCase } from '@/src/domain/usecases/home/GetTaskProgressUseCase';
@@ -25,17 +26,18 @@ const TaskContext = createContext<TaskUseCases | null>(null);
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const { sessionRepository, taskRepository } = useDependencies();
 
-  const taskUseCases = useMemo<TaskUseCases>(
-    () => ({
+  const taskUseCases = useMemo<TaskUseCases>(() => {
+    const getStoredSessionUseCase = new GetStoredSessionUseCase(sessionRepository);
+    return {
+      getStoredSessionUseCase,
       fetchAllTasksUseCase: new FetchAllTasksUseCase(sessionRepository, taskRepository),
       fetchOldestTodoStatusUseCase: new FetchOldestTodoStatusUseCase(sessionRepository, taskRepository),
       createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
       updateTaskStatusUseCase: new UpdateTaskStatusUseCase(taskRepository),
-      getTotalFocusTimeUseCase: new GetTotalFocusTimeUseCase(taskRepository),
-      getTaskProgressUseCase: new GetTaskProgressUseCase(taskRepository),
-    }),
-    [sessionRepository, taskRepository],
-  );
+      getTotalFocusTimeUseCase: new GetTotalFocusTimeUseCase(taskRepository, getStoredSessionUseCase),
+      getTaskProgressUseCase: new GetTaskProgressUseCase(taskRepository, getStoredSessionUseCase),
+    };
+  }, [sessionRepository, taskRepository]);
 
   return <TaskContext.Provider value={taskUseCases}>{children}</TaskContext.Provider>;
 }
