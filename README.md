@@ -32,7 +32,7 @@ Este aplicativo móvel é construído com as seguintes principais tecnologias:
 1. Clone o repositório:
 
    ```bash
-   git clone <repo-url> mobile
+   git clone git@github.com:TC5Hackatton/mobile.git mobile
    cd mobile
    ```
 
@@ -43,23 +43,27 @@ Este aplicativo móvel é construído com as seguintes principais tecnologias:
    # ou yarn install
    ```
 
-3. Crie ou configure o arquivo `firebaseConfig.ts` com suas credenciais do Firebase.
+3. Duplique o arquivo `.env.example`, renomeie para `.env` e cole as credenciais do Firebase que foram enviadas junto com a entrega do projeto.
+ 
+```.env
+# Exemplo
+EXPO_PUBLIC_FIREBASE_API_KEY=
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+EXPO_PUBLIC_FIREBASE_APP_ID=
+EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=
 
 4. Inicie o Metro bundler/expo:
 
    ```bash
-   npx expo start
+   npm start # Ou você pode rodar diretamente com expo com o comando: npx expo start
    ```
 
 5. Escolha a forma de execução na interface do Expo (emulador Android, simulador iOS, Expo Go etc.).
 
-6. Para limpar caches ou reiniciar com estado limpo (útil em novas máquinas):
-
-   ```bash
-   npm run reset-project
-   ```
-
-7. Comece a desenvolver editando os arquivos em **app/**.
+6. Comece a desenvolver editando os arquivos em **app/**.
 
 ### Estrutura do Projeto
  
@@ -82,56 +86,22 @@ Este aplicativo móvel é construído com as seguintes principais tecnologias:
     │   ├── index.ts
     │   ├── dtos/
     │   │   └── task/
-    │   │       ├── CreateTaskDTO.ts
-    │   │       └── ResponseTaskDTO.ts
     │   └── mappers/
     │       ├── task/
-    │       │   ├── TaskMapper.spec.ts
-    │       │   └── TaskMapper.ts
     │       └── user/
-    │           ├── UserMapper.spec.ts
-    │           └── UserMapper.ts
     ├── domain/                                                      ← Domínio
     │   ├── index.ts
     │   ├── entities/                                                ← Aqui estão as entidades do projeto mobile
-    │   │   ├── Session.spec.ts
-    │   │   ├── Session.ts
-    │   │   ├── Task.spec.ts
-    │   │   ├── Task.ts
-    │   │   ├── User.spec.ts
-    │   │   └── User.ts
     │   ├── enums/
-    │   │   ├── TaskStatus.ts
-    │   │   └── TimeType.ts
     │   ├── repositories/
-    │   │   ├── AuthRepository.ts
-    │   │   ├── LoggerRepository.ts
-    │   │   ├── SessionRepository.ts
-    │   │   ├── StorageRepository.ts
-    │   │   └── TaskRepository.ts
     │   └── usecases/                                                 ← UseCases - referente às regras de negócios
     │       ├── home/
-    │       │   ├── GetTaskProgressUseCase.ts
-    │       │   └── GetTotalFocusTimeUseCase.ts
     │       ├── task/
-    │       │   ├── CreateTaskUseCase.spec.ts
-    │       │   └── … (others)
     │       └── user/
-    │           └── … (use cases)
     ├── infrastructure/                                              ← Infraestrutura
     │   ├── error-handler.ts
     │   ├── index.ts
     │   └── repositories/
-    │       ├── AsyncStorageRepository.spec.ts
-    │       ├── AsyncStorageRepository.ts
-    │       ├── FirebaseAuthRepository.spec.ts
-    │       ├── FirebaseAuthRepository.ts
-    │       ├── FirebaseTaskRepository.spec.ts
-    │       ├── FirebaseTaskRepository.ts
-    │       ├── InMemoryLoggerRepository.spec.ts
-    │       ├── InMemoryLoggerRepository.ts
-    │       ├── InMemorySessionRepository.spec.ts
-    │       └── InMemorySessionRepository.ts
     └── presentation/                                                 ← Apresentação
         ├── assets/
         │   └── images/
@@ -146,30 +116,8 @@ Este aplicativo móvel é construído com as seguintes principais tecnologias:
         │   ├── sign-up/
         │   └── tasks/
         ├── constants/
-        │   ├── index.ts
-        │   ├── paper-theme.ts
-        │   ├── spacing.ts
-        │   ├── theme.ts
-        │   └── typography.ts
         ├── contexts/
-        │   ├── DependenciesContext.spec.tsx
-        │   ├── DependenciesContext.tsx
-        │   ├── SessionContext.spec.tsx
-        │   ├── SessionContext.tsx
-        │   ├── TaskContext.spec.tsx
-        │   ├── TaskContext.tsx
-        │   ├── ThemeContext.spec.tsx
-        │   ├── ThemeContext.tsx
-        │   ├── UserContext.spec.tsx
-        │   └── UserContext.tsx
         └── hooks/
-            ├── use-color-scheme.ts
-            ├── use-color-scheme.web.spec.ts
-            ├── use-color-scheme.web.ts
-            ├── use-theme-color.spec.ts
-            ├── use-theme-color.ts
-            ├── use-theme-colors.spec.ts
-            └── use-theme-colors.ts
  ```
 
 #### Onde Adicionar novos componentes
@@ -198,14 +146,8 @@ Use os exemplos abaixo para entender onde as novas peças do sistema devem viver
 # Executar testes unitários
 npm test
 
-# Gerar build de produção
-npm run build
-
 # Executar linting
 npm run lint
-
-# Gerar documentação
-npm run docs
 
 # Rodar no emulador/dispositivo Android
 npx expo run:android
