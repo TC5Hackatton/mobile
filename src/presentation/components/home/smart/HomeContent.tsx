@@ -13,7 +13,6 @@ import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
-import OldestTaskCard from '../presentational/OldestTaskCard';
 
 const mockData = {
   daily: {
@@ -102,12 +101,48 @@ export default function HomeContent() {
             <Card
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
-              <Card.Content>
+              <Card.Content style={styles.sectionCardContent}>
                 <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
-                  Tarefa Mais Antiga
+                  Tarefas Prioritárias
                 </Text>
 
-                <OldestTaskCard task={oldestTask} />
+                <View style={[styles.innerCard, { backgroundColor: colors.surfaceVariant }]}>
+                  <View style={styles.priorityTaskHeader}>
+                    <Text
+                      variant="titleMedium"
+                      style={styles.priorityTaskTitle}
+                      theme={{ colors: { onSurface: colors.text } }}>
+                      {mockData.priorityTask.title}
+                    </Text>
+                    <View style={styles.priorityTaskMeta}>
+                      <MaterialIcons name="schedule" size={16} color={colors.textSecondary} />
+                      <Text
+                        variant="bodySmall"
+                        style={styles.priorityTaskTime}
+                        theme={{ colors: { onSurface: colors.textSecondary } }}>
+                        {mockData.priorityTask.time}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.priorityTaskTagContainer}>
+                    <View style={[styles.priorityTaskTag, { backgroundColor: colors.tertiary }]}>
+                      <Text
+                        variant="labelSmall"
+                        style={styles.priorityTaskTagText}
+                        theme={{ colors: { onSurface: colors.text } }}>
+                        {mockData.priorityTask.status}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text
+                    variant="bodyMedium"
+                    style={styles.priorityTaskDescription}
+                    theme={{ colors: { onSurface: colors.textSecondary } }}>
+                    {mockData.priorityTask.description}
+                  </Text>
+                </View>
               </Card.Content>
             </Card>
           </View>
