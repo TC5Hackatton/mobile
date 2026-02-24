@@ -1,44 +1,23 @@
-import { useFocusTimer } from '@/src/presentation/hooks/use-focus-timer';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, Dialog, Portal, Text } from 'react-native-paper';
-
-import { Task, TaskStatus } from '@/src/domain';
-import { useTask } from '@/src/presentation/contexts/TaskContext';
+import Svg, { Circle } from 'react-native-svg';
 import { customColors } from '../../constants';
+import { useFocusViewModel } from './hooks/useFocusViewModel';
 
 export default function FocusScreen() {
-  const { fetchAllTasksUseCase, updateTaskUseCase } = useTask();
-  const [currentTask, setCurrentTask] = useState<Task | null>(null);
-  const [nextTask, setNextTask] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [showConfirm, setShowConfirm] = useState(false);
-
-  //Buscar a task mais antiga e pegar o tempo dela
-  useEffect(() => {
-    async function loadTasks() {
-      const allTasks = await fetchAllTasksUseCase.execute();
-
-      //Filtrar as task TODO e ordenar pela data de criação
-      const pendingTasks = allTasks
-        .filter((t) => t.status === TaskStatus.TODO)
-        .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-      setCurrentTask(pendingTasks[0] || null);
-      setNextTask(pendingTasks[1] || null);
-      setLoading(false);
-    }
-    loadTasks();
-  }, []);
-
-  const { formatTime, isActive, toggleTimer, progress } = useFocusTimer(currentTask?.timeValue || 25);
-
-  const onConfirmNext = async () => {
-    if (currentTask) {
-      await handleFinishTask(currentTask);
-    }
-    setShowConfirm(false);
-  };
+  const {
+    currentTask,
+    nextTask,
+    loading,
+    showConfirm,
+    setShowConfirm,
+    isActive,
+    progress,
+    formatTime,
+    handleToggleTimer,
+    handleFinishTask,
+  } = useFocusViewModel();
 
   if (loading) return null;
 
@@ -57,11 +36,8 @@ export default function FocusScreen() {
         <Button
           mode="contained"
           buttonColor={customColors.coral}
-          contentStyle={{ paddingHorizontal: 12 }}
-          style={styles.exitButton}
           onPress={() => router.back()}
-          accessibilityLabel="Botão para Sair do Foco"
-          accessibilityHint="Pressione para sair da tela de foco e retornar à tela anterior">
+          style={styles.exitButton}>
           Sair do Foco
         </Button>
       </View>
@@ -72,28 +48,38 @@ export default function FocusScreen() {
           <Text style={styles.description}>{currentTask.description}</Text>
 
           <View style={styles.timerWrapper}>
-            <View style={[styles.timerCircle, { borderColor: customColors.darkTextSecondary }]}>
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    backgroundColor: customColors.mintTealLight,
-                    opacity: 100,
-                    borderRadius: 110,
-                    transform: [{ scale: progress }],
-                  },
-                ]}
-              />
+            <View style={styles.timerContainer}>
+              <Svg width={220} height={220}>
+                {/* Fundo cinza */}
+                <Circle stroke={customColors.lightGray} fill="none" cx="110" cy="110" r="100" strokeWidth="10" />
 
-              <Text style={styles.timerText}>{formatTime()}</Text>
-              <Text style={styles.percentText}>{Math.round(progress * 100)}% concluído</Text>
+                {/* Progresso */}
+                <Circle
+                  stroke={customColors.tealGreen}
+                  fill="none"
+                  cx="110"
+                  cy="110"
+                  r="100"
+                  strokeWidth="10"
+                  strokeDasharray={2 * Math.PI * 100}
+                  strokeDashoffset={2 * Math.PI * 100 * (1 - progress)}
+                  strokeLinecap="round"
+                  rotation="-90"
+                  origin="110,110"
+                />
+              </Svg>
+
+              <View style={styles.timerContent}>
+                <Text style={styles.timerText}>{formatTime()}</Text>
+                <Text style={styles.percentText}>{Math.round(progress * 100)}% concluído</Text>
+              </View>
             </View>
           </View>
 
           <View style={styles.controlsRow}>
             <Button
               mode="contained"
-              onPress={toggleTimer}
+              onPress={handleToggleTimer}
               disabled={isActive}
               buttonColor={customColors.tealGreen}
               style={styles.actionButton}>
@@ -102,7 +88,7 @@ export default function FocusScreen() {
 
             <Button
               mode="contained"
-              onPress={toggleTimer}
+              onPress={handleToggleTimer}
               disabled={!isActive}
               buttonColor={customColors.darkBorder}
               style={styles.actionButton}>
@@ -116,7 +102,7 @@ export default function FocusScreen() {
         mode="contained"
         buttonColor={customColors.skyBlue}
         style={styles.nextTaskButton}
-        contentStyle={{ paddingVertical: 10 }}>
+        onPress={() => setShowConfirm(true)}>
         Próxima Tarefa
       </Button>
 
@@ -136,11 +122,16 @@ export default function FocusScreen() {
         <Dialog visible={showConfirm} onDismiss={() => setShowConfirm(false)}>
           <Dialog.Title>Finalizar Tarefa?</Dialog.Title>
           <Dialog.Content>
-            <Text>Tem certeza que deseja finalizar a tarefa atual?</Text>
+            <Text>Deseja marcar "{currentTask.title}" como concluída e ir para a próxima?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setShowConfirm(false)}>Não</Button>
-            <Button onPress={onConfirmNext}>Sim</Button>
+            <Button
+              onPress={() => {
+                handleFinishTask();
+              }}>
+              Sim
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -172,6 +163,18 @@ const styles = StyleSheet.create({
   cardContent: {
     alignItems: 'center',
     paddingVertical: 30,
+  },
+
+  timerContainer: {
+    width: 220,
+    height: 220,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  timerContent: {
+    position: 'absolute',
+    alignItems: 'center',
   },
 
   title: {
