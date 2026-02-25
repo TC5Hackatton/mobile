@@ -36,6 +36,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
         oldestTask: null,
         progress: { completed: 0, total: 0 },
         totalFocusTime: '0 min',
+        taskCounts: { todo: 0, doing: 0, done: 0, total: 0 },
       });
       expect(mockTaskRepository.fetchAll).not.toHaveBeenCalled();
     });
@@ -78,7 +79,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
     });
   });
 
-  describe('execute — task progress', () => {
+  describe('execute — task progress & counts', () => {
     it('should calculate completed and total tasks correctly', async () => {
       const userId = 'user_123';
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: userId } as any);
@@ -92,6 +93,22 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
 
       expect(result.progress.total).toBe(3);
       expect(result.progress.completed).toBe(2);
+    });
+
+    it('should count tasks by status correctly', async () => {
+      mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
+      mockTaskRepository.fetchAll.mockResolvedValue([
+        { status: TaskStatus.TODO, timeSpend: 0 },
+        { status: TaskStatus.TODO, timeSpend: 0 },
+        { status: TaskStatus.DOING, timeSpend: 0 },
+        { status: TaskStatus.DONE, timeSpend: 0 },
+        { status: TaskStatus.DONE, timeSpend: 0 },
+        { status: TaskStatus.DONE, timeSpend: 0 },
+      ] as any);
+
+      const result = await useCase.execute();
+
+      expect(result.taskCounts).toEqual({ todo: 2, doing: 1, done: 3, total: 6 });
     });
   });
 

@@ -7,6 +7,7 @@ export interface UserTaskStatistics {
   oldestTask: Task | null;
   progress: { completed: number; total: number };
   totalFocusTime: string;
+  taskCounts: { todo: number; doing: number; done: number; total: number };
 }
 
 export class FetchStatisticsFromUserTasksUseCase {
@@ -23,17 +24,21 @@ export class FetchStatisticsFromUserTasksUseCase {
         oldestTask: null,
         progress: { completed: 0, total: 0 },
         totalFocusTime: '0 min',
+        taskCounts: { todo: 0, doing: 0, done: 0, total: 0 },
       };
     }
 
     const tasks = await this.taskRepository.fetchAll(session.uid);
 
     // Oldest TODO task — fetchAll is ordered by createdAt DESC, so the last TODO is the oldest
-    const oldestTask = tasks.filter((t) => t.status === TaskStatus.TODO).at(-1) ?? null;
+    const todoTasks = tasks.filter((t) => t.status === TaskStatus.TODO);
+    const oldestTask = todoTasks.at(-1) ?? null;
 
-    // Progress
+    // Progress & task counts
     const total = tasks.length;
-    const completed = tasks.filter((t) => t.status === TaskStatus.DONE).length;
+    const done = tasks.filter((t) => t.status === TaskStatus.DONE).length;
+    const doing = tasks.filter((t) => t.status === TaskStatus.DOING).length;
+    const todo = todoTasks.length;
 
     // Focus time — ROUNDING RULE: 0.73 → 1 | 0.49 → 0
     const totalMinutes = tasks.reduce((acc, task) => acc + (task.timeSpend || 0), 0);
@@ -50,8 +55,9 @@ export class FetchStatisticsFromUserTasksUseCase {
 
     return {
       oldestTask,
-      progress: { completed, total },
+      progress: { completed: done, total },
       totalFocusTime,
+      taskCounts: { todo, doing, done, total },
     };
   }
 }

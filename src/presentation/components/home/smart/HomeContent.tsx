@@ -15,36 +15,22 @@ import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import OldestTaskCard from '../presentational/OldestTaskCard';
 
-const mockData = {
-  daily: {
-    tasksCompleted: { current: 3, total: 8 },
-    timeWorked: '45 min',
-    pomodoroSessions: 2,
-  },
-  weekly: {
-    progress: 0.67,
-    tasksCompleted: 15,
-    focusTime: '3h 45min',
-    activeStreak: '5 dias',
-    vsLastWeek: '+20%',
-  },
-};
-
 export default function HomeContent() {
   const colors = useThemeColors();
   const { fetchStatisticsFromUserTasksUseCase } = useTask();
 
   const [oldestTask, setOldestTask] = useState<Task | null>(null);
-
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
   const [totalTime, setTotalTime] = useState('0 min');
+  const [taskCounts, setTaskCounts] = useState({ todo: 0, doing: 0, done: 0, total: 0 });
 
   useFocusEffect(
     useCallback(() => {
-      fetchStatisticsFromUserTasksUseCase.execute().then(({ oldestTask, progress, totalFocusTime }) => {
+      fetchStatisticsFromUserTasksUseCase.execute().then(({ oldestTask, progress, totalFocusTime, taskCounts }) => {
         setOldestTask(oldestTask);
         setProgress(progress);
         setTotalTime(totalFocusTime);
+        setTaskCounts(taskCounts);
       });
     }, [fetchStatisticsFromUserTasksUseCase]),
   );
@@ -121,7 +107,11 @@ export default function HomeContent() {
                 </Text>
 
                 <View style={[styles.progressBarContainer, { backgroundColor: colors.surfaceVariant }]}>
-                  <View style={[styles.progressBarFill, { width: `${mockData.weekly.progress * 100}%` }]}>
+                  <View
+                    style={[
+                      styles.progressBarFill,
+                      { width: progress.total > 0 ? `${(progress.completed / progress.total) * 100}%` : '0%' },
+                    ]}>
                     <LinearGradient
                       colors={[colors.tertiary, colors.secondary]}
                       start={{ x: 0, y: 0 }}
@@ -135,72 +125,72 @@ export default function HomeContent() {
                 <View style={styles.weeklyStatsGrid}>
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="gps-fixed" size={24} color={colors.secondary} />
+                      <MaterialIcons name="pending" size={24} color={colors.textSecondary} />
                       <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
-                        {mockData.weekly.tasksCompleted}
+                        {taskCounts.todo}
                       </Text>
                       <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Tarefas Concluídas
+                        A Fazer
                       </Text>
                     </View>
                   </View>
 
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="timer" size={24} color={colors.textSecondary} />
+                      <MaterialIcons name="timelapse" size={24} color={colors.secondary} />
                       <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
-                        {mockData.weekly.focusTime}
+                        {taskCounts.doing}
                       </Text>
                       <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Tempo de Foco
+                        Em Andamento
                       </Text>
                     </View>
                   </View>
 
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="local-fire-department" size={24} color={colors.coral} />
+                      <MaterialIcons name="check-circle-outline" size={24} color={colors.primary} />
                       <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
-                        {mockData.weekly.activeStreak}
+                        {taskCounts.done}
                       </Text>
                       <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Sequência Ativa
+                        Concluídas
                       </Text>
                     </View>
                   </View>
 
                   <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
                     <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="trending-up" size={24} color={colors.primary} />
+                      <MaterialIcons name="group-work" size={24} color={colors.coral} />
                       <Text
                         variant="headlineMedium"
                         style={styles.weeklyStatValue}
                         theme={{ colors: { onSurface: colors.text } }}>
-                        {mockData.weekly.vsLastWeek}
+                        {taskCounts.total}
                       </Text>
                       <Text
                         variant="bodySmall"
                         style={styles.weeklyStatLabel}
                         theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        vs Semana Passada
+                        Tarefas Totais
                       </Text>
                     </View>
                   </View>
