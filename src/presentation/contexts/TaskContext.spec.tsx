@@ -102,7 +102,7 @@ describe('TaskContext', () => {
 
       renderHook(() => useTask(), { wrapper });
 
-      expect(MockFetchAllTasksUseCase).toHaveBeenCalledWith(mockDeps.taskRepository);
+      expect(MockFetchAllTasksUseCase).toHaveBeenCalledWith(mockDeps.sessionRepository, mockDeps.taskRepository);
     });
 
     it('should instantiate FetchOldestTodoStatusUseCase with taskRepository', () => {
@@ -124,7 +124,10 @@ describe('TaskContext', () => {
 
       renderHook(() => useTask(), { wrapper });
 
-      expect(MockFetchOldestTodoStatusUseCase).toHaveBeenCalledWith(mockDeps.taskRepository);
+      expect(MockFetchOldestTodoStatusUseCase).toHaveBeenCalledWith(
+        mockDeps.sessionRepository,
+        mockDeps.taskRepository,
+      );
     });
 
     it('should instantiate CreateTaskUseCase with sessionRepository and taskRepository', () => {
