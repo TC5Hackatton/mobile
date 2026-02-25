@@ -3,14 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
-import {
-  AccessibilitySection,
-  AppearanceSection,
-  FocusModeSection,
-  InfoCard,
-  NotificationsSection,
-  ProductivitySection,
-} from '../presentation';
+import { AppearanceSection, FocusModeSection, InfoCard, ProductivitySection } from '../presentation';
 
 // NOTE: maybe here we can render the some sections directly, and use a reducer to control the state
 export default function PreferencesContent() {
@@ -27,9 +20,7 @@ export default function PreferencesContent() {
           <InfoCard />
           <AppearanceSection />
           <ProductivitySection />
-          <NotificationsSection />
           <FocusModeSection />
-          <AccessibilitySection />
         </ScrollView>
       </SafeAreaView>
     </View>

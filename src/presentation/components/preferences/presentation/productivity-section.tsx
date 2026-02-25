@@ -1,7 +1,7 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Card, Switch, Text } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
@@ -12,30 +12,23 @@ type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
 export function ProductivitySection() {
   const colors = useThemeColors();
   const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
-  const [highContrast, setHighContrast] = useState(false);
 
   return (
-    <Card 
-      style={[styles.card, { backgroundColor: colors.surface }]} 
-      mode="elevated" 
+    <Card
+      style={[styles.card, { backgroundColor: colors.surface }]}
+      mode="elevated"
       elevation={2}
       theme={{ colors: { surface: colors.surface } }}>
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="access-time" size={24} color={colors.text} />
-          <Text 
-            variant="titleLarge" 
-            style={styles.sectionTitle}
-            theme={{ colors: { onSurface: colors.text } }}>
+          <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
             Tempo e Produtividade
           </Text>
         </View>
 
-        <View style={styles.pomodoroContainer}>
-          <Text 
-            variant="titleMedium" 
-            style={styles.itemTitle}
-            theme={{ colors: { onSurface: colors.text } }}>
+        <View>
+          <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
             Pomodoro Padrão
           </Text>
           <View style={styles.pomodoroButtons}>
@@ -62,24 +55,6 @@ export function ProductivitySection() {
             ))}
           </View>
         </View>
-
-        <View style={styles.item}>
-          <View style={styles.itemContent}>
-            <Text 
-              variant="titleMedium" 
-              style={styles.itemTitle}
-              theme={{ colors: { onSurface: colors.text } }}>
-              Alto Contraste
-            </Text>
-            <Text 
-              variant="bodySmall" 
-              style={styles.itemSubtitle}
-              theme={{ colors: { onSurface: colors.textSecondary } }}>
-              Para melhor legibilidade
-            </Text>
-          </View>
-          <Switch value={highContrast} onValueChange={setHighContrast} />
-        </View>
       </Card.Content>
     </Card>
   );
@@ -90,7 +65,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: spacing.md,
     marginTop: spacing.lg,
-    marginBottom: spacing.lg,
   },
   content: {
     padding: spacing.md,
@@ -104,9 +78,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.fontSize.lg,
     fontFamily: typography.fontFamily.bold,
-  },
-  pomodoroContainer: {
-    marginTop: spacing.md,
   },
   itemTitle: {
     fontSize: typography.fontSize.md,
@@ -128,18 +99,5 @@ const styles = StyleSheet.create({
   pomodoroButtonText: {
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.medium,
-  },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  itemContent: {
-    flex: 1,
-  },
-  itemSubtitle: {
-    fontSize: typography.fontSize.sm,
-    fontFamily: typography.fontFamily.regular,
   },
 });

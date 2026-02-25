@@ -1,52 +1,45 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 type FontSize = 'P' | 'M' | 'G';
 
 export function AppearanceSection() {
   const colors = useThemeColors();
   const { isDark, setTheme } = useTheme();
-  const [highContrast, setHighContrast] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('M');
-  
+
   const handleThemeToggle = () => {
     setTheme(isDark ? 'light' : 'dark');
   };
 
   return (
-    <Card 
-      style={[styles.card, { backgroundColor: colors.surface }]} 
-      mode="elevated" 
+    <Card
+      style={[styles.card, { backgroundColor: colors.surface }]}
+      mode="elevated"
       elevation={2}
       theme={{ colors: { surface: colors.surface } }}>
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="brightness-3" size={24} color={colors.text} />
-          <Text 
-            variant="titleLarge" 
-            style={styles.sectionTitle}
-            theme={{ colors: { onSurface: colors.text } }}>
+          <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
             Aparência
           </Text>
         </View>
 
         <View style={styles.item}>
           <View style={styles.itemContent}>
-            <Text 
-              variant="titleMedium" 
-              style={styles.itemTitle}
-              theme={{ colors: { onSurface: colors.text } }}>
+            <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
               Modo Escuro
             </Text>
-            <Text 
-              variant="bodySmall" 
+            <Text
+              variant="bodySmall"
               style={styles.itemSubtitle}
               theme={{ colors: { onSurface: colors.textSecondary } }}>
               Reduz luz da tela
@@ -55,29 +48,8 @@ export function AppearanceSection() {
           <Switch value={isDark} onValueChange={handleThemeToggle} />
         </View>
 
-        <View style={styles.item}>
-          <View style={styles.itemContent}>
-            <Text 
-              variant="titleMedium" 
-              style={styles.itemTitle}
-              theme={{ colors: { onSurface: colors.text } }}>
-              Alto Contraste
-            </Text>
-            <Text 
-              variant="bodySmall" 
-              style={styles.itemSubtitle}
-              theme={{ colors: { onSurface: colors.textSecondary } }}>
-              Para melhor legibilidade
-            </Text>
-          </View>
-          <Switch value={highContrast} onValueChange={setHighContrast} />
-        </View>
-
         <View style={styles.fontSizeContainer}>
-          <Text 
-            variant="titleMedium" 
-            style={styles.itemTitle}
-            theme={{ colors: { onSurface: colors.text } }}>
+          <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
             Tamanho da Fonte
           </Text>
           <View style={styles.fontSizeButtons}>
