@@ -32,7 +32,7 @@ const mockData = {
 
 export default function HomeContent() {
   const colors = useThemeColors();
-  const { fetchOldestTodoStatusUseCase, getTaskProgressUseCase, getTotalFocusTimeUseCase } = useTask();
+  const { fetchStatisticsFromUserTasksUseCase } = useTask();
 
   const [oldestTask, setOldestTask] = useState<Task | null>(null);
 
@@ -41,16 +41,12 @@ export default function HomeContent() {
 
   useFocusEffect(
     useCallback(() => {
-      Promise.all([
-        fetchOldestTodoStatusUseCase.execute(),
-        getTaskProgressUseCase.execute(),
-        getTotalFocusTimeUseCase.execute(),
-      ]).then(([task, progressData, time]) => {
-        setOldestTask(task);
-        setProgress(progressData);
-        setTotalTime(time);
+      fetchStatisticsFromUserTasksUseCase.execute().then(({ oldestTask, progress, totalFocusTime }) => {
+        setOldestTask(oldestTask);
+        setProgress(progress);
+        setTotalTime(totalFocusTime);
       });
-    }, [fetchOldestTodoStatusUseCase, getTaskProgressUseCase, getTotalFocusTimeUseCase]),
+    }, [fetchStatisticsFromUserTasksUseCase]),
   );
 
   return (

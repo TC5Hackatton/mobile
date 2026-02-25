@@ -11,8 +11,8 @@ jest.mock('@/src/domain/usecases/task/CreateTaskUseCase', () => ({
 jest.mock('@/src/domain/usecases/task/FetchAllTasksUseCase', () => ({
   FetchAllTasksUseCase: jest.fn(),
 }));
-jest.mock('@/src/domain/usecases/task/FetchOldestTodoStatusUseCase', () => ({
-  FetchOldestTodoStatusUseCase: jest.fn(),
+jest.mock('@/src/domain/usecases/task/FetchStatisticsFromUserTasksUseCase', () => ({
+  FetchStatisticsFromUserTasksUseCase: jest.fn(),
 }));
 jest.mock('@/src/domain/usecases/task/UpdateTaskStatusUseCase', () => ({
   UpdateTaskStatusUseCase: jest.fn(),
@@ -20,7 +20,7 @@ jest.mock('@/src/domain/usecases/task/UpdateTaskStatusUseCase', () => ({
 
 import { CreateTaskUseCase } from '@/src/domain/usecases/task/CreateTaskUseCase';
 import { FetchAllTasksUseCase } from '@/src/domain/usecases/task/FetchAllTasksUseCase';
-import { FetchOldestTodoStatusUseCase } from '@/src/domain/usecases/task/FetchOldestTodoStatusUseCase';
+import { FetchStatisticsFromUserTasksUseCase } from '@/src/domain/usecases/task/FetchStatisticsFromUserTasksUseCase';
 import { UpdateTaskStatusUseCase } from '@/src/domain/usecases/task/UpdateTaskStatusUseCase';
 import { useDependencies } from './DependenciesContext';
 import { TaskProvider, useTask } from './TaskContext';
@@ -28,16 +28,16 @@ import { TaskProvider, useTask } from './TaskContext';
 const mockUseDependencies = useDependencies as jest.MockedFunction<typeof useDependencies>;
 const MockCreateTaskUseCase = CreateTaskUseCase as jest.Mock;
 const MockFetchAllTasksUseCase = FetchAllTasksUseCase as jest.Mock;
-const MockFetchOldestTodoStatusUseCase = FetchOldestTodoStatusUseCase as jest.Mock;
+const MockFetchStatisticsFromUserTasksUseCase = FetchStatisticsFromUserTasksUseCase as jest.Mock;
 const MockUpdateTaskStatusUseCase = UpdateTaskStatusUseCase as jest.Mock;
 
 const buildWrapper = () => {
   const mockFetchAllTasks = { execute: jest.fn() };
-  const mockFetchOldestTodoStatus = { execute: jest.fn() };
+  const mockFetchStatistics = { execute: jest.fn() };
   const mockCreateTask = { execute: jest.fn() };
 
   MockFetchAllTasksUseCase.mockImplementation(() => mockFetchAllTasks);
-  MockFetchOldestTodoStatusUseCase.mockImplementation(() => mockFetchOldestTodoStatus);
+  MockFetchStatisticsFromUserTasksUseCase.mockImplementation(() => mockFetchStatistics);
   MockCreateTaskUseCase.mockImplementation(() => mockCreateTask);
   MockUpdateTaskStatusUseCase.mockImplementation(() => ({ execute: jest.fn() }));
 
@@ -66,7 +66,7 @@ describe('TaskContext', () => {
       const { result } = renderHook(() => useTask(), { wrapper });
 
       expect(result.current.fetchAllTasksUseCase).toBeDefined();
-      expect(result.current.fetchOldestTodoStatusUseCase).toBeDefined();
+      expect(result.current.fetchStatisticsFromUserTasksUseCase).toBeDefined();
       expect(result.current.createTaskUseCase).toBeDefined();
     });
 
@@ -79,7 +79,7 @@ describe('TaskContext', () => {
       rerender({});
 
       expect(result.current.fetchAllTasksUseCase).toBe(firstResult.fetchAllTasksUseCase);
-      expect(result.current.fetchOldestTodoStatusUseCase).toBe(firstResult.fetchOldestTodoStatusUseCase);
+      expect(result.current.fetchStatisticsFromUserTasksUseCase).toBe(firstResult.fetchStatisticsFromUserTasksUseCase);
       expect(result.current.createTaskUseCase).toBe(firstResult.createTaskUseCase);
     });
 
@@ -105,7 +105,7 @@ describe('TaskContext', () => {
       expect(MockFetchAllTasksUseCase).toHaveBeenCalledWith(mockDeps.sessionRepository, mockDeps.taskRepository);
     });
 
-    it('should instantiate FetchOldestTodoStatusUseCase with taskRepository', () => {
+    it('should instantiate FetchStatisticsFromUserTasksUseCase with sessionRepository and taskRepository', () => {
       const mockDeps = {
         authRepository: {} as any,
         taskRepository: { id: 'task-repo' } as any,
@@ -116,15 +116,15 @@ describe('TaskContext', () => {
 
       mockUseDependencies.mockReturnValue(mockDeps);
 
-      const mockFetchOldestTodoStatus = { execute: jest.fn() };
-      MockFetchOldestTodoStatusUseCase.mockImplementation(() => mockFetchOldestTodoStatus);
+      const mockFetchStatistics = { execute: jest.fn() };
+      MockFetchStatisticsFromUserTasksUseCase.mockImplementation(() => mockFetchStatistics);
       MockCreateTaskUseCase.mockImplementation(() => ({ execute: jest.fn() }));
 
       const wrapper = ({ children }: { children: React.ReactNode }) => <TaskProvider>{children}</TaskProvider>;
 
       renderHook(() => useTask(), { wrapper });
 
-      expect(MockFetchOldestTodoStatusUseCase).toHaveBeenCalledWith(
+      expect(MockFetchStatisticsFromUserTasksUseCase).toHaveBeenCalledWith(
         mockDeps.sessionRepository,
         mockDeps.taskRepository,
       );
