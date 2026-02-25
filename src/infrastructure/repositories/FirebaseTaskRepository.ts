@@ -2,8 +2,8 @@ import firebaseConfig from '@/firebaseConfig';
 import { CreateTaskDTO } from '@/src/data';
 import { ResponseTaskDTO } from '@/src/data/dtos/task/ResponseTaskDTO';
 import { TaskMapper } from '@/src/data/mappers/task/TaskMapper';
-import { Task, TaskRepository, TaskStatus } from '@/src/domain';
-import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { Task, TaskRepository } from '@/src/domain';
+import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
 
 export class FirebaseTaskRepository implements TaskRepository {
   async fetchAll(uid: string): Promise<Task[]> {
@@ -21,24 +21,6 @@ export class FirebaseTaskRepository implements TaskRepository {
     });
 
     return tasks;
-  }
-
-  async fetchOldestTodoStatus(uid: string): Promise<Task | null> {
-    // Note: interesting enough, to be able to perform this query, we need to create an index in Firebase
-    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), where('status', '==', TaskStatus.TODO), where('uid', '==', uid), orderBy("createdAt", "asc"), limit(1));
-    const querySnapshot = await getDocs(builtQuery);
-
-    if (!querySnapshot.empty) {
-      const oldestDoc = querySnapshot.docs[0];
-      return TaskMapper.fromDtoToDomain({
-        ...oldestDoc.data(),
-        id: oldestDoc.id,
-        createdAt: oldestDoc.data()?.createdAt?.toDate(),
-        statusChangedAt: oldestDoc.data()?.statusChangedAt?.toDate(),
-      } as ResponseTaskDTO);
-    } else {
-      return null;
-    }
   }
 
   async createTask(dto: CreateTaskDTO, uid: string): Promise<void> {

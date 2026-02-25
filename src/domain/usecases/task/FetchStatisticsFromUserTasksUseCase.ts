@@ -26,10 +26,10 @@ export class FetchStatisticsFromUserTasksUseCase {
       };
     }
 
-    const [oldestTask, tasks] = await Promise.all([
-      this.taskRepository.fetchOldestTodoStatus(session.uid),
-      this.taskRepository.fetchAll(session.uid),
-    ]);
+    const tasks = await this.taskRepository.fetchAll(session.uid);
+
+    // Oldest TODO task — fetchAll is ordered by createdAt DESC, so the last TODO is the oldest
+    const oldestTask = tasks.filter((t) => t.status === TaskStatus.TODO).at(-1) ?? null;
 
     // Progress
     const total = tasks.length;

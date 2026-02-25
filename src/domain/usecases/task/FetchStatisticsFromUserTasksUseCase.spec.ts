@@ -13,7 +13,6 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
   beforeEach(() => {
     mockTaskRepository = {
       fetchAll: jest.fn(),
-      fetchOldestTodoStatus: jest.fn(),
       createTask: jest.fn(),
       updateTask: jest.fn(),
     } as any;
@@ -39,28 +38,38 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
         totalFocusTime: '0 min',
       });
       expect(mockTaskRepository.fetchAll).not.toHaveBeenCalled();
-      expect(mockTaskRepository.fetchOldestTodoStatus).not.toHaveBeenCalled();
     });
   });
 
   describe('execute — oldest task', () => {
-    it('should return the oldest todo task from the repository', async () => {
+    it('should return the oldest TODO task (last in DESC-ordered list)', async () => {
       const userId = 'user_123';
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: userId } as any);
 
-      const mockTask = Task.create('Title', 'Desc', TimeType.CRONOMETRO, 0, 0, TaskStatus.TODO, new Date());
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(mockTask);
-      mockTaskRepository.fetchAll.mockResolvedValue([]);
+      const newerTask = Task.create('Newer', 'Desc', TimeType.CRONOMETRO, 0, 0, TaskStatus.TODO, new Date('2024-02-01'));
+      const olderTask = Task.create('Older', 'Desc', TimeType.CRONOMETRO, 0, 0, TaskStatus.TODO, new Date('2024-01-01'));
+
+      // fetchAll returns tasks ordered by createdAt DESC — newer first, older last
+      mockTaskRepository.fetchAll.mockResolvedValue([newerTask, olderTask]);
 
       const result = await useCase.execute();
 
-      expect(mockTaskRepository.fetchOldestTodoStatus).toHaveBeenCalledWith(userId);
-      expect(result.oldestTask).toBe(mockTask);
+      expect(result.oldestTask).toBe(olderTask);
     });
 
-    it('should return null oldestTask when repository returns null', async () => {
+    it('should return null oldestTask when there are no TODO tasks', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
+      mockTaskRepository.fetchAll.mockResolvedValue([
+        Task.create('Done', 'Desc', TimeType.CRONOMETRO, 0, 0, TaskStatus.DONE, new Date()),
+      ]);
+
+      const result = await useCase.execute();
+
+      expect(result.oldestTask).toBeNull();
+    });
+
+    it('should return null oldestTask when task list is empty', async () => {
+      mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
       mockTaskRepository.fetchAll.mockResolvedValue([]);
 
       const result = await useCase.execute();
@@ -73,11 +82,10 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
     it('should calculate completed and total tasks correctly', async () => {
       const userId = 'user_123';
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: userId } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
       mockTaskRepository.fetchAll.mockResolvedValue([
-        { uid: userId, status: TaskStatus.DONE, timeSpend: 0 },
-        { uid: userId, status: TaskStatus.TODO, timeSpend: 0 },
-        { uid: userId, status: TaskStatus.DONE, timeSpend: 0 },
+        { status: TaskStatus.DONE, timeSpend: 0 },
+        { status: TaskStatus.TODO, timeSpend: 0 },
+        { status: TaskStatus.DONE, timeSpend: 0 },
       ] as any);
 
       const result = await useCase.execute();
@@ -90,8 +98,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
   describe('execute — total focus time', () => {
     it('should round up 0.73 to 1 min (Math.round rule)', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
-      mockTaskRepository.fetchAll.mockResolvedValue([{ timeSpend: 0.73 }] as any);
+      mockTaskRepository.fetchAll.mockResolvedValue([{ status: TaskStatus.TODO, timeSpend: 0.73 }] as any);
 
       const result = await useCase.execute();
 
@@ -100,8 +107,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
 
     it('should round down 0.49 to 0 min', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
-      mockTaskRepository.fetchAll.mockResolvedValue([{ timeSpend: 0.49 }] as any);
+      mockTaskRepository.fetchAll.mockResolvedValue([{ status: TaskStatus.TODO, timeSpend: 0.49 }] as any);
 
       const result = await useCase.execute();
 
@@ -110,8 +116,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
 
     it('should format hours and minutes correctly (e.g., 65.7 min → 66 min → 1h 6min)', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
-      mockTaskRepository.fetchAll.mockResolvedValue([{ timeSpend: 65.7 }] as any);
+      mockTaskRepository.fetchAll.mockResolvedValue([{ status: TaskStatus.TODO, timeSpend: 65.7 }] as any);
 
       const result = await useCase.execute();
 
@@ -120,8 +125,7 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
 
     it('should format whole hours without minutes (e.g., 120 min → 2h)', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
-      mockTaskRepository.fetchAll.mockResolvedValue([{ timeSpend: 120 }] as any);
+      mockTaskRepository.fetchAll.mockResolvedValue([{ status: TaskStatus.TODO, timeSpend: 120 }] as any);
 
       const result = await useCase.execute();
 
@@ -130,10 +134,9 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
 
     it('should sum timeSpend across multiple tasks', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
       mockTaskRepository.fetchAll.mockResolvedValue([
-        { timeSpend: 10.5 },
-        { timeSpend: 5.2 },
+        { status: TaskStatus.TODO, timeSpend: 10.5 },
+        { status: TaskStatus.DONE, timeSpend: 5.2 },
       ] as any);
 
       const result = await useCase.execute();
@@ -146,7 +149,6 @@ describe('FetchStatisticsFromUserTasksUseCase', () => {
   describe('execute — error propagation', () => {
     it('should propagate errors if TaskRepository.fetchAll fails', async () => {
       mockSessionRepository.getStoredSession.mockResolvedValue({ uid: 'user_1' } as any);
-      mockTaskRepository.fetchOldestTodoStatus.mockResolvedValue(null);
       mockTaskRepository.fetchAll.mockRejectedValue(new Error('DB Error'));
 
       await expect(useCase.execute()).rejects.toThrow('DB Error');

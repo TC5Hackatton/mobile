@@ -31,7 +31,6 @@ describe('CreateTaskUseCase', () => {
     mockTaskRepository = {
       fetchAll: jest.fn(),
       createTask: jest.fn(),
-      fetchOldestTodoStatus: jest.fn(),
       updateTask: jest.fn(),
     };
 
