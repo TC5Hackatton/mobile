@@ -12,7 +12,6 @@ type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
 export function ProductivitySection() {
   const colors = useThemeColors();
   const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
-  const [highContrast, setHighContrast] = useState(false);
 
   return (
     <Card
@@ -66,7 +65,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: spacing.md,
     marginTop: spacing.lg,
-    marginBottom: spacing.lg,
   },
   content: {
     padding: spacing.md,
