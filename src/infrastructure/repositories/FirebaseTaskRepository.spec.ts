@@ -10,7 +10,6 @@ jest.mock('firebase/firestore', () => ({
   updateDoc: jest.fn(),
   where: jest.fn(),
   orderBy: jest.fn(),
-  limit: jest.fn(),
 }));
 
 jest.mock('@/firebaseConfig', () => ({
@@ -54,37 +53,6 @@ describe('FirebaseTaskRepository', () => {
       expect(collection).toHaveBeenCalledWith(firebaseConfig.db, 'tasks');
       expect(result).toHaveLength(1);
       expect(result[0]).toBeInstanceOf(Task);
-    });
-  });
-
-  describe('fetchOldestTodoStatus', () => {
-    it('should return the oldest TODO task', async () => {
-      const mockDoc = {
-        id: 'oldest',
-        data: () => ({
-          title: 'Oldest Task',
-          status: TaskStatus.TODO,
-          createdAt: { toDate: () => new Date() },
-        }),
-      };
-      const mockSnapshot = {
-        empty: false,
-        docs: [mockDoc],
-      };
-      getDocs.mockResolvedValue(mockSnapshot);
-
-      const result = await repository.fetchOldestTodoStatus('uid');
-
-      expect(where).toHaveBeenCalledWith('status', '==', TaskStatus.TODO);
-      expect(result?.id).toBe('oldest');
-    });
-
-    it('should return null if no TODO tasks found', async () => {
-      getDocs.mockResolvedValue({ empty: true });
-
-      const result = await repository.fetchOldestTodoStatus('uid');
-
-      expect(result).toBeNull();
     });
   });
 
