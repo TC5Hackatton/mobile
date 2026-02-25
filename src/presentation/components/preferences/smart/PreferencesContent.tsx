@@ -8,7 +8,6 @@ import {
   AppearanceSection,
   FocusModeSection,
   InfoCard,
-  NotificationsSection,
   ProductivitySection,
 } from '../presentation';
 
@@ -27,7 +26,6 @@ export default function PreferencesContent() {
           <InfoCard />
           <AppearanceSection />
           <ProductivitySection />
-          <NotificationsSection />
           <FocusModeSection />
           <AccessibilitySection />
         </ScrollView>
