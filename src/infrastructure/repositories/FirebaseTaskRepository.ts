@@ -23,9 +23,9 @@ export class FirebaseTaskRepository implements TaskRepository {
     return tasks;
   }
 
-  async fetchOldestTodoStatus(): Promise<Task | null> {
+  async fetchOldestTodoStatus(uid: string): Promise<Task | null> {
     // Note: interesting enough, to be able to perform this query, we need to create an index in Firebase
-    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), where('status', '==', TaskStatus.TODO), orderBy("createdAt", "asc"), limit(1));
+    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), where('status', '==', TaskStatus.TODO), where('uid', '==', uid), orderBy("createdAt", "asc"), limit(1));
     const querySnapshot = await getDocs(builtQuery);
 
     if (!querySnapshot.empty) {

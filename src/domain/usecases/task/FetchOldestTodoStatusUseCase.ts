@@ -1,9 +1,11 @@
+import { SessionRepository } from "../../repositories/SessionRepository";
 import { TaskRepository } from "../../repositories/TaskRepository";
 
 export class FetchOldestTodoStatusUseCase {
-  constructor(private readonly taskRepository: TaskRepository) { }
+  constructor(private readonly sessionRepository: SessionRepository, private readonly taskRepository: TaskRepository) { }
 
   async execute() {
-    return this.taskRepository.fetchOldestTodoStatus();
+    const session = await this.sessionRepository.getStoredSession();
+    return this.taskRepository.fetchOldestTodoStatus(session?.uid || '');
   }
 }
