@@ -1,9 +1,11 @@
+import { SessionRepository } from '@/src/domain/repositories/SessionRepository';
 import { TaskRepository } from '../../repositories/TaskRepository';
 
 export class FetchAllTasksUseCase {
-  constructor(private taskRepository: TaskRepository) { }
+  constructor(private sessionRepository: SessionRepository, private taskRepository: TaskRepository) { }
 
-  execute() {
-    return this.taskRepository.fetchAll();
+  async execute() {
+    const session = await this.sessionRepository.getStoredSession();
+    return this.taskRepository.fetchAll(session?.uid || '');
   }
 }

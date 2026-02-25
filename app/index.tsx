@@ -13,10 +13,8 @@ export default function Index() {
 
     const timer = setTimeout(() => {
       if (isAuthenticated) {
-        console.log('User authenticated, navigating to home...');
         router.replace('/(tabs)/home');
       } else {
-        console.log('User not authenticated, navigating to sign-in...');
         router.replace('/sign-in');
       }
     }, 1500);

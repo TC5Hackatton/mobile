@@ -1,12 +1,14 @@
 import { Task } from '../../entities/Task';
 import { TaskStatus } from '../../enums/TaskStatus';
 import { TimeType } from '../../enums/TimeType';
+import { SessionRepository } from '../../repositories/SessionRepository';
 import { TaskRepository } from '../../repositories/TaskRepository';
 import { FetchOldestTodoStatusUseCase } from './FetchOldestTodoStatusUseCase';
 
 describe('FetchOldestTodoStatusUseCase', () => {
   let fetchOldestTodoStatusUseCase: FetchOldestTodoStatusUseCase;
   let mockTaskRepository: jest.Mocked<TaskRepository>;
+  let mockSessionRepository: jest.Mocked<SessionRepository>;
 
   beforeEach(() => {
     mockTaskRepository = {
@@ -15,7 +17,12 @@ describe('FetchOldestTodoStatusUseCase', () => {
       createTask: jest.fn(),
       updateTask: jest.fn(),
     } as any;
-    fetchOldestTodoStatusUseCase = new FetchOldestTodoStatusUseCase(mockTaskRepository);
+    mockSessionRepository = {
+      getStoredSession: jest.fn(),
+      storeSession: jest.fn(),
+      clearSession: jest.fn(),
+    } as any;
+    fetchOldestTodoStatusUseCase = new FetchOldestTodoStatusUseCase(mockSessionRepository, mockTaskRepository);
   });
 
   it('should call fetchOldestTodoStatus from repository', async () => {

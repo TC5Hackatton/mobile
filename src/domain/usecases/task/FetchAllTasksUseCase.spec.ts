@@ -1,21 +1,30 @@
 import { Task } from '../../entities/Task';
 import { TaskStatus } from '../../enums/TaskStatus';
 import { TimeType } from '../../enums/TimeType';
+import { SessionRepository } from '../../repositories/SessionRepository';
 import { TaskRepository } from '../../repositories/TaskRepository';
 import { FetchAllTasksUseCase } from './FetchAllTasksUseCase';
 
 describe('FetchAllTasksUseCase', () => {
   let fetchAllTasksUseCase: FetchAllTasksUseCase;
   let mockTaskRepository: jest.Mocked<TaskRepository>;
+  let mockSessionRepository: jest.Mocked<SessionRepository>;
 
   beforeEach(() => {
     mockTaskRepository = {
       fetchAll: jest.fn(),
       createTask: jest.fn(),
       fetchOldestTodoStatus: jest.fn(),
+      updateTask: jest.fn(),
     };
 
-    fetchAllTasksUseCase = new FetchAllTasksUseCase(mockTaskRepository);
+    mockSessionRepository = {
+      getStoredSession: jest.fn(),
+      storeSession: jest.fn(),
+      clearSession: jest.fn(),
+    } as any;
+
+    fetchAllTasksUseCase = new FetchAllTasksUseCase(mockSessionRepository, mockTaskRepository);
   });
 
   it('should return all tasks from repository', async () => {
