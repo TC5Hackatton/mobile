@@ -48,7 +48,7 @@ describe('FirebaseTaskRepository', () => {
       };
       getDocs.mockResolvedValue(mockSnapshot);
 
-      const result = await repository.fetchAll();
+      const result = await repository.fetchAll('uid');
 
       expect(query).toHaveBeenCalled();
       expect(collection).toHaveBeenCalledWith(firebaseConfig.db, 'tasks');
@@ -73,7 +73,7 @@ describe('FirebaseTaskRepository', () => {
       };
       getDocs.mockResolvedValue(mockSnapshot);
 
-      const result = await repository.fetchOldestTodoStatus();
+      const result = await repository.fetchOldestTodoStatus('uid');
 
       expect(where).toHaveBeenCalledWith('status', '==', TaskStatus.TODO);
       expect(result?.id).toBe('oldest');
@@ -82,7 +82,7 @@ describe('FirebaseTaskRepository', () => {
     it('should return null if no TODO tasks found', async () => {
       getDocs.mockResolvedValue({ empty: true });
 
-      const result = await repository.fetchOldestTodoStatus();
+      const result = await repository.fetchOldestTodoStatus('uid');
 
       expect(result).toBeNull();
     });

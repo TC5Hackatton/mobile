@@ -24,9 +24,7 @@ Object.defineProperty(window, 'localStorage', {
   writable: true,
 });
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>{children}</ThemeProvider>
-);
+const wrapper = ({ children }: { children: React.ReactNode }) => <ThemeProvider>{children}</ThemeProvider>;
 
 describe('ThemeContext', () => {
   beforeEach(() => {
@@ -36,7 +34,7 @@ describe('ThemeContext', () => {
 
   describe('ThemeProvider initial state', () => {
     it('should start with light theme when no theme is saved', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue('light');
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
@@ -74,7 +72,7 @@ describe('ThemeContext', () => {
 
   describe('toggleTheme', () => {
     it('should toggle from light to dark', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue('light');
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
@@ -100,7 +98,7 @@ describe('ThemeContext', () => {
     });
 
     it('should save new theme to localStorage after toggle', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue('light');
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
@@ -114,7 +112,7 @@ describe('ThemeContext', () => {
 
   describe('setTheme', () => {
     it('should set theme to dark', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue('light');
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
@@ -140,7 +138,7 @@ describe('ThemeContext', () => {
     });
 
     it('should save theme to localStorage when set', () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.getItem.mockReturnValue('light');
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
