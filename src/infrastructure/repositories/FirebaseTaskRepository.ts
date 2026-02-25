@@ -6,8 +6,8 @@ import { Task, TaskRepository, TaskStatus } from '@/src/domain';
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc, where } from 'firebase/firestore';
 
 export class FirebaseTaskRepository implements TaskRepository {
-  async fetchAll(): Promise<Task[]> {
-    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), orderBy('createdAt', 'desc'));
+  async fetchAll(uid: string): Promise<Task[]> {
+    const builtQuery = query(collection(firebaseConfig.db, 'tasks'), where('uid', '==', uid), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(builtQuery);
 
     const tasks: Task[] = [];

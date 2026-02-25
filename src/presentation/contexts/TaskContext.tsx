@@ -23,7 +23,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 
   const taskUseCases = useMemo<TaskUseCases>(
     () => ({
-      fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
+      fetchAllTasksUseCase: new FetchAllTasksUseCase(sessionRepository, taskRepository),
       fetchOldestTodoStatusUseCase: new FetchOldestTodoStatusUseCase(taskRepository),
       createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
       updateTaskStatusUseCase: new UpdateTaskStatusUseCase(taskRepository),
