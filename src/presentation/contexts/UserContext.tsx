@@ -1,4 +1,4 @@
-import { CreateTaskUseCase, FetchAllTasksUseCase, ForgotPasswordUseCase, SignInUseCase, SignUpUseCase } from '@/src/domain';
+import { ForgotPasswordUseCase, SignInUseCase, SignUpUseCase } from '@/src/domain';
 import { createContext, useContext, useMemo } from 'react';
 import { useDependencies } from './DependenciesContext';
 
@@ -13,17 +13,15 @@ const UserContext = createContext<UserUseCases | null>(null);
 
 // Component (Provider) that provides auth dependencies instantiated through context
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const { authRepository, taskRepository, sessionRepository } = useDependencies();
+  const { authRepository, sessionRepository } = useDependencies();
 
   const userUseCases = useMemo<UserUseCases>(
     () => ({
       signUpUseCase: new SignUpUseCase(authRepository),
       signInUseCase: new SignInUseCase(authRepository, sessionRepository),
       forgotPasswordUseCase: new ForgotPasswordUseCase(authRepository),
-      createTaskUseCase: new CreateTaskUseCase(sessionRepository, taskRepository),
-      fetchAllTasksUseCase: new FetchAllTasksUseCase(taskRepository),
     }),
-    [authRepository, taskRepository, sessionRepository],
+    [authRepository, sessionRepository],
   );
 
   return <UserContext.Provider value={userUseCases}>{children}</UserContext.Provider>;

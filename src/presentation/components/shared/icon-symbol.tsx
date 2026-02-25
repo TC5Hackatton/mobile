@@ -19,12 +19,12 @@ const MAPPING = {
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
   'doc.text.fill': 'description',
-  'square': 'crop-free',
+  square: 'crop-free',
   'gearshape.fill': 'settings',
   'arrow-expand-all': 'open-in-full',
   'circle-half-full': 'brightness-6',
   'person.circle.fill': 'account-circle',
-} as IconMapping;
+} as unknown as IconMapping;
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
