@@ -5,7 +5,7 @@ export class GetTotalFocusTimeUseCase {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly getStoredSessionUseCase: GetStoredSessionUseCase,
-  ) {}
+  ) { }
 
   async execute(): Promise<string> {
     const session = await this.getStoredSessionUseCase.execute();
@@ -14,13 +14,10 @@ export class GetTotalFocusTimeUseCase {
       return '0 min';
     }
 
-    const tasks = await this.taskRepository.fetchAll();
-
-    // Filtra as tasks do usuário logado
-    const userTasks = tasks.filter((t) => t.uid === session.uid);
+    const tasks = await this.taskRepository.fetchAll(session.uid);
 
     // Soma o tempo de foco
-    const totalMinutes = userTasks.reduce((acc, task) => acc + (task.timeSpend || 0), 0);
+    const totalMinutes = tasks.reduce((acc, task) => acc + (task.timeSpend || 0), 0);
 
     // REGRA DE ARREDONDAMENTO: 0.73 vira 1 | 0.49 vira 0 * Podemos alterar isso se a maioria achar que não faz sentido.
     const roundedMinutes = Math.round(totalMinutes);

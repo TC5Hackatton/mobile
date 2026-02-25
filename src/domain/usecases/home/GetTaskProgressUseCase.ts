@@ -6,7 +6,7 @@ export class GetTaskProgressUseCase {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly getStoredSessionUseCase: GetStoredSessionUseCase,
-  ) {}
+  ) { }
 
   async execute() {
     const session = await this.getStoredSessionUseCase.execute();
@@ -15,13 +15,10 @@ export class GetTaskProgressUseCase {
       return { completed: 0, total: 0 };
     }
 
-    const tasks = await this.taskRepository.fetchAll();
+    const tasks = await this.taskRepository.fetchAll(session.uid);
 
-    //Filtrando as tasks pelo usuário logado
-    const userTasks = tasks.filter((t) => t.uid === session.uid);
-
-    const total = userTasks.length;
-    const completed = userTasks.filter((t) => t.status === TaskStatus.DONE).length;
+    const total = tasks.length;
+    const completed = tasks.filter((t) => t.status === TaskStatus.DONE).length;
 
     return {
       completed,
