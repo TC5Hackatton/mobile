@@ -1,4 +1,3 @@
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -6,7 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Task } from '@/src/domain';
+import { UserTaskStatistics } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { FloatingActionButton } from '@/src/presentation/components/shared/floating-action-button';
 import { spacing } from '@/src/presentation/constants/spacing';
@@ -14,24 +13,24 @@ import { typography } from '@/src/presentation/constants/typography';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import OldestTaskCard from '../presentational/OldestTaskCard';
+import StatCard from '../presentational/StatCard';
 
 export default function HomeContent() {
   const colors = useThemeColors();
   const { fetchStatisticsFromUserTasksUseCase } = useTask();
 
-  const [oldestTask, setOldestTask] = useState<Task | null>(null);
-  const [progress, setProgress] = useState({ completed: 0, total: 0 });
-  const [totalTime, setTotalTime] = useState('0 min');
-  const [taskCounts, setTaskCounts] = useState({ todo: 0, doing: 0, done: 0, total: 0 });
+  const [statistics, setStatistics] = useState<UserTaskStatistics>({
+    oldestTask: null,
+    progress: { completed: 0, total: 0 },
+    totalFocusTime: '0 min',
+    taskCounts: { todo: 0, doing: 0, done: 0, total: 0 },
+  });
+
+  const { oldestTask, progress, totalFocusTime, taskCounts } = statistics;
 
   useFocusEffect(
     useCallback(() => {
-      fetchStatisticsFromUserTasksUseCase.execute().then(({ oldestTask, progress, totalFocusTime, taskCounts }) => {
-        setOldestTask(oldestTask);
-        setProgress(progress);
-        setTotalTime(totalFocusTime);
-        setTaskCounts(taskCounts);
-      });
+      fetchStatisticsFromUserTasksUseCase.execute().then(setStatistics);
     }, [fetchStatisticsFromUserTasksUseCase]),
   );
 
@@ -71,7 +70,7 @@ export default function HomeContent() {
                   variant="headlineLarge"
                   style={styles.dailyCardValue}
                   theme={{ colors: { onSurface: colors.secondary } }}>
-                  {totalTime}
+                  {totalFocusTime}
                 </Text>
                 <Text
                   variant="bodySmall"
@@ -123,77 +122,25 @@ export default function HomeContent() {
                 </View>
 
                 <View style={styles.weeklyStatsGrid}>
-                  <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
-                    <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="pending" size={24} color={colors.textSecondary} />
-                      <Text
-                        variant="headlineMedium"
-                        style={styles.weeklyStatValue}
-                        theme={{ colors: { onSurface: colors.text } }}>
-                        {taskCounts.todo}
-                      </Text>
-                      <Text
-                        variant="bodySmall"
-                        style={styles.weeklyStatLabel}
-                        theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        A Fazer
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
-                    <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="timelapse" size={24} color={colors.secondary} />
-                      <Text
-                        variant="headlineMedium"
-                        style={styles.weeklyStatValue}
-                        theme={{ colors: { onSurface: colors.text } }}>
-                        {taskCounts.doing}
-                      </Text>
-                      <Text
-                        variant="bodySmall"
-                        style={styles.weeklyStatLabel}
-                        theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Em Andamento
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
-                    <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="check-circle-outline" size={24} color={colors.primary} />
-                      <Text
-                        variant="headlineMedium"
-                        style={styles.weeklyStatValue}
-                        theme={{ colors: { onSurface: colors.text } }}>
-                        {taskCounts.done}
-                      </Text>
-                      <Text
-                        variant="bodySmall"
-                        style={styles.weeklyStatLabel}
-                        theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Concluídas
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={[styles.weeklyInnerCard, { backgroundColor: colors.surfaceVariant }]}>
-                    <View style={styles.weeklyStatContent}>
-                      <MaterialIcons name="group-work" size={24} color={colors.coral} />
-                      <Text
-                        variant="headlineMedium"
-                        style={styles.weeklyStatValue}
-                        theme={{ colors: { onSurface: colors.text } }}>
-                        {taskCounts.total}
-                      </Text>
-                      <Text
-                        variant="bodySmall"
-                        style={styles.weeklyStatLabel}
-                        theme={{ colors: { onSurface: colors.textSecondary } }}>
-                        Tarefas Totais
-                      </Text>
-                    </View>
-                  </View>
+                  <StatCard icon="pending" iconColor={colors.textSecondary} value={taskCounts.todo} label="A Fazer" />
+                  <StatCard
+                    icon="timelapse"
+                    iconColor={colors.secondary}
+                    value={taskCounts.doing}
+                    label="Em Andamento"
+                  />
+                  <StatCard
+                    icon="check-circle-outline"
+                    iconColor={colors.primary}
+                    value={taskCounts.done}
+                    label="Concluídas"
+                  />
+                  <StatCard
+                    icon="group-work"
+                    iconColor={colors.coral}
+                    value={taskCounts.total}
+                    label="Tarefas Totais"
+                  />
                 </View>
               </Card.Content>
             </Card>
@@ -275,14 +222,10 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.md,
   },
-  innerCard: {
-    borderRadius: 12,
-    padding: spacing.md,
-  },
-  weeklyInnerCard: {
-    borderRadius: 12,
-    padding: spacing.md,
-    width: '48%',
+  weeklyStatsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
   },
   progressBarContainer: {
     height: 16,
@@ -303,23 +246,5 @@ const styles = StyleSheet.create({
   progressBarEmpty: {
     flex: 1,
     height: '100%',
-  },
-  weeklyStatsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  weeklyStatContent: {
-    alignItems: 'center',
-  },
-  weeklyStatValue: {
-    fontSize: typography.fontSize.xl,
-    fontFamily: typography.fontFamily.semiBold,
-    marginTop: spacing.sm,
-    marginBottom: spacing.xs,
-  },
-  weeklyStatLabel: {
-    fontSize: typography.fontSize.sm,
-    textAlign: 'center',
   },
 });
