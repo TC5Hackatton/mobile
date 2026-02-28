@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -8,6 +8,7 @@ import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
+import { useFocusEffect } from 'expo-router';
 import { FloatingActionButton } from '../../shared/floating-action-button';
 import useTaskLabels from '../hooks/useTaskLabels';
 import TasksListCard from '../presentational/TasksListCard';
@@ -47,9 +48,11 @@ export default function TasksContent() {
     setTasks(groupedTasks);
   }, [fetchAllTasksUseCase, calculateLabels]);
 
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [fetchTasks]),
+  );
 
   const handleUpdateStatus = async (task: Task, newStatus: TaskStatus) => {
     try {
