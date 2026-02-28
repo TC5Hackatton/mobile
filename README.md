@@ -1,7 +1,6 @@
 # FIAP - Hackaton - Mobile
 
-Este repositório é referente ao desenvolvimento mobile do hackaton. Aqui você encontrará tudo que precisa pra executar o projeto, instalar novos módulos,etc. 
-
+Este repositório é referente ao desenvolvimento mobile do hackaton. Aqui você encontrará tudo que precisa pra executar o projeto, instalar novos módulos,etc.
 
 ## Primeiros passos
 
@@ -44,7 +43,7 @@ Este aplicativo móvel é construído com as seguintes principais tecnologias:
    ```
 
 3. Duplique o arquivo `.env.example`, renomeie para `.env` e cole as credenciais do Firebase que foram enviadas junto com a entrega do projeto.
- 
+
 ```.env
 # Exemplo
 EXPO_PUBLIC_FIREBASE_API_KEY=
@@ -67,9 +66,8 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=
 6. Comece a desenvolver editando os arquivos em **app/**.
 
 ### Estrutura do Projeto
- 
- ```bash
 
+```bash
 ├── app/
 │   ├── _layout.tsx
 │   ├── forgot-password.tsx
@@ -83,45 +81,46 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=
 │       ├── preferences.tsx
 │       └── tasks.tsx
 └── src/
-    ├── data/
-    │   ├── index.ts
-    │   ├── dtos/
-    │   │   └── task/
-    │   └── mappers/
-    │       ├── task/
-    │       └── user/
-    ├── domain/                                                      ← Domínio
-    │   ├── index.ts
-    │   ├── entities/                                                ← Aqui estão as entidades do projeto mobile
-    │   ├── enums/
-    │   ├── repositories/
-    │   └── usecases/                                                 ← UseCases - referente às regras de negócios
-    │       ├── home/
-    │       ├── task/
-    │       └── user/
-    ├── infrastructure/                                              ← Infraestrutura
-    │   ├── error-handler.ts
-    │   ├── index.ts
-    │   └── repositories/
-    └── presentation/                                                 ← Apresentação
-        ├── assets/
-        │   └── images/
-        ├── components/
-        │   ├── forgot-password/
-        │   │   └── smart/
-        │   ├── home/
-        │   ├── preferences/
-        │   ├── register-task/
-        │   ├── shared/
-        │   ├── sign-in/
-        │   ├── sign-up/
-        │   └── tasks/
-        ├── constants/
-        ├── contexts/
-        └── hooks/
- ```
+   ├── data/
+   │   ├── index.ts
+   │   ├── dtos/
+   │   │   └── task/
+   │   └── mappers/
+   │       ├── task/
+   │       └── user/
+   ├── domain/                                                      ← Domínio
+   │   ├── index.ts
+   │   ├── entities/                                                ← Aqui estão as entidades do projeto mobile
+   │   ├── enums/
+   │   ├── repositories/
+   │   └── usecases/                                                 ← UseCases - referente às regras de negócios
+   │       ├── home/
+   │       ├── task/
+   │       └── user/
+   ├── infrastructure/                                              ← Infraestrutura
+   │   ├── error-handler.ts
+   │   ├── index.ts
+   │   └── repositories/
+   └── presentation/                                                 ← Apresentação
+       ├── assets/
+       │   └── images/
+       ├── components/
+       │   ├── forgot-password/
+       │   │   └── smart/
+       │   ├── home/
+       │   ├── preferences/
+       │   ├── register-task/
+       │   ├── shared/
+       │   ├── sign-in/
+       │   ├── sign-up/
+       │   └── tasks/
+       ├── constants/
+       ├── contexts/
+       └── hooks/
+```
 
 #### Onde Adicionar novos componentes
+
 Seguindo as normas da Clean Architecture, cada tipo de serviço, componente ou utilitário tem seu lugar definido.
 Use os exemplos abaixo para entender onde as novas peças do sistema devem viver.
 
@@ -143,7 +142,8 @@ Use os exemplos abaixo para entender onde as novas peças do sistema devem viver
 > 💡 Ao criar um novo recurso, pense primeiro em sua responsabilidade e escolha a camada adequada. Isso mantém o código modular, testável e fácil de manter.
 
 #### Extra - Comandos Úteis
- ```bash
+
+```bash
 # Executar testes unitários
 npm test
 
@@ -159,11 +159,12 @@ npx expo run:ios
 # Abrir o app no Expo Go (exemplo)
 npx expo start --tunnel
 ```
+
 ### Estilos e Temas
 
 O projeto usa o **react-native-paper** como biblioteca de componentes e temas. As cores e fontes são definidas em `src/presentation/constants/paper-theme.ts` e existem dois objetos exportados (`lightTheme`/`darkTheme`) que são aplicados via `PaperProvider` no layout principal.
 
-Para alternar entre modo claro/escuro há um contexto dedicado (`ThemeContext` em `src/presentation/contexts/ThemeContext.tsx`) que guarda o estado, persiste a escolha no `localStorage` e expõe os hooks **`useTheme`**, **`useThemeColor`** e **`useThemeColors`**. Estes hooks são usados por componentes como cartões de tarefa, preferências e abas para obter as cores certas com base no tema atual.
+Para alternar entre modo claro/escuro há um contexto dedicado (`ThemeContext` em `src/presentation/contexts/ThemeContext.tsx`) que guarda o estado e alguns hooks - tais como **`useTheme`**, **`useThemeColor`** e **`useThemeColors`** - que são usados por componentes como cartões de tarefa, preferências e abas para obter as cores certas com base no tema atual.
 
 As fontes customizadas (Raleway) são carregadas no arquivo `app/_layout.tsx` usando `expo-font` e mantemos a splash screen até que os arquivos estejam prontos. A lógica de status bar e barra de navegação também leva em conta o tema escuro/claro.
 
@@ -176,24 +177,26 @@ O modo escuro foi aplicado não apenas como uma preferência estética, mas como
 </ul>
 
 #### Implementação Técnica de Acessibilidade
+
 Para garantir que o MindEase seja verdadeiramente inclusivo, a alternância de temas segue diretrizes específicas:
 
 <ol>
   <li>Contraste Otimizado: Diferente do "preto absoluto", utilizamos as variações de cinza profundo e azul marinho do nosso manual de identidade, o que evita o efeito de "halo" (borrão) que algumas pessoas com Dislexia sentem ao ler texto branco sobre fundo 100% preto.</li>
   <li>Consistência Sistêmica: Através do ThemeContext e do PaperProvider, garantimos que a transição de cores seja atômica em todo o app, evitando flashes de luz branca durante o carregamento de telas, o que poderia desencadear gatilhos sensoriais.</li>
-  <li>Persistência de Preferência: A escolha do usuário é armazenada localmente para que o app respeite o "espaço seguro" configurado pelo estudante desde o primeiro frame da inicialização.</li>
+  <li>Persistência de Preferência: A escolha do usuário é armazenada para que o app respeite o "espaço seguro" configurado pelo estudante desde o primeiro frame da inicialização.</li>
 </ol>
 
 ### Gerenciamento de estado/contextos
 
 A camada de apresentação é orientada por contextos React para compartilhar estado entre telas:
 
-- **`SessionContext`** – controle de autenticação (usuário atual, `isAuthenticated`, `signIn`, `signOut`, etc.). Protege rotas e é consultado no layout das tabs.
+- **`SessionContext`** – controle de sessão do app (usuário atual, `isAuthenticated`, etc.). Protege rotas e é consultado no layout das tabs.
 - **`TaskContext`** – mantém as tarefas carregadas, fornece métodos como `fetchTasks` e `createTask` e é usado pelas telas de lista e criação de tarefas.
+- **`UserContext`** – responsável por manipular a conta do usuário, fornecendo métodos como `signIn`, `signUp`, `forgotPassword`, etc.
 - **`ThemeContext`** – já mencionado acima para modo claro/escuro.
-- **`DependenciesContext`** – “injetor” simples que provê as implementações dos repositórios (Firebase, AsyncStorage, etc.) para os use‑cases.
+- **`DependenciesContext`** – “injetor” global de dependências que provê as implementações dos repositórios (Firebase, AsyncStorage, etc.) para os use‑cases.
 
-Cada contexto exporta um provider e um hook (`useSession`, `useTask`, `useTheme`, `useDependencies`). Adicionar novo estado global envolve criar o contexto sob `src/presentation/contexts`, escrever o provider e utilizá‑lo no topo da árvore (normalmente em `app/_layout.tsx`).
+Cada contexto exporta um provider e um hook (`useSession`, `useTask`, `useUser`, `useTheme`, `useDependencies`). Adicionar novo estado global envolve criar o contexto sob `src/presentation/contexts`, escrever o provider e utilizá‑lo no topo da árvore (normalmente em `app/_layout.tsx`, mas dando preferência para adicionar o contexto na parte mais alta possível da árvore de componentes, próximo ao local de utilização).
 
 ### Navegação
 
@@ -210,7 +213,7 @@ Também há componentes reutilizáveis como `HapticTab`, `IconSymbol` e `Loading
 
 ### Qualidade e Confiabilidade (Jest & Testing Library)
 
-Para um aplicativo focado em saúde mental e neurodiversidade, a previsibilidade é uma regra de ouro. Falhas inesperadas ou comportamentos inconsistentes na interface podem gerar ansiedade e frustração no nosso público-alvo. Por isso, adotamos uma cultura de Test-Driven Development (TDD) rigorosa.
+Para um aplicativo focado em saúde mental e neurodiversidade, a previsibilidade é uma regra de ouro. Falhas inesperadas ou comportamentos inconsistentes na interface podem gerar ansiedade e frustração no nosso público-alvo. Por isso, adotamos uma cultura de testes rigorosa.
 
 O conjunto de testes usa **Jest** + **React Testing Library** (configurado em `jest.setup.ts`) e cobre todas as camadas:
 
@@ -218,16 +221,16 @@ O conjunto de testes usa **Jest** + **React Testing Library** (configurado em `j
 - **Infraestrutura** – repositórios in‑memory, AsyncStorage e Firebase possuem testes que garantem contratos básicos.
 - **Apresentação** – hooks (`use-theme-colors`, `useTaskLabels`), contextos (`ThemeContext`, `SessionContext`), componentes smart/presentational e schemas de validação são exercitados.
 
-Para rodar os testes execute `npm test` ou `yarn test`. O comando já foi listado em “Extra – Comandos Úteis”, mas aqui reforçamos que novas specs devem ficar próximas ao código testado e utilizar o padrão `*.spec.ts` ou `*.spec.tsx`.
+Para rodar os testes execute `npm test` ou `yarn test`. O comando já foi listado na seção “Extra – Comandos Úteis”, mas aqui reforçamos que novas specs devem ficar próximas ao código testado e utilizar o padrão `*.spec.ts` ou `*.spec.tsx`.
 
 #### Por que escolhemos o Jest?
+
 Escolhemos o Jest pela sua velocidade e isolamento de testes. Em um ambiente de desenvolvimento ágil como um hackathon, a capacidade de rodar testes em paralelo e o modo watch nos permitiram iterar rápido sem quebrar funcionalidades críticas de acessibilidade.
 
 Não testamos apenas o "caminho feliz". Nossa suíte de testes abrange:
 
 <ul>
-  <li>Domínio e Lógica de Negócio: Garantimos que as regras de criação de tarefas e gerenciamento de sessões sejam impecáveis.</li>
-  <li>Consistência de Interface (UI): Testamos nossos hooks customizados (use-theme-colors) e contextos para garantir que a transição entre modos claro e escuro nunca falhe, mantendo o conforto visual.</li>
+  <li>Domínio e Lógica de Negócio: Garantimos que as regras de criação de tarefas e gerenciamento de sessões sejam funcionais.</li>
   <li>Consistência de Interface (UI): Testamos nossos hooks customizados (use-theme-colors) e contextos para garantir que a transição entre modos claro e escuro nunca falhe, mantendo o conforto visual.</li>
 </ul>
 
@@ -235,17 +238,14 @@ Não testamos apenas o "caminho feliz". Nossa suíte de testes abrange:
 
 Como evidenciado nos logs abaixo, alcançamos a marca de <b>282 testes aprovados</b> em <b>38 suítes de teste</b> diferentes.
 
-<b>Destaque do Time:</b> Conseguimos validar componentes complexos de UI, como o `TasksListCard` e o `RunningTimer`, garantindo que cronômetros e etiquetas de tarefas funcionem com precisão milimétrica — algo vital para usuários com TDAH que dependem de indicadores visuais de tempo.
-
+<b>Destaque do Time:</b> Conseguimos validar componentes complexos de UI, como o `TasksListCard` e o `RunningTimer`, garantindo que cronômetros e etiquetas de tarefas funcionem com precisão — algo muito importante para usuários com TDAH que dependem de indicadores visuais de tempo.
 
 #### Evidências de Testes
 
 ##### Execução das Suítes de Teste
+
 Abaixo, a execução detalhada mostrando a cobertura desde os casos de uso de domínio até os componentes de apresentação.
 
-##### Resultado Final
-Um ecossistema de software íntegro: 282 testes passando em apenas 20 segundos.
+![Teste do Jest para os arquivos do sistema Mobile](./src/presentation/assets/docs/image.png)
 
-![Teste do Jest para os arquivos do sistema Mobile](image.png)
-
-![Testes do Jest e resultado final dos testes para Mobile](image-1.png)
+![Testes do Jest e resultado final dos testes para Mobile](./src/presentation/assets/docs/image-1.png)
