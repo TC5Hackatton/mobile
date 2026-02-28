@@ -5,8 +5,8 @@ import { Card, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
 
@@ -24,8 +24,8 @@ export function ProductivitySection() {
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="access-time" size={24} color={colors.text} />
-          <Text 
-            variant="titleLarge" 
+          <Text
+            variant="titleLarge"
             style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Tempo e Produtividade
@@ -33,8 +33,8 @@ export function ProductivitySection() {
         </View>
 
         <View>
-          <Text 
-            variant="titleMedium" 
+          <Text
+            variant="titleMedium"
             style={[styles.itemTitle, { fontSize: fontSize.md }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Pomodoro Padrão

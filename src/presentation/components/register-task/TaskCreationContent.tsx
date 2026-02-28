@@ -8,8 +8,8 @@ import Toast from 'react-native-toast-message';
 import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
@@ -90,7 +90,14 @@ export default function TaskCreationContent() {
                 timeType === 'cronometro' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('cronometro')}>
-              <Text style={[styles.tabText, { color: colors.text, fontSize: fontSize.md }, timeType === 'cronometro' && { color: colors.text }]}>Cronômetro</Text>
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: colors.text, fontSize: fontSize.md },
+                  timeType === 'cronometro' && { color: colors.text },
+                ]}>
+                Cronômetro
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -100,7 +107,14 @@ export default function TaskCreationContent() {
                 timeType === 'fixo' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('fixo')}>
-              <Text style={[styles.tabText, { color: colors.text, fontSize: fontSize.md }, timeType === 'fixo' && { color: colors.white }]}>Tempo fixo</Text>
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: colors.text, fontSize: fontSize.md },
+                  timeType === 'fixo' && { color: colors.white },
+                ]}>
+                Tempo fixo
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -119,7 +133,14 @@ export default function TaskCreationContent() {
                     selectedTime === time && { backgroundColor: colors.tertiary },
                   ]}
                   onPress={() => setSelectedTime(time)}>
-                  <Text style={[styles.timeOptionText, { color: colors.text, fontSize: fontSize.md }, selectedTime === time && { color: colors.white }]}>{time}</Text>
+                  <Text
+                    style={[
+                      styles.timeOptionText,
+                      { color: colors.text, fontSize: fontSize.md },
+                      selectedTime === time && { color: colors.white },
+                    ]}>
+                    {time}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>

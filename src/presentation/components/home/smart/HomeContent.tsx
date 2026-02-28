@@ -11,8 +11,8 @@ import { FloatingActionButton } from '@/src/presentation/components/shared/float
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import OldestTaskCard from '../presentational/OldestTaskCard';
 import StatCard from '../presentational/StatCard';
 
@@ -89,7 +89,10 @@ export default function HomeContent() {
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content>
-                <Text variant="titleLarge" style={[styles.sectionTitle, { fontSize: fontSize.xxl }]} theme={{ colors: { onSurface: colors.text } }}>
+                <Text
+                  variant="titleLarge"
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+                  theme={{ colors: { onSurface: colors.text } }}>
                   Tarefa Mais Antiga
                 </Text>
 
@@ -103,7 +106,10 @@ export default function HomeContent() {
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.sectionCardContent}>
-                <Text variant="titleLarge" style={[styles.sectionTitle, { fontSize: fontSize.lg }]} theme={{ colors: { onSurface: colors.text } }}>
+                <Text
+                  variant="titleLarge"
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+                  theme={{ colors: { onSurface: colors.text } }}>
                   Progresso Semanal
                 </Text>
 
