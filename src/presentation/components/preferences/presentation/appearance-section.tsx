@@ -1,5 +1,4 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
 
@@ -12,11 +11,10 @@ import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export function AppearanceSection() {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   const { isDark, setTheme } = useTheme();
   const { fontSizeScale, setFontSizeScale } = useFontSizeContext();
-  const { fontSize } = useFontSize();
-  const [highContrast, setHighContrast] = useState(false);
-  
+
   const handleThemeToggle = () => {
     setTheme(isDark ? 'light' : 'dark');
   };
@@ -34,8 +32,8 @@ export function AppearanceSection() {
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="brightness-3" size={24} color={colors.text} />
-          <Text 
-            variant="titleLarge" 
+          <Text
+            variant="titleLarge"
             style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
             theme={{ colors: { onSurface: colors.text } }}>
             Aparência
@@ -44,14 +42,14 @@ export function AppearanceSection() {
 
         <View style={styles.item}>
           <View style={styles.itemContent}>
-            <Text 
-              variant="titleMedium" 
+            <Text
+              variant="titleMedium"
               style={[styles.itemTitle, { fontSize: fontSize.md }]}
               theme={{ colors: { onSurface: colors.text } }}>
               Modo Escuro
             </Text>
-            <Text 
-              variant="bodySmall" 
+            <Text
+              variant="bodySmall"
               style={[styles.itemSubtitle, { fontSize: fontSize.sm }]}
               theme={{ colors: { onSurface: colors.textSecondary } }}>
               Reduz luz da tela
@@ -61,7 +59,10 @@ export function AppearanceSection() {
         </View>
 
         <View style={styles.fontSizeContainer}>
-          <Text variant="titleMedium" style={[styles.itemTitle, { fontSize: fontSize.md }]} theme={{ colors: { onSurface: colors.text } }}>
+          <Text
+            variant="titleMedium"
+            style={[styles.itemTitle, { fontSize: fontSize.md }]}
+            theme={{ colors: { onSurface: colors.text } }}>
             Tamanho da Fonte
           </Text>
           <View style={styles.fontSizeButtons}>
@@ -79,7 +80,7 @@ export function AppearanceSection() {
                 <Text
                   style={[
                     styles.fontSizeButtonText,
-                    { 
+                    {
                       color: colors.textSecondary,
                       fontSize: fontSize.md,
                     },
