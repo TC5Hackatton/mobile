@@ -5,6 +5,7 @@ import React from 'react';
 jest.mock('@/src/infrastructure', () => ({
   AsyncStorageRepository: jest.fn().mockImplementation(() => ({})),
   FirebaseAuthRepository: jest.fn().mockImplementation(() => ({})),
+  FirebaseSettingsRepository: jest.fn().mockImplementation(() => ({})),
   FirebaseTaskRepository: jest.fn().mockImplementation(() => ({})),
   InMemoryLoggerRepository: jest.fn().mockImplementation(() => ({})),
   InMemorySessionRepository: jest.fn().mockImplementation(() => ({})),
@@ -26,6 +27,7 @@ describe('DependenciesContext', () => {
       expect(result.current.logger).toBeDefined();
       expect(result.current.storageRepository).toBeDefined();
       expect(result.current.sessionRepository).toBeDefined();
+      expect(result.current.settingsRepository).toBeDefined();
     });
 
     it('should instantiate dependencies only once (memoized)', () => {
@@ -63,6 +65,15 @@ describe('DependenciesContext', () => {
       rerender({});
 
       expect(result.current.sessionRepository).toBe(firstRepo);
+    });
+
+    it('should provide stable settingsRepository reference', () => {
+      const { result, rerender } = renderHook(() => useDependencies(), { wrapper });
+
+      const firstRepo = result.current.settingsRepository;
+      rerender({});
+
+      expect(result.current.settingsRepository).toBe(firstRepo);
     });
   });
 

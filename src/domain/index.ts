@@ -1,4 +1,5 @@
 // Entities
+export * from './entities/AppearanceSettings';
 export * from './entities/Session';
 export * from './entities/Task';
 export * from './entities/User';
@@ -12,6 +13,7 @@ export * from './repositories/AuthRepository';
 export * from './repositories/LoggerRepository';
 export * from './repositories/SessionRepository';
 export * from './repositories/StorageRepository';
+export * from './repositories/SettingsRepository';
 export * from './repositories/TaskRepository';
 
 // Use Cases
@@ -25,4 +27,6 @@ export * from './usecases/user/GetStoredSessionUseCase';
 export * from './usecases/user/SignInUseCase';
 export * from './usecases/user/SignOutUseCase';
 export * from './usecases/user/SignUpUseCase';
+export * from './usecases/settings/GetSettingsUseCase';
+export * from './usecases/settings/UpdateAppearanceUseCase';
 

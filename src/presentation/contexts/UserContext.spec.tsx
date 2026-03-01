@@ -45,6 +45,7 @@ const buildWrapper = () => {
     logger: {} as any,
     storageRepository: {} as any,
     sessionRepository: {} as any,
+    settingsRepository: {} as any,
   });
 
   const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -104,6 +105,7 @@ describe('UserContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: { id: 'session-repo' } as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);
@@ -132,6 +134,7 @@ describe('UserContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: {} as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);
@@ -157,6 +160,7 @@ describe('UserContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: {} as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);

@@ -47,6 +47,7 @@ const buildWrapper = () => {
     logger: {} as any,
     storageRepository: {} as any,
     sessionRepository: {} as any,
+    settingsRepository: {} as any,
   });
 
   const wrapper = ({ children }: { children: React.ReactNode }) => <TaskProvider>{children}</TaskProvider>;
@@ -90,6 +91,7 @@ describe('TaskContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: { id: 'session-repo' } as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);
@@ -112,6 +114,7 @@ describe('TaskContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: { id: 'session-repo' } as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);
@@ -137,6 +140,7 @@ describe('TaskContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: { id: 'session-repo' } as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);
@@ -158,6 +162,7 @@ describe('TaskContext', () => {
         logger: {} as any,
         storageRepository: {} as any,
         sessionRepository: { id: 'session-repo' } as any,
+        settingsRepository: {} as any,
       };
 
       mockUseDependencies.mockReturnValue(mockDeps);

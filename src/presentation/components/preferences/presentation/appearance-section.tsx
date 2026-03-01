@@ -5,6 +5,8 @@ import { Card, Switch, Text } from 'react-native-paper';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography, type FontSizeScale } from '@/src/presentation/constants/typography';
 import { useFontSizeContext } from '@/src/presentation/contexts/FontSizeContext';
+import { useSession } from '@/src/presentation/contexts/SessionContext';
+import { useSettings } from '@/src/presentation/contexts/SettingsContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
@@ -14,13 +16,26 @@ export function AppearanceSection() {
   const { fontSize } = useFontSize();
   const { isDark, setTheme } = useTheme();
   const { fontSizeScale, setFontSizeScale } = useFontSizeContext();
+  const { session } = useSession();
+  const { updateAppearanceUseCase } = useSettings();
 
   const handleThemeToggle = () => {
-    setTheme(isDark ? 'light' : 'dark');
+    const newDark = !isDark;
+    setTheme(newDark ? 'dark' : 'light');
+    if (session?.uid) {
+      updateAppearanceUseCase.execute({ dark_mode: newDark }).catch((err) =>
+        console.warn('Falha ao salvar tema no Firebase:', err),
+      );
+    }
   };
 
   const handleFontSizeChange = (size: FontSizeScale) => {
     setFontSizeScale(size);
+    if (session?.uid) {
+      updateAppearanceUseCase.execute({ font_size: size }).catch((err) =>
+        console.warn('Falha ao salvar tamanho da fonte no Firebase:', err),
+      );
+    }
   };
 
   return (

@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import { Task, TaskStatus } from '@/src/domain';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface RunningTimerProps {
@@ -11,6 +12,7 @@ interface RunningTimerProps {
 
 export function RunningTimer({ task }: RunningTimerProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -32,7 +34,10 @@ export function RunningTimer({ task }: RunningTimerProps) {
 
   return (
     <View style={styles.container}>
-      <Text variant="bodySmall" style={[styles.timerText, { color: colors.textSecondary }]} testID="timer-text">
+      <Text
+        variant="bodySmall"
+        style={[styles.timerText, { color: colors.textSecondary, fontSize: fontSize.sm }]}
+        testID="timer-text">
         {`${minutes}m ${seconds.toString().padStart(2, '0')}s`}
       </Text>
     </View>
