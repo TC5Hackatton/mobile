@@ -20,6 +20,17 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   }),
 }));
 
+jest.mock('@/src/presentation/contexts/FontSizeContext', () => ({
+  FontSizeProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+jest.mock('@/src/presentation/hooks/use-font-size', () => ({
+  useFontSize: jest.fn().mockReturnValue({
+    fontSize: { xs: 10, sm: 12, md: 14, lg: 16, xl: 18, xxl: 22, xxxl: 28 },
+    lineHeight: { xs: 14, sm: 16, md: 20, lg: 24, xl: 28, xxl: 32, xxxl: 36 },
+  }),
+}));
+
 // Helper component that throws
 const ThrowingComponent = ({ shouldThrow }: { shouldThrow: boolean }) => {
   if (shouldThrow) {
