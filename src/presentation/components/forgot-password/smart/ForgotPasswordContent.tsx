@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   headerTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_600SemiBold',
     marginLeft: 8,
   },
