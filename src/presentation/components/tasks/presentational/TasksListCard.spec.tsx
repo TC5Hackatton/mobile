@@ -7,6 +7,12 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   useThemeColors: jest.fn(),
 }));
 
+jest.mock('@/src/presentation/hooks/use-font-size', () => ({
+  useFontSize: jest.fn().mockReturnValue({
+    fontSize: { xs: 10, sm: 12, md: 14, lg: 16, xl: 18, xxl: 22, xxxl: 28 },
+  }),
+}));
+
 jest.mock('../../shared/content-card', () => ({
   ContentCard: ({ children, style }: any) => {
     const { View } = require('react-native');
@@ -113,7 +119,7 @@ describe('TasksListCard', () => {
     const tasks = [createTask('1', TaskStatus.TODO), createTask('2', TaskStatus.TODO)];
     render(<TasksListCard tasks={tasks} status={TaskStatus.TODO} />);
 
-    expect(screen.getByTestId('status-badge').props.children).toBe(2);
+    expect(screen.getByTestId('status-badge')).toHaveTextContent('2');
   });
 
   it('should render multiple tasks', () => {

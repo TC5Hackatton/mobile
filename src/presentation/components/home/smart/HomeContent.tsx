@@ -11,12 +11,14 @@ import { FloatingActionButton } from '@/src/presentation/components/shared/float
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import OldestTaskCard from '../presentational/OldestTaskCard';
 import StatCard from '../presentational/StatCard';
 
 export default function HomeContent() {
   const colors = useThemeColors();
+  const { fontSize, lineHeight } = useFontSize();
   const { fetchStatisticsFromUserTasksUseCase } = useTask();
 
   const [statistics, setStatistics] = useState<UserTaskStatistics>({
@@ -49,13 +51,13 @@ export default function HomeContent() {
               <Card.Content style={styles.dailyCardContent}>
                 <Text
                   variant="headlineLarge"
-                  style={styles.dailyCardValue}
+                  style={[styles.dailyCardValue, { fontSize: fontSize.xxl }]}
                   theme={{ colors: { onSurface: colors.primary } }}>
                   {progress.total > 0 ? `${progress.completed}/${progress.total}` : '0'}
                 </Text>
                 <Text
                   variant="bodySmall"
-                  style={styles.dailyCardLabel}
+                  style={[styles.dailyCardLabel, { fontSize: fontSize.sm }]}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tarefas Concluídas
                 </Text>
@@ -68,13 +70,13 @@ export default function HomeContent() {
               <Card.Content style={styles.dailyCardContent}>
                 <Text
                   variant="headlineLarge"
-                  style={styles.dailyCardValue}
+                  style={[styles.dailyCardValue, { fontSize: fontSize.xxl }]}
                   theme={{ colors: { onSurface: colors.secondary } }}>
                   {totalFocusTime}
                 </Text>
                 <Text
                   variant="bodySmall"
-                  style={styles.dailyCardLabel}
+                  style={[styles.dailyCardLabel, { fontSize: fontSize.sm }]}
                   theme={{ colors: { onSurface: colors.textSecondary } }}>
                   Tempo Trabalhado
                 </Text>
@@ -87,7 +89,10 @@ export default function HomeContent() {
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content>
-                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
+                <Text
+                  variant="titleLarge"
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+                  theme={{ colors: { onSurface: colors.text } }}>
                   Tarefa Mais Antiga
                 </Text>
 
@@ -101,7 +106,10 @@ export default function HomeContent() {
               style={[styles.sectionCard, { backgroundColor: colors.surface }]}
               theme={{ colors: { surface: colors.surface } }}>
               <Card.Content style={styles.sectionCardContent}>
-                <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
+                <Text
+                  variant="titleLarge"
+                  style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+                  theme={{ colors: { onSurface: colors.text } }}>
                   Progresso Semanal
                 </Text>
 
@@ -191,12 +199,12 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
   dailyCardValue: {
-    fontSize: 28,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.xs,
   },
   dailyCardLabel: {
-    fontSize: typography.fontSize.sm,
+    // fontSize definido dinamicamente via useFontSize hook
     textAlign: 'center',
   },
   section: {
@@ -218,7 +226,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
+    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.md,
   },

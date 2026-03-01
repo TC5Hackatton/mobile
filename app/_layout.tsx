@@ -10,20 +10,22 @@ import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { SettingsSync } from '@/src/presentation/components/settings/SettingsSync';
 import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
 import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
+import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
+import { SettingsProvider } from '@/src/presentation/contexts/SettingsContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
 import {
-    Raleway_400Regular,
-    Raleway_500Medium,
-    Raleway_600SemiBold,
-    Raleway_700Bold,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
 } from '@expo-google-fonts/raleway';
 
-// Manter a splash screen visível enquanto carregamos as fontes
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
@@ -91,7 +93,12 @@ export default function RootLayout() {
       <DependenciesProvider>
         <SessionProvider>
           <AppThemeProvider>
-            <RootLayoutContent />
+            <FontSizeProvider>
+              <SettingsProvider>
+                <SettingsSync />
+                <RootLayoutContent />
+              </SettingsProvider>
+            </FontSizeProvider>
           </AppThemeProvider>
         </SessionProvider>
       </DependenciesProvider>

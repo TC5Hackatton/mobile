@@ -40,6 +40,7 @@ const buildWrapper = () => {
     logger: {} as any,
     storageRepository: {} as any,
     sessionRepository: mockSessionRepository,
+    settingsRepository: {} as any,
   });
 
   const wrapper = ({ children }: { children: React.ReactNode }) => (

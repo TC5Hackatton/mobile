@@ -1,6 +1,11 @@
-/**
- * Sistema de tipografia consistente para o aplicativo
- */
+export const FONT_SIZE_ADJUSTMENTS = {
+  P: -4,
+  M: 0,
+  G: 4,
+} as const;
+
+export type FontSizeScale = keyof typeof FONT_SIZE_ADJUSTMENTS;
+
 export const typography = {
   fontSize: {
     xs: 12,
@@ -30,3 +35,11 @@ export const typography = {
 
 export type FontSize = keyof typeof typography.fontSize;
 export type FontFamily = keyof typeof typography.fontFamily;
+
+export function getAdjustedFontSize(baseSize: number, scale: FontSizeScale = 'M'): number {
+  return baseSize + FONT_SIZE_ADJUSTMENTS[scale];
+}
+
+export function getAdjustedLineHeight(baseLineHeight: number, scale: FontSizeScale = 'M'): number {
+  return baseLineHeight + FONT_SIZE_ADJUSTMENTS[scale];
+}

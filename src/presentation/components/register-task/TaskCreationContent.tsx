@@ -1,18 +1,21 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
 import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
+import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -63,6 +66,8 @@ export default function TaskCreationContent() {
             outlineColor={colors.tertiary}
             activeOutlineColor={colors.tertiary}
             style={[styles.input, { backgroundColor: colors.surface }]}
+            contentStyle={{ fontSize: fontSize.md }}
+            theme={{ fonts: { bodyLarge: { fontFamily: 'Raleway_400Regular' } } }}
           />
 
           <TextInput
@@ -77,9 +82,11 @@ export default function TaskCreationContent() {
             outlineColor={colors.tertiary}
             activeOutlineColor={colors.tertiary}
             style={[styles.textArea, { backgroundColor: colors.surface }]}
+            contentStyle={{ fontSize: fontSize.md }}
+            theme={{ fonts: { bodyLarge: { fontFamily: 'Raleway_400Regular' } } }}
           />
 
-          <Text style={[styles.labelSection, { color: colors.text }]}>Tempo da Tarefa</Text>
+          <Text style={[styles.labelSection, { color: colors.text, fontSize: fontSize.md }]}>Tempo da Tarefa</Text>
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[
@@ -89,7 +96,11 @@ export default function TaskCreationContent() {
               ]}
               onPress={() => setTimeType('cronometro')}>
               <Text
-                style={[styles.tabText, { color: colors.text }, timeType === 'cronometro' && { color: colors.white }]}>
+                style={[
+                  styles.tabText,
+                  { color: colors.text, fontSize: fontSize.md },
+                  timeType === 'cronometro' && { color: colors.text },
+                ]}>
                 Cronômetro
               </Text>
             </TouchableOpacity>
@@ -101,7 +112,12 @@ export default function TaskCreationContent() {
                 timeType === 'fixo' && { backgroundColor: colors.secondary },
               ]}
               onPress={() => setTimeType('fixo')}>
-              <Text style={[styles.tabText, { color: colors.text }, timeType === 'fixo' && { color: colors.white }]}>
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: colors.text, fontSize: fontSize.md },
+                  timeType === 'fixo' && { color: colors.white },
+                ]}>
                 Tempo fixo
               </Text>
             </TouchableOpacity>
@@ -109,11 +125,11 @@ export default function TaskCreationContent() {
 
           {timeType === 'cronometro' ? (
             <View style={styles.timerWrapper}>
-              <Text style={[styles.timerDisplay, { color: colors.text }]}>00:00:00</Text>
+              <Text style={[styles.timerDisplay, { color: colors.text, fontSize: fontSize.xxxl }]}>00:00:00</Text>
             </View>
           ) : (
             <View style={styles.fixedTimeList}>
-              {['15 min', '25 min', '45 min', '1 hora'].map((time) => (
+              {['15 min', '25 min', '35 min', '45 min'].map((time) => (
                 <TouchableOpacity
                   key={time}
                   style={[
@@ -125,7 +141,7 @@ export default function TaskCreationContent() {
                   <Text
                     style={[
                       styles.timeOptionText,
-                      { color: colors.text },
+                      { color: colors.text, fontSize: fontSize.md },
                       selectedTime === time && { color: colors.white },
                     ]}>
                     {time}
@@ -136,25 +152,17 @@ export default function TaskCreationContent() {
           )}
 
           <View style={styles.footer}>
-            <Button
-              mode="contained"
+            <CustomButton
+              label={timeType === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
               onPress={submitTaskCreation}
-              style={[styles.btnSave, { backgroundColor: colors.tertiary }]}
-              contentStyle={styles.btnContent}
-              buttonColor={colors.tertiary}
-              textColor={colors.white}>
-              {timeType === 'cronometro' ? 'Adicionar Tarefa e Iniciar Cronômetro' : 'Adicionar Tarefa'}
-            </Button>
+              variant="primary"
+            />
 
-            <Button
-              mode="contained"
+            <CustomButton
+              label="Cancelar"
               onPress={() => router.back()}
-              style={[styles.btnCancel, { backgroundColor: colors.coral }]}
-              contentStyle={styles.btnContent}
-              buttonColor={colors.coral}
-              textColor={colors.white}>
-              Cancelar
-            </Button>
+              variant="cancel"
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -177,12 +185,12 @@ const styles = StyleSheet.create({
   },
   input: { marginBottom: 16 },
   textArea: { marginBottom: 24, height: 120 },
-  labelSection: { fontSize: 16, fontWeight: '600', marginBottom: 12 },
+  labelSection: { fontWeight: '600', marginBottom: 12 },
   tabContainer: { flexDirection: 'row', gap: 12, marginBottom: 30 },
   tabButton: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: 'center' },
   tabText: { fontWeight: '500' },
   timerWrapper: { alignItems: 'center', marginVertical: 40 },
-  timerDisplay: { fontSize: 64, fontWeight: 'bold' },
+  timerDisplay: { fontWeight: 'bold' },
   fixedTimeList: { gap: 10 },
   timeOption: {
     padding: 16,
@@ -190,9 +198,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
   },
-  timeOptionText: { fontSize: 16 },
+  timeOptionText: {},
   footer: { marginTop: 40, gap: 12 },
-  btnSave: { borderRadius: 25 },
-  btnCancel: { borderRadius: 25 },
-  btnContent: { paddingVertical: 8 },
 });

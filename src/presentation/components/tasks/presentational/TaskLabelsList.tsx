@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { TaskLabel } from '../types/TaskLabel';
 
 interface TaskLabelsListProps {
@@ -8,6 +9,8 @@ interface TaskLabelsListProps {
 }
 
 export function TaskLabelsList({ labels }: TaskLabelsListProps) {
+  const { fontSize } = useFontSize();
+
   if (!labels || labels.length === 0) {
     return null;
   }
@@ -17,7 +20,7 @@ export function TaskLabelsList({ labels }: TaskLabelsListProps) {
       {labels.map((label, index) => (
         <View key={`${label}-${index}`} style={[styles.labelContainer, { backgroundColor: label.color + '40' }]}>
           <IconButton icon={label.icon} size={14} iconColor={label.color} style={styles.labelIcon} />
-          <Text variant="labelSmall" style={{ color: label.color }}>
+          <Text variant="labelSmall" style={{ color: label.color, fontSize: fontSize.xs }}>
             {label.text}
           </Text>
         </View>
