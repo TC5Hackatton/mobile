@@ -11,9 +11,12 @@ export interface AppDependencies {
   settingsRepository: SettingsRepository;
 }
 
+// Create a context for all the app dependencies
 const DependenciesContext = createContext<AppDependencies | null>(null);
 
+// Component (Provider) that provides all the dependencies instantiated through context
 export function DependenciesProvider({ children }: { children: React.ReactNode }) {
+  // NOTE: useMemo is essential here to avoid re-instantiating the dependencies on every render
   const dependencies = useMemo<AppDependencies>(
     () => {
       const storageRepository = new AsyncStorageRepository();
@@ -33,6 +36,7 @@ export function DependenciesProvider({ children }: { children: React.ReactNode }
   return <DependenciesContext.Provider value={dependencies}>{children}</DependenciesContext.Provider>;
 }
 
+// Custom hook to use all the dependencies
 export const useDependencies = () => {
   const dependencies = useContext(DependenciesContext);
 

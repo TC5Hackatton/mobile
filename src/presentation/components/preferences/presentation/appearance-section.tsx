@@ -1,41 +1,40 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography, type FontSizeScale } from '@/src/presentation/constants/typography';
-import { useFontSizeContext } from '@/src/presentation/contexts/FontSizeContext';
-import { useSession } from '@/src/presentation/contexts/SessionContext';
-import { useSettings } from '@/src/presentation/contexts/SettingsContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export function AppearanceSection() {
   const colors = useThemeColors();
-  const { fontSize } = useFontSize();
-  const { isDark, setTheme } = useTheme();
-  const { fontSizeScale, setFontSizeScale } = useFontSizeContext();
-  const { session } = useSession();
-  const { updateAppearanceUseCase } = useSettings();
+  const { fontSize, fontSizeScale } = useFontSize();
+  const { isDark, setTheme, setFontSizeScale, updateSettingsUseCase } = useTheme();
 
   const handleThemeToggle = () => {
     const newDark = !isDark;
     setTheme(newDark ? 'dark' : 'light');
-    if (session?.uid) {
-      updateAppearanceUseCase.execute({ dark_mode: newDark }).catch((err) =>
-        console.warn('Falha ao salvar tema no Firebase:', err),
-      );
-    }
+    updateSettingsUseCase.execute({ darkMode: newDark }).catch((err) =>
+      Toast.show({
+        type: 'error',
+        text1: 'Falha ao salvar tema no Firebase',
+        text2: String(err),
+      }),
+    );
   };
 
   const handleFontSizeChange = (size: FontSizeScale) => {
     setFontSizeScale(size);
-    if (session?.uid) {
-      updateAppearanceUseCase.execute({ font_size: size }).catch((err) =>
-        console.warn('Falha ao salvar tamanho da fonte no Firebase:', err),
-      );
-    }
+    updateSettingsUseCase.execute({ fontSize: size }).catch((err) =>
+      Toast.show({
+        type: 'error',
+        text1: 'Falha ao salvar tamanho da fonte no Firebase',
+        text2: String(err),
+      }),
+    );
   };
 
   return (

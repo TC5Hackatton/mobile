@@ -9,26 +9,32 @@ import { TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
+import { useTimerSettings } from '@/src/presentation/contexts/TimerSettingsContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+
+const FIXED_TIME_OPTIONS = [15, 25, 35, 45];
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
   const colors = useThemeColors();
   const { fontSize } = useFontSize();
+  const { amountDefault } = useTimerSettings();
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [timeType, setTimeType] = useState<'cronometro' | 'fixo'>('cronometro');
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<number | null>(amountDefault);
 
   const submitTaskCreation = async () => {
     try {
+      const timeValue = timeType === 'cronometro' ? 0 : (selectedTime ?? amountDefault);
+
       await createTaskUseCase.execute({
         title,
         description,
         status: timeType === 'cronometro' ? TaskStatus.DOING : TaskStatus.TODO,
-        timeValue: timeType === 'cronometro' ? 0 : Number(selectedTime?.split(' ')[0]),
+        timeValue,
         timeSpend: 0,
         timeType: timeType === 'cronometro' ? 'cronometro' : 'tempo_fixo',
         createdAt: new Date(),
@@ -67,7 +73,6 @@ export default function TaskCreationContent() {
             activeOutlineColor={colors.tertiary}
             style={[styles.input, { backgroundColor: colors.surface }]}
             contentStyle={{ fontSize: fontSize.md }}
-            theme={{ fonts: { bodyLarge: { fontFamily: 'Raleway_400Regular' } } }}
           />
 
           <TextInput
@@ -83,7 +88,6 @@ export default function TaskCreationContent() {
             activeOutlineColor={colors.tertiary}
             style={[styles.textArea, { backgroundColor: colors.surface }]}
             contentStyle={{ fontSize: fontSize.md }}
-            theme={{ fonts: { bodyLarge: { fontFamily: 'Raleway_400Regular' } } }}
           />
 
           <Text style={[styles.labelSection, { color: colors.text, fontSize: fontSize.md }]}>Tempo da Tarefa</Text>
@@ -111,7 +115,10 @@ export default function TaskCreationContent() {
                 { backgroundColor: colors.surfaceVariant },
                 timeType === 'fixo' && { backgroundColor: colors.secondary },
               ]}
-              onPress={() => setTimeType('fixo')}>
+              onPress={() => {
+                setTimeType('fixo');
+                setSelectedTime(amountDefault);
+              }}>
               <Text
                 style={[
                   styles.tabText,
@@ -129,22 +136,21 @@ export default function TaskCreationContent() {
             </View>
           ) : (
             <View style={styles.fixedTimeList}>
-              {['15 min', '25 min', '35 min', '45 min'].map((time) => (
+              {FIXED_TIME_OPTIONS.map((minutes) => (
                 <TouchableOpacity
-                  key={time}
+                  key={minutes}
                   style={[
                     styles.timeOption,
                     { borderColor: colors.tertiary },
-                    selectedTime === time && { backgroundColor: colors.tertiary },
+                    selectedTime === minutes && { backgroundColor: colors.tertiary },
                   ]}
-                  onPress={() => setSelectedTime(time)}>
+                  onPress={() => setSelectedTime(minutes)}>
                   <Text
                     style={[
-                      styles.timeOptionText,
                       { color: colors.text, fontSize: fontSize.md },
-                      selectedTime === time && { color: colors.white },
+                      selectedTime === minutes && { color: colors.white },
                     ]}>
-                    {time}
+                    {minutes} min
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -198,6 +204,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
   },
-  timeOptionText: {},
   footer: { marginTop: 40, gap: 12 },
 });

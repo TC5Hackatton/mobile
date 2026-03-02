@@ -3,8 +3,8 @@ import { Switch, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface ToggleLineProps {
   title: string;
@@ -49,12 +49,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   itemSubtitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
   },
 });

@@ -4,21 +4,21 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { FetchSettingsUseCase, UpdateSettingsUseCase } from '@/src/domain';
+import { useEffect, useMemo } from 'react';
 import { Platform, StatusBar as RNStatusBar } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { SettingsSync } from '@/src/presentation/components/settings/SettingsSync';
+import { SettingsSync } from '@/src/presentation/components/preferences/smart/SettingsSync';
 import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
 import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
-import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
-import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
+import { DependenciesProvider, useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
-import { SettingsProvider } from '@/src/presentation/contexts/SettingsContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { TimerSettingsProvider } from '@/src/presentation/contexts/TimerSettingsContext';
 import {
   Raleway_400Regular,
   Raleway_500Medium,
@@ -31,6 +31,23 @@ SplashScreen.preventAutoHideAsync();
 export const unstable_settings = {
   anchor: '(tabs)',
 };
+
+function AppThemeProviderWithDeps({ children }: { children: React.ReactNode }) {
+  const { sessionRepository, settingsRepository } = useDependencies();
+  const fetchSettingsUseCase = useMemo(
+    () => new FetchSettingsUseCase(sessionRepository, settingsRepository),
+    [sessionRepository, settingsRepository],
+  );
+  const updateSettingsUseCase = useMemo(
+    () => new UpdateSettingsUseCase(sessionRepository, settingsRepository),
+    [sessionRepository, settingsRepository],
+  );
+  return (
+    <AppThemeProvider fetchSettingsUseCase={fetchSettingsUseCase} updateSettingsUseCase={updateSettingsUseCase}>
+      {children}
+    </AppThemeProvider>
+  );
+}
 
 function RootLayoutContent() {
   const { isDark } = useTheme();
@@ -66,9 +83,11 @@ function RootLayoutContent() {
     return null;
   }
 
+  const containerBg = isDark ? customColors.darkNavy : customColors.white;
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: containerBg }} edges={['top', 'left', 'right']}>
         <PaperProvider key={isDark ? 'dark' : 'light'} theme={paperTheme}>
           <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
             <Stack>
@@ -92,14 +111,12 @@ export default function RootLayout() {
     <ErrorBoundary>
       <DependenciesProvider>
         <SessionProvider>
-          <AppThemeProvider>
-            <FontSizeProvider>
-              <SettingsProvider>
-                <SettingsSync />
-                <RootLayoutContent />
-              </SettingsProvider>
-            </FontSizeProvider>
-          </AppThemeProvider>
+          <AppThemeProviderWithDeps>
+            <TimerSettingsProvider>
+              <SettingsSync />
+              <RootLayoutContent />
+            </TimerSettingsProvider>
+          </AppThemeProviderWithDeps>
         </SessionProvider>
       </DependenciesProvider>
     </ErrorBoundary>

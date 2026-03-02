@@ -1,6 +1,6 @@
-import { AppearanceSettings } from '../entities/AppearanceSettings';
+import { Settings } from '../entities/Settings';
 
 export interface SettingsRepository {
-  getSettings(uid: string): Promise<AppearanceSettings | null>;
-  updateAppearance(uid: string, data: Partial<AppearanceSettings>): Promise<void>;
+  fetch(uid: string): Promise<Settings | null>;
+  update(uid: string, data: Partial<Settings>): Promise<void>;
 }

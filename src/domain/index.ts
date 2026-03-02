@@ -1,5 +1,5 @@
 // Entities
-export * from './entities/AppearanceSettings';
+export * from './entities/Settings';
 export * from './entities/Session';
 export * from './entities/Task';
 export * from './entities/User';
@@ -29,6 +29,6 @@ export * from './usecases/user/GetStoredSessionUseCase';
 export * from './usecases/user/SignInUseCase';
 export * from './usecases/user/SignOutUseCase';
 export * from './usecases/user/SignUpUseCase';
-export * from './usecases/settings/GetSettingsUseCase';
-export * from './usecases/settings/UpdateAppearanceUseCase';
+export * from './usecases/settings/FetchSettingsUseCase';
+export * from './usecases/settings/UpdateSettingsUseCase';
 

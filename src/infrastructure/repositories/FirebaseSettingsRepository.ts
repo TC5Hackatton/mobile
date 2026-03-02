@@ -1,47 +1,55 @@
 import firebaseConfig from '@/firebaseConfig';
-import { AppearanceSettings, SettingsRepository } from '@/src/domain';
+import { Settings, type FontSizeScale, SettingsRepository } from '@/src/domain';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const SETTINGS_COLLECTION = 'settings';
 
 export class FirebaseSettingsRepository implements SettingsRepository {
-  async getSettings(uid: string): Promise<AppearanceSettings | null> {
+  async fetch(uid: string): Promise<Settings | null> {
     const ref = doc(firebaseConfig.db, SETTINGS_COLLECTION, uid);
     const snapshot = await getDoc(ref);
 
     if (!snapshot.exists()) return null;
 
     const data = snapshot.data();
-    const appearance = data?.appearance;
+    const appearance = data?.appearance ?? {};
+    const timer = data?.timer ?? {};
 
-    if (!appearance || typeof appearance.dark_mode !== 'boolean') return null;
-
-    const fontSize = appearance.font_size;
-    const validFontSize = fontSize === 'P' || fontSize === 'M' || fontSize === 'G';
-
-    return {
-      dark_mode: appearance.dark_mode,
-      font_size: validFontSize ? fontSize : 'M',
-      high_contrast: appearance.high_contrast,
-    };
+    return Settings.create(
+      appearance.dark_mode ?? false,
+      (appearance.font_size as FontSizeScale) ?? 'M',
+      timer.amount_default ?? 25,
+      timer.pause_reminder ?? false,
+    );
   }
 
-  async updateAppearance(uid: string, data: Partial<AppearanceSettings>): Promise<void> {
+  async update(uid: string, data: Partial<Settings>): Promise<void> {
     const ref = doc(firebaseConfig.db, SETTINGS_COLLECTION, uid);
     const snapshot = await getDoc(ref);
 
     const existing = snapshot.exists() ? snapshot.data() : {};
-    const currentAppearance = (existing?.appearance || {}) as Partial<AppearanceSettings>;
+    const currentAppearance = existing?.appearance ?? {};
+    const currentTimer = existing?.timer ?? {};
 
-    await setDoc(
-      ref,
-      {
-        appearance: {
-          ...currentAppearance,
-          ...data,
-        },
-      },
-      { merge: true },
-    );
+    const update: Record<string, unknown> = {};
+    const hasAppearanceUpdate = data.darkMode !== undefined || data.fontSize !== undefined;
+    const hasTimerUpdate = data.amountDefault !== undefined || data.pauseReminder !== undefined;
+
+    if (hasAppearanceUpdate) {
+      const appearanceUpdate: Record<string, unknown> = { ...currentAppearance };
+      if (data.darkMode !== undefined) appearanceUpdate.dark_mode = data.darkMode;
+      if (data.fontSize !== undefined) appearanceUpdate.font_size = data.fontSize;
+      update.appearance = appearanceUpdate;
+    }
+    if (hasTimerUpdate) {
+      const timerUpdate: Record<string, unknown> = { ...currentTimer };
+      if (data.amountDefault !== undefined) timerUpdate.amount_default = data.amountDefault;
+      if (data.pauseReminder !== undefined) timerUpdate.pause_reminder = data.pauseReminder;
+      update.timer = timerUpdate;
+    }
+
+    if (Object.keys(update).length === 0) return;
+
+    await setDoc(ref, update, { merge: true });
   }
 }

@@ -1,4 +1,5 @@
 import { Task, TaskStatus, TimeType } from '@/src/domain';
+import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { act, render, screen } from '@testing-library/react-native';
 import { RunningTimer } from './RunningTimer';
@@ -8,6 +9,10 @@ jest.mock('@/src/presentation/hooks/use-theme-colors');
 const mockColors = {
   textSecondary: '#666',
 };
+
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <FontSizeProvider>{children}</FontSizeProvider>
+);
 
 describe('RunningTimer', () => {
   beforeEach(() => {
@@ -33,7 +38,7 @@ describe('RunningTimer', () => {
       new Date(),
     );
 
-    render(<RunningTimer task={task} />);
+    render(<RunningTimer task={task} />, { wrapper });
 
     // Should be 0m 00s even if timeSpend is 10.5
     expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
@@ -55,7 +60,7 @@ describe('RunningTimer', () => {
     );
 
     jest.setSystemTime(startTime);
-    render(<RunningTimer task={task} />);
+    render(<RunningTimer task={task} />, { wrapper });
 
     expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
 
@@ -77,7 +82,7 @@ describe('RunningTimer', () => {
   it('should not start the interval if task status is not DOING', () => {
     const task = Task.create('Title', 'Desc', TimeType.CRONOMETRO, 0, 10, TaskStatus.TODO, new Date());
 
-    render(<RunningTimer task={task} />);
+    render(<RunningTimer task={task} />, { wrapper });
 
     expect(screen.getByTestId('timer-text')).toHaveTextContent('0m 00s');
 

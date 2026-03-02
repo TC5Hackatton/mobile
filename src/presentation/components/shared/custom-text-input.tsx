@@ -157,6 +157,5 @@ const styles = StyleSheet.create({
   },
   inputContent: {
     fontFamily: typography.fontFamily.regular,
-    // fontSize definido dinamicamente via useFontSize hook
   },
 });

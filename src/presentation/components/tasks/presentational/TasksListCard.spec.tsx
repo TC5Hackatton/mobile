@@ -142,7 +142,7 @@ describe('TasksListCard', () => {
 
       expect(screen.getByText('A Fazer')).toBeTruthy();
       expect(screen.getByTestId('status-badge').props.style).toEqual(
-        expect.objectContaining({ backgroundColor: mockColors.tertiary }),
+        expect.arrayContaining([expect.objectContaining({ backgroundColor: mockColors.tertiary })]),
       );
     });
 
@@ -151,7 +151,7 @@ describe('TasksListCard', () => {
 
       expect(screen.getByText('Em Andamento')).toBeTruthy();
       expect(screen.getByTestId('status-badge').props.style).toEqual(
-        expect.objectContaining({ backgroundColor: mockColors.yellow }),
+        expect.arrayContaining([expect.objectContaining({ backgroundColor: mockColors.yellow })]),
       );
     });
 
@@ -160,7 +160,7 @@ describe('TasksListCard', () => {
 
       expect(screen.getByText('Concluído')).toBeTruthy();
       expect(screen.getByTestId('status-badge').props.style).toEqual(
-        expect.objectContaining({ backgroundColor: mockColors.secondary }),
+        expect.arrayContaining([expect.objectContaining({ backgroundColor: mockColors.secondary })]),
       );
     });
   });

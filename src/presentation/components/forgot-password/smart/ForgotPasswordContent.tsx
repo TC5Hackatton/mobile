@@ -10,8 +10,8 @@ import { CustomButton } from '@/src/presentation/components/shared/custom-button
 import { CustomTextInput } from '@/src/presentation/components/shared/custom-text-input';
 import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { useUser } from '@/src/presentation/contexts/UserContext';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export default function ForgotPasswordContent() {
   const { forgotPasswordUseCase } = useUser();
@@ -143,11 +143,9 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   errorText: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: 'Raleway_400Regular',
   },
   tagline: {
-    // fontSize definido dinamicamente via useFontSize hook
     maxWidth: '95%',
     textAlign: 'center',
     fontFamily: 'Raleway_400Regular',

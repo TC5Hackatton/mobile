@@ -4,8 +4,8 @@ import { Card, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 export function InfoCard() {
   const colors = useThemeColors();
@@ -52,12 +52,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
     marginBottom: spacing.xs,
   },
   description: {
-    // fontSize e lineHeight definidos dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
   },
 });

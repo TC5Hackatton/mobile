@@ -4,8 +4,8 @@ import { Card, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { ToggleLine } from './ToggleLine';
 
 interface ToggleItem {
@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
     flex: 1,
   },

@@ -1,19 +1,20 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { Card, Switch, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useTimerSettings } from '@/src/presentation/contexts/TimerSettingsContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
+type PomodoroTime = 15 | 25 | 35 | 45;
+const POMODORO_OPTIONS: PomodoroTime[] = [15, 25, 35, 45];
 
 export function ProductivitySection() {
   const colors = useThemeColors();
   const { fontSize } = useFontSize();
-  const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
+  const { amountDefault, pauseReminder, setAmountDefault, setPauseReminder } = useTimerSettings();
 
   return (
     <Card
@@ -37,31 +38,41 @@ export function ProductivitySection() {
             variant="titleMedium"
             style={[styles.itemTitle, { fontSize: fontSize.md }]}
             theme={{ colors: { onSurface: colors.text } }}>
-            Pomodoro Padrão
+            Tempo Padrão
           </Text>
           <View style={styles.pomodoroButtons}>
-            {(['15 min', '25 min', '35 min', '45 min'] as PomodoroTime[]).map((time) => (
+            {POMODORO_OPTIONS.map((minutes) => (
               <TouchableOpacity
-                key={time}
+                key={minutes}
                 style={[
                   styles.pomodoroButton,
                   { backgroundColor: colors.surfaceVariant },
-                  pomodoroTime === time && { backgroundColor: colors.primary },
+                  amountDefault === minutes && { backgroundColor: colors.primary },
                 ]}
-                onPress={() => setPomodoroTime(time)}
+                onPress={() => setAmountDefault(minutes)}
                 accessibilityRole="button"
-                accessibilityLabel={`Pomodoro de ${time}`}>
+                accessibilityLabel={`Pomodoro de ${minutes} min`}>
                 <Text
                   style={[
                     styles.pomodoroButtonText,
                     { color: colors.textSecondary, fontSize: fontSize.sm },
-                    pomodoroTime === time && { color: colors.white },
+                    amountDefault === minutes && { color: colors.white },
                   ]}>
-                  {time}
+                  {minutes} min
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
+        </View>
+
+        <View style={styles.pauseReminderRow}>
+          <Text
+            variant="titleMedium"
+            style={[styles.itemTitle, { fontSize: fontSize.md }]}
+            theme={{ colors: { onSurface: colors.text } }}>
+            Lembrete de Pausa
+          </Text>
+          <Switch value={pauseReminder} onValueChange={setPauseReminder} />
         </View>
       </Card.Content>
     </Card>
@@ -84,11 +95,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.bold,
   },
   itemTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.sm,
   },
@@ -105,7 +114,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pomodoroButtonText: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.medium,
+  },
+  pauseReminderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.lg,
   },
 });

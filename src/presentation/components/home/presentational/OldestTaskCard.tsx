@@ -34,7 +34,7 @@ export default function OldestTaskCard({ task }: OldestTaskCardProps) {
           <MaterialIcons name="schedule" size={16} color={colors.textSecondary} />
           <Text
             variant="bodySmall"
-            style={[styles.priorityTaskTime, { fontSize: fontSize.sm }]}
+            style={{ fontSize: fontSize.sm }}
             theme={{ colors: { onSurface: colors.textSecondary } }}>
             {task.createdAtLabel}
           </Text>
@@ -45,7 +45,7 @@ export default function OldestTaskCard({ task }: OldestTaskCardProps) {
         <View style={[styles.priorityTaskTag, { backgroundColor: colors.tertiary }]}>
           <Text
             variant="labelSmall"
-            style={[styles.priorityTaskTagText, { fontSize: fontSize.xs, fontFamily: typography.fontFamily.medium }]}
+            style={{ fontSize: fontSize.xs, fontFamily: typography.fontFamily.medium }}
             theme={{ colors: { onSurface: colors.white } }}>
             {task.statusLabel}
           </Text>
@@ -54,7 +54,7 @@ export default function OldestTaskCard({ task }: OldestTaskCardProps) {
 
       <Text
         variant="bodyMedium"
-        style={[styles.priorityTaskDescription, { fontSize: fontSize.sm, lineHeight: lineHeight.sm }]}
+        style={{ fontSize: fontSize.sm, lineHeight: lineHeight.sm }}
         theme={{ colors: { onSurface: colors.textSecondary } }}>
         {task.description}
       </Text>
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.xs,
   },
-  priorityTaskTime: {},
   priorityTaskTagContainer: {
     marginBottom: spacing.md,
   },
@@ -91,6 +90,4 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     alignSelf: 'flex-start',
   },
-  priorityTaskTagText: {},
-  priorityTaskDescription: {},
 });

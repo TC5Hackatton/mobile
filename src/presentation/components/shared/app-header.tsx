@@ -141,13 +141,11 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   title: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     flex: 1,
   },
   titleWithBack: {
     textAlign: 'center',
-    // fontSize definido dinamicamente via useFontSize hook
   },
   rightSection: {
     flexDirection: 'row',

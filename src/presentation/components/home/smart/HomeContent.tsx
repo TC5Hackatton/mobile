@@ -199,12 +199,10 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
   dailyCardValue: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.xs,
   },
   dailyCardLabel: {
-    // fontSize definido dinamicamente via useFontSize hook
     textAlign: 'center',
   },
   section: {
@@ -226,7 +224,6 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   sectionTitle: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.semiBold,
     marginBottom: spacing.md,
   },

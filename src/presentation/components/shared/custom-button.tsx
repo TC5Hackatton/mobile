@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    // fontSize definido dinamicamente via useFontSize hook
     fontFamily: typography.fontFamily.regular,
   },
 });

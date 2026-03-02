@@ -1,8 +1,8 @@
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
-import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
+import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface LinkTextProps {
   text: string;
@@ -22,7 +22,6 @@ export function LinkText({ text, onPress }: LinkTextProps) {
 
 const styles = StyleSheet.create({
   link: {
-    // fontSize definido dinamicamente via useFontSize hook
     textDecorationLine: 'underline',
     textAlign: 'center',
     fontFamily: typography.fontFamily.regular,
