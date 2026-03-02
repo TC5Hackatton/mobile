@@ -15,7 +15,6 @@ import { ErrorBoundary } from '@/src/presentation/components/shared/error-bounda
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
-import { TaskProvider } from '@/src/presentation/contexts/TaskContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
 import {
   Raleway_400Regular,
@@ -70,16 +69,14 @@ function RootLayoutContent() {
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
         <PaperProvider key={isDark ? 'dark' : 'light'} theme={paperTheme}>
           <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-            <TaskProvider>
-              <Stack>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-                <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-                <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="focus" options={{ headerShown: false }} />;
-              </Stack>
-            </TaskProvider>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+              <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+              <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="focus" options={{ headerShown: false }} />
+            </Stack>
             <StatusBar style={isDark ? 'light' : 'dark'} />
             <CustomToast />
           </ThemeProvider>

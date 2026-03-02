@@ -3,7 +3,7 @@ import { Task } from '../../entities/Task';
 import { TaskStatus } from '../../enums/TaskStatus';
 import { SessionRepository } from '../../repositories/SessionRepository';
 
-export class GetFocusTasksUseCase {
+export class FetchFocusTaskUseCase {
   constructor(
     private taskRepository: TaskRepository,
     private sessionRepository: SessionRepository,
@@ -11,9 +11,6 @@ export class GetFocusTasksUseCase {
 
   async execute(): Promise<{ current: Task | null; next: Task | null }> {
     const session = await this.sessionRepository.getStoredSession();
-
-    // Debug: Verifique se o ID da sessão bate com o do print
-    console.log('ID da Sessão Atual:', session?.uid);
 
     if (!session) return { current: null, next: null };
 
