@@ -26,7 +26,7 @@ describe('useFocusViewModel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useTask as jest.Mock).mockReturnValue({
-      getFocusTasksUseCase: mockGetFocusTasksUseCase,
+      fetchFocusTasksUseCase: mockGetFocusTasksUseCase,
       updateTaskStatusUseCase: mockUpdateTaskStatusUseCase,
     });
 

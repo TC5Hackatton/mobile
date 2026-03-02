@@ -2,9 +2,10 @@ import { Task, TaskStatus } from '@/src/domain';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useFocusTimer } from '@/src/presentation/hooks/use-focus-timer';
 import { useEffect, useState } from 'react';
+import Toast from 'react-native-toast-message';
 
 export function useFocusViewModel() {
-  const { getFocusTasksUseCase, updateTaskStatusUseCase } = useTask();
+  const { fetchFocusTasksUseCase, updateTaskStatusUseCase } = useTask();
 
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [nextTask, setNextTask] = useState<Task | null>(null);
@@ -18,17 +19,21 @@ export function useFocusViewModel() {
   useEffect(() => {
     async function loadTasks() {
       try {
-        const { current, next } = await getFocusTasksUseCase.execute();
+        const { current, next } = await fetchFocusTasksUseCase.execute();
         setCurrentTask(current);
         setNextTask(next);
       } catch (error) {
-        console.error('Erro ao carregar modo foco:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao carregar tarefas',
+          text2: 'Tente novamente mais tarde.' + (error instanceof Error ? ` Detalhes: ${error.message}` : ''),
+        });
       } finally {
         setLoading(false);
       }
     }
     loadTasks();
-  }, [getFocusTasksUseCase]);
+  }, [fetchFocusTasksUseCase]);
 
   //Lógica de Play/Pause atualizando status no banco
   const handleToggleTimer = async () => {
@@ -41,7 +46,7 @@ export function useFocusViewModel() {
 
       toggleTimer();
 
-      const { current } = await getFocusTasksUseCase.execute();
+      const { current } = await fetchFocusTasksUseCase.execute();
       setCurrentTask(current);
     } catch (error) {
       console.error('Erro ao atualizar status da tarefa:', error);
@@ -58,7 +63,7 @@ export function useFocusViewModel() {
       await updateTaskStatusUseCase.execute(currentTask, TaskStatus.DONE);
 
       // 2. Busca a próxima tarefa da fila
-      const { current, next } = await getFocusTasksUseCase.execute();
+      const { current, next } = await fetchFocusTasksUseCase.execute();
       setCurrentTask(current);
       setNextTask(next);
 

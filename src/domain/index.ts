@@ -15,7 +15,7 @@ export * from './repositories/StorageRepository';
 export * from './repositories/TaskRepository';
 
 // Use Cases
-export * from './usecases/focus-mode/GetFocusTasksUseCase';
+export * from './usecases/focus-mode/FetchFocusTasksUseCase';
 
 export * from './usecases/task/CreateTaskUseCase';
 export * from './usecases/task/FetchAllTasksUseCase';

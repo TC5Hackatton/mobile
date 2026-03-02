@@ -3,10 +3,10 @@ import { Session } from '../../entities/Session';
 import { Task } from '../../entities/Task';
 import { TaskStatus } from '../../enums/TaskStatus';
 import { SessionRepository } from '../../repositories/SessionRepository';
-import { GetFocusTasksUseCase } from './GetFocusTasksUseCase';
+import { FetchFocusTasksUseCase } from './FetchFocusTasksUseCase';
 
-describe('GetFocusTasksUseCase', () => {
-  let sut: GetFocusTasksUseCase;
+describe('FetchFocusTasksUseCase', () => {
+  let sut: FetchFocusTasksUseCase;
   let taskRepository: jest.Mocked<TaskRepository>;
   let sessionRepository: jest.Mocked<SessionRepository>;
 
@@ -26,7 +26,7 @@ describe('GetFocusTasksUseCase', () => {
       getStoredSession: jest.fn(),
     } as any;
 
-    sut = new GetFocusTasksUseCase(taskRepository, sessionRepository);
+    sut = new FetchFocusTasksUseCase(taskRepository, sessionRepository);
   });
 
   it('should return null if there is no active session.', async () => {
