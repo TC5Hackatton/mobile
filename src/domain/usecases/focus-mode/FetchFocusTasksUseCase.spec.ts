@@ -2,6 +2,7 @@ import { TaskRepository } from '@/src/domain/repositories/TaskRepository';
 import { Session } from '../../entities/Session';
 import { Task } from '../../entities/Task';
 import { TaskStatus } from '../../enums/TaskStatus';
+import { TimeType } from '../../enums/TimeType';
 import { SessionRepository } from '../../repositories/SessionRepository';
 import { FetchFocusTasksUseCase } from './FetchFocusTasksUseCase';
 
@@ -10,10 +11,10 @@ describe('FetchFocusTasksUseCase', () => {
   let taskRepository: jest.Mocked<TaskRepository>;
   let sessionRepository: jest.Mocked<SessionRepository>;
 
-  const mockSession: Session = { uid: 'user-123', email: 'test@test.com' } as Session;
+  const mockSession = { uid: 'user-123', email: 'test@test.com' } as unknown as Session;
 
   const createTask = (id: string, status: TaskStatus, createdAt: number, uid = 'user-123') => {
-    return Task.create(`Task ${id}`, 'Description', 'tempo_fixo', 25, 0, status, new Date(createdAt), id, uid);
+    return Task.create(`Task ${id}`, 'Description', TimeType.TEMPO_FIXO, 25, 0, status, new Date(createdAt), id, uid);
   };
 
   beforeEach(() => {
@@ -51,11 +52,12 @@ describe('FetchFocusTasksUseCase', () => {
 
     const result = await sut.execute();
 
-    expect(result.current?.id).toBe('1');
-    expect(result.next?.id).toBe('3');
+    // DOING task '3' must be current even though '1' is older
+    expect(result.current?.id).toBe('3');
+    expect(result.next?.id).toBe('1');
   });
 
-  it('should sort tasks by creation date (oldest first)', async () => {
+  it('should sort tasks by creation date (oldest first) when all are TODO', async () => {
     sessionRepository.getStoredSession.mockResolvedValue(mockSession);
 
     const tasks = [
@@ -72,6 +74,42 @@ describe('FetchFocusTasksUseCase', () => {
     expect(result.next?.id).toBe('meio');
   });
 
+  it('should prioritize a DOING task over older TODO tasks', async () => {
+    sessionRepository.getStoredSession.mockResolvedValue(mockSession);
+
+    const tasks = [
+      createTask('oldest-todo', TaskStatus.TODO, 1000),
+      createTask('middle-todo', TaskStatus.TODO, 2000),
+      createTask('doing-newer', TaskStatus.DOING, 3000),
+    ];
+
+    taskRepository.fetchAll.mockResolvedValue(tasks);
+
+    const result = await sut.execute();
+
+    expect(result.current?.id).toBe('doing-newer');
+    expect(result.next?.id).toBe('oldest-todo');
+  });
+
+  it('should pick the oldest DOING task as current when multiple DOING tasks exist', async () => {
+    sessionRepository.getStoredSession.mockResolvedValue(mockSession);
+
+    const tasks = [
+      createTask('doing-newest', TaskStatus.DOING, 5000),
+      createTask('doing-oldest', TaskStatus.DOING, 1000),
+      createTask('doing-middle', TaskStatus.DOING, 3000),
+      createTask('todo', TaskStatus.TODO, 500),
+    ];
+
+    taskRepository.fetchAll.mockResolvedValue(tasks);
+
+    const result = await sut.execute();
+
+    // Oldest DOING is always current; next is the second oldest DOING
+    expect(result.current?.id).toBe('doing-oldest');
+    expect(result.next?.id).toBe('doing-middle');
+  });
+
   it('should return only current if there is only one pending task', async () => {
     sessionRepository.getStoredSession.mockResolvedValue(mockSession);
     taskRepository.fetchAll.mockResolvedValue([createTask('unica', TaskStatus.TODO, 1000)]);
@@ -82,3 +120,4 @@ describe('FetchFocusTasksUseCase', () => {
     expect(result.next).toBeNull();
   });
 });
+

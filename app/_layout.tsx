@@ -75,7 +75,6 @@ function RootLayoutContent() {
               <Stack.Screen name="sign-up" options={{ headerShown: false }} />
               <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="focus" options={{ headerShown: false }} />;
             </Stack>
             <StatusBar style={isDark ? 'light' : 'dark'} />
             <CustomToast />
@@ -88,14 +87,14 @@ function RootLayoutContent() {
 
 export default function RootLayout() {
   return (
-    <AppThemeProvider>
-      <ErrorBoundary>
-        <DependenciesProvider>
-          <SessionProvider>
+    <ErrorBoundary>
+      <DependenciesProvider>
+        <SessionProvider>
+          <AppThemeProvider>
             <RootLayoutContent />
-          </SessionProvider>
-        </DependenciesProvider>
-      </ErrorBoundary>
-    </AppThemeProvider>
+          </AppThemeProvider>
+        </SessionProvider>
+      </DependenciesProvider>
+    </ErrorBoundary>
   );
 }

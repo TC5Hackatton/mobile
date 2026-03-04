@@ -1,7 +1,13 @@
+// Mock the entire infra dependency chain in one shot so Firebase ESM and
+// AsyncStorage native modules are never resolved during tests.
+jest.mock('@/src/presentation/contexts/DependenciesContext', () => ({
+  useDependencies: jest.fn(),
+}));
+
 import { TaskStatus } from '@/src/domain';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
-import { act, renderHook, waitFor } from '@testing-library/react-native'; // waitFor aqui
-import { useFocusViewModel } from './useFocusViewModel';
+import { useFocusSession } from '@/src/presentation/hooks/use-focus-session';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 // Mock do Contexto de Tasks
 jest.mock('@/src/presentation/contexts/TaskContext');
@@ -16,32 +22,31 @@ jest.mock('@/src/presentation/hooks/use-focus-timer', () => ({
   })),
 }));
 
-describe('useFocusViewModel', () => {
+describe('useFocusSession', () => {
   const mockCurrentTask = { id: '1', title: 'Task 1', timeValue: 25, status: TaskStatus.TODO };
   const mockNextTask = { id: '2', title: 'Task 2', timeValue: 30, status: TaskStatus.TODO };
 
-  const mockGetFocusTasksUseCase = { execute: jest.fn() };
+  const mockFetchFocusTasksUseCase = { execute: jest.fn() };
   const mockUpdateTaskStatusUseCase = { execute: jest.fn() };
 
   beforeEach(() => {
     jest.clearAllMocks();
     (useTask as jest.Mock).mockReturnValue({
-      fetchFocusTasksUseCase: mockGetFocusTasksUseCase,
+      fetchFocusTasksUseCase: mockFetchFocusTasksUseCase,
       updateTaskStatusUseCase: mockUpdateTaskStatusUseCase,
     });
 
-    mockGetFocusTasksUseCase.execute.mockResolvedValue({
+    mockFetchFocusTasksUseCase.execute.mockResolvedValue({
       current: mockCurrentTask,
       next: mockNextTask,
     });
   });
 
   it('must load the initial tasks and change the loading setting to false.', async () => {
-    const { result } = renderHook(() => useFocusViewModel());
+    const { result } = renderHook(() => useFocusSession());
 
     expect(result.current.loading).toBe(true);
 
-    // Substituímos waitForNextUpdate por waitFor
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.currentTask).toEqual(mockCurrentTask);
@@ -49,7 +54,7 @@ describe('useFocusViewModel', () => {
   });
 
   it('must toggle the timer and update the status in the database when handleToggleTimer is called', async () => {
-    const { result } = renderHook(() => useFocusViewModel());
+    const { result } = renderHook(() => useFocusSession());
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
@@ -58,15 +63,16 @@ describe('useFocusViewModel', () => {
     });
 
     expect(mockUpdateTaskStatusUseCase.execute).toHaveBeenCalledWith(mockCurrentTask, TaskStatus.DOING);
-    expect(mockGetFocusTasksUseCase.execute).toHaveBeenCalledTimes(2);
+    // No longer calls fetchFocusTasksUseCase on toggle — only 1 call (initial load)
+    expect(mockFetchFocusTasksUseCase.execute).toHaveBeenCalledTimes(1);
   });
 
   it('must finish the task and load the next task when handleFinishTask is called', async () => {
-    const { result } = renderHook(() => useFocusViewModel());
+    const { result } = renderHook(() => useFocusSession());
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    mockGetFocusTasksUseCase.execute.mockResolvedValue({
+    mockFetchFocusTasksUseCase.execute.mockResolvedValue({
       current: mockNextTask,
       next: null,
     });
@@ -82,9 +88,9 @@ describe('useFocusViewModel', () => {
 
   it('must handle errors during loading without freezing the loading state', async () => {
     console.error = jest.fn();
-    mockGetFocusTasksUseCase.execute.mockRejectedValue(new Error('Falha no banco'));
+    mockFetchFocusTasksUseCase.execute.mockRejectedValue(new Error('Falha no banco'));
 
-    const { result } = renderHook(() => useFocusViewModel());
+    const { result } = renderHook(() => useFocusSession());
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 

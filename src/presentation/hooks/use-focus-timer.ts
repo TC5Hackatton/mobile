@@ -1,46 +1,52 @@
+import { TimeType } from '@/src/domain/enums/TimeType';
 import { useCallback, useEffect, useState } from 'react';
 
-export function useFocusTimer(initialMinutes: number = 25) {
-  const totalSeconds = initialMinutes * 60;
-  const [seconds, setSeconds] = useState(totalSeconds);
+const SECONDS_PER_MINUTE = 60;
+const ONE_SECOND_MS = 1000;
+
+export function useFocusTimer(initialMinutes: number, timeType: TimeType) {
+  const isCronometro = timeType === TimeType.CRONOMETRO;
+
+  const [seconds, setSeconds] = useState(isCronometro ? 0 : initialMinutes * SECONDS_PER_MINUTE);
   const [isActive, setIsActive] = useState(false);
 
-  // Sincroniza o timer caso a task mude (ex: carregou do banco)
   useEffect(() => {
-    setSeconds(initialMinutes * 60);
-  }, [initialMinutes]);
-
-  useEffect(() => {
-    let interval: any;
-    if (isActive && seconds > 0) {
-      interval = setInterval(() => setSeconds((s) => s - 1), 1000);
-    } else if (seconds === 0) {
-      setIsActive(false);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, seconds]);
-
-  const toggleTimer = useCallback(() => setIsActive(!isActive), [isActive]);
-
-  const resetTimer = useCallback(() => {
-    setSeconds(totalSeconds);
+    setSeconds(isCronometro ? 0 : initialMinutes * SECONDS_PER_MINUTE);
     setIsActive(false);
-  }, [totalSeconds]);
+  }, [initialMinutes, isCronometro]);
 
-  const formatTime = () => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+  useEffect(() => {
+    if (!isActive) return;
+
+    if (!isCronometro && seconds === 0) {
+      setIsActive(false);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setSeconds((s) => (isCronometro ? s + 1 : s - 1));
+    }, ONE_SECOND_MS);
+
+    return () => clearInterval(interval);
+  }, [isActive, seconds, isCronometro]);
+
+  const toggleTimer = useCallback(() => setIsActive((a) => !a), []);
+
+  const formatTime = useCallback(() => {
+    const mins = Math.floor(seconds / SECONDS_PER_MINUTE);
+    const secs = seconds % SECONDS_PER_MINUTE;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, [seconds]);
 
-  // Cálculo da porcentagem para a barra de progresso
-  const progress = totalSeconds > 0 ? (totalSeconds - seconds) / totalSeconds : 0;
+  const progress = isCronometro
+    ? (seconds % SECONDS_PER_MINUTE) / SECONDS_PER_MINUTE
+    : initialMinutes > 0
+      ? (initialMinutes * SECONDS_PER_MINUTE - seconds) / (initialMinutes * SECONDS_PER_MINUTE)
+      : 0;
 
   return {
-    seconds,
     isActive,
     toggleTimer,
-    resetTimer,
     formatTime,
     progress,
   };
