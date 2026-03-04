@@ -1,6 +1,7 @@
 import {
   CreateTaskUseCase,
   FetchAllTasksUseCase,
+  FetchFocusTasksUseCase,
   FetchStatisticsFromUserTasksUseCase,
   UpdateTaskStatusUseCase,
 } from '@/src/domain';
@@ -12,6 +13,7 @@ export interface TaskUseCases {
   fetchAllTasksUseCase: FetchAllTasksUseCase;
   fetchStatisticsFromUserTasksUseCase: FetchStatisticsFromUserTasksUseCase;
   updateTaskStatusUseCase: UpdateTaskStatusUseCase;
+  fetchFocusTasksUseCase: FetchFocusTasksUseCase;
 }
 
 // Create a context for Task dependencies
@@ -27,6 +29,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       fetchAllTasksUseCase: new FetchAllTasksUseCase(sessionRepository, taskRepository),
       fetchStatisticsFromUserTasksUseCase: new FetchStatisticsFromUserTasksUseCase(sessionRepository, taskRepository),
       updateTaskStatusUseCase: new UpdateTaskStatusUseCase(taskRepository),
+      fetchFocusTasksUseCase: new FetchFocusTasksUseCase(taskRepository, sessionRepository), //Instanciando o case do modo foco aqui
     };
   }, [sessionRepository, taskRepository]);
 

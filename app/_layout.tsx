@@ -17,10 +17,10 @@ import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesCo
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
 import {
-    Raleway_400Regular,
-    Raleway_500Medium,
-    Raleway_600SemiBold,
-    Raleway_700Bold,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
 } from '@expo-google-fonts/raleway';
 
 // Manter a splash screen visível enquanto carregamos as fontes
