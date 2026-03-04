@@ -20,7 +20,7 @@ describe('FocusFinishDialog', () => {
       />,
     );
 
-    expect(screen.getByText('Finalizar Tarefa?')).toBeTruthy();
+    expect(screen.getByText('Próxima Tarefa?')).toBeTruthy();
     expect(screen.getByText(/Implementar tela de login/)).toBeTruthy();
   });
 

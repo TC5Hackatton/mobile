@@ -11,9 +11,9 @@ export function FocusFinishDialog({ visible, taskTitle, onDismiss, onConfirm }: 
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss}>
-        <Dialog.Title>Finalizar Tarefa?</Dialog.Title>
+        <Dialog.Title>Próxima Tarefa?</Dialog.Title>
         <Dialog.Content>
-          <Text>Deseja marcar "{taskTitle}" como concluída e ir para a próxima?</Text>
+          <Text>Deseja pausar "{taskTitle}" e avançar para a próxima tarefa?</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={onDismiss}>Não</Button>

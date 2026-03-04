@@ -22,7 +22,7 @@ export default function FocusContent() {
     isCronometro,
     formatTime,
     handleToggleTimer,
-    handleFinishTask,
+    handleNextTask,
   } = useFocusSession();
 
   if (loading) return null;
@@ -103,6 +103,7 @@ export default function FocusContent() {
         mode="contained"
         buttonColor={customColors.skyBlue}
         style={styles.nextTaskButton}
+        disabled={!nextTask}
         onPress={() => setShowConfirm(true)}>
         Próxima Tarefa
       </Button>
@@ -113,7 +114,7 @@ export default function FocusContent() {
         visible={showConfirm}
         taskTitle={currentTask.title}
         onDismiss={() => setShowConfirm(false)}
-        onConfirm={handleFinishTask}
+        onConfirm={handleNextTask}
       />
     </View>
   );

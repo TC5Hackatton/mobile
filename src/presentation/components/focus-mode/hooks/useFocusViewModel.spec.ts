@@ -23,8 +23,8 @@ jest.mock('@/src/presentation/hooks/use-focus-timer', () => ({
 }));
 
 describe('useFocusSession', () => {
-  const mockCurrentTask = { id: '1', title: 'Task 1', timeValue: 25, status: TaskStatus.TODO };
-  const mockNextTask = { id: '2', title: 'Task 2', timeValue: 30, status: TaskStatus.TODO };
+  const mockCurrentTask = { id: '1', title: 'Task 1', timeValue: 25, timeSpend: 0, status: TaskStatus.DOING, statusChangedAt: new Date() };
+  const mockNextTask = { id: '2', title: 'Task 2', timeValue: 30, timeSpend: 0, status: TaskStatus.TODO };
 
   const mockFetchFocusTasksUseCase = { execute: jest.fn() };
   const mockUpdateTaskStatusUseCase = { execute: jest.fn() };
@@ -67,7 +67,7 @@ describe('useFocusSession', () => {
     expect(mockFetchFocusTasksUseCase.execute).toHaveBeenCalledTimes(1);
   });
 
-  it('must finish the task and load the next task when handleFinishTask is called', async () => {
+  it('must pause current task and start next task when handleNextTask is called', async () => {
     const { result } = renderHook(() => useFocusSession());
 
     await waitFor(() => expect(result.current.loading).toBe(false));
@@ -78,10 +78,13 @@ describe('useFocusSession', () => {
     });
 
     await act(async () => {
-      await result.current.handleFinishTask();
+      await result.current.handleNextTask();
     });
 
-    expect(mockUpdateTaskStatusUseCase.execute).toHaveBeenCalledWith(mockCurrentTask, TaskStatus.DONE);
+    // Current task (DOING) is paused → TODO
+    expect(mockUpdateTaskStatusUseCase.execute).toHaveBeenCalledWith(mockCurrentTask, TaskStatus.TODO);
+    // Next task is started → DOING
+    expect(mockUpdateTaskStatusUseCase.execute).toHaveBeenCalledWith(mockNextTask, TaskStatus.DOING);
     expect(result.current.currentTask).toEqual(mockNextTask);
     expect(result.current.showConfirm).toBe(false);
   });
@@ -95,5 +98,55 @@ describe('useFocusSession', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.currentTask).toBeNull();
+  });
+
+  it('passes total elapsed seconds and autoStart=true to useFocusTimer when the loaded task is DOING', async () => {
+    const { useFocusTimer } = require('@/src/presentation/hooks/use-focus-timer');
+
+    const statusChangedAt = new Date(Date.now() - 60_000); // 1 minute into current session
+    const doingTask = {
+      id: '1',
+      title: 'Task DOING',
+      timeValue: 25,
+      timeSpend: 5,          // 5 minutes spent in previous sessions
+      status: TaskStatus.DOING,
+      statusChangedAt,
+    };
+
+    mockFetchFocusTasksUseCase.execute.mockResolvedValue({ current: doingTask, next: null });
+
+    const { result } = renderHook(() => useFocusSession());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const lastCall = useFocusTimer.mock.calls.at(-1);
+    const elapsedArg = lastCall?.[2] ?? 0;   // 3rd param: elapsedSeconds
+    const autoStartArg = lastCall?.[3];       // 4th param: autoStart
+
+    // 5 min previous (300s) + ~60s current session = ~360s total
+    expect(elapsedArg).toBeGreaterThanOrEqual(358);
+    expect(elapsedArg).toBeLessThanOrEqual(362);
+    expect(autoStartArg).toBe(true);
+  });
+
+  it('passes elapsed seconds and autoStart=false when the loaded task is paused (TODO)', async () => {
+    const { useFocusTimer } = require('@/src/presentation/hooks/use-focus-timer');
+
+    const pausedTask = {
+      id: '2',
+      title: 'Task TODO',
+      timeValue: 25,
+      timeSpend: 3,   // 3 minutes spent before being paused
+      status: TaskStatus.TODO,
+      statusChangedAt: undefined,
+    };
+
+    mockFetchFocusTasksUseCase.execute.mockResolvedValue({ current: pausedTask, next: null });
+
+    const { result } = renderHook(() => useFocusSession());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const lastCall = useFocusTimer.mock.calls.at(-1);
+    expect(lastCall?.[2]).toBe(180); // 3 min * 60 = 180s
+    expect(lastCall?.[3]).toBe(false);
   });
 });

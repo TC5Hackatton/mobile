@@ -12,11 +12,13 @@ export class FirebaseTaskRepository implements TaskRepository {
 
     const tasks: Task[] = [];
     querySnapshot.forEach((doc) => {
+      const data = doc.data();
       tasks.push(TaskMapper.fromDtoToDomain({
-        ...doc.data(),
+        ...data,
         id: doc.id,
-        createdAt: doc.data()?.createdAt?.toDate(),
-        statusChangedAt: doc.data()?.statusChangedAt?.toDate(),
+        timeSpend: data.timeSpend ?? 0,
+        createdAt: data.createdAt?.toDate(),
+        statusChangedAt: data.statusChangedAt?.toDate(),
       } as ResponseTaskDTO));
     });
 
