@@ -236,7 +236,7 @@ Não testamos apenas o "caminho feliz". Nossa suíte de testes abrange:
 
 #### Resultado de testes com o Jest
 
-Como evidenciado nos logs abaixo, alcançamos a marca de <b>317 testes aprovados</b> em <b>44 suítes de teste</b> diferentes.
+Como evidenciado nos logs abaixo, alcançamos a marca de <b>349 testes aprovados</b> em <b>49 suítes de teste</b> diferentes.
 
 <b>Destaque do Time:</b> Conseguimos validar componentes complexos de UI, como o `TasksListCard` e o `RunningTimer`, garantindo que cronômetros e etiquetas de tarefas funcionem com precisão — algo muito importante para usuários com TDAH que dependem de indicadores visuais de tempo.
 
