@@ -18,7 +18,7 @@ import StatCard from '../presentational/StatCard';
 
 export default function HomeContent() {
   const colors = useThemeColors();
-  const { fontSize, lineHeight } = useFontSize();
+  const { fontSize } = useFontSize();
   const { fetchStatisticsFromUserTasksUseCase } = useTask();
 
   const [statistics, setStatistics] = useState<UserTaskStatistics>({

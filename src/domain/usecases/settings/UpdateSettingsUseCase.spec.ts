@@ -1,5 +1,5 @@
-import { SettingsRepository } from '../../repositories/SettingsRepository';
 import { SessionRepository } from '../../repositories/SessionRepository';
+import { SettingsRepository } from '../../repositories/SettingsRepository';
 import { UpdateSettingsUseCase } from './UpdateSettingsUseCase';
 
 describe('UpdateSettingsUseCase', () => {
@@ -47,14 +47,12 @@ describe('UpdateSettingsUseCase', () => {
       darkMode: true,
       fontSize: 'P',
       amountDefault: 35,
-      pauseReminder: true,
     });
 
     expect(mockSettingsRepository.update).toHaveBeenCalledWith('user-789', {
       darkMode: true,
       fontSize: 'P',
       amountDefault: 35,
-      pauseReminder: true,
     });
   });
 

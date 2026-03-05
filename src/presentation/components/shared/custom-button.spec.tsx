@@ -5,7 +5,7 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   useThemeColors: jest.fn(),
 }));
 
-import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { CustomButton } from './custom-button';
 
@@ -18,9 +18,7 @@ const mockColors = {
   white: '#FFFFFF',
 } as any;
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <FontSizeProvider>{children}</FontSizeProvider>
-);
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
 
 describe('CustomButton', () => {
   beforeEach(() => {
@@ -64,10 +62,9 @@ describe('CustomButton', () => {
   });
 
   it('should show ActivityIndicator and hide label when loading', () => {
-    const { UNSAFE_getByType } = render(
-      <CustomButton label="Submit" onPress={jest.fn()} loading={true} />,
-      { wrapper },
-    );
+    const { UNSAFE_getByType } = render(<CustomButton label="Submit" onPress={jest.fn()} loading={true} />, {
+      wrapper,
+    });
 
     const { ActivityIndicator } = require('react-native');
     expect(UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
@@ -75,10 +72,9 @@ describe('CustomButton', () => {
   });
 
   it('should show label and hide ActivityIndicator when not loading', () => {
-    const { UNSAFE_queryAllByType } = render(
-      <CustomButton label="Submit" onPress={jest.fn()} loading={false} />,
-      { wrapper },
-    );
+    const { UNSAFE_queryAllByType } = render(<CustomButton label="Submit" onPress={jest.fn()} loading={false} />, {
+      wrapper,
+    });
 
     const { ActivityIndicator } = require('react-native');
     expect(UNSAFE_queryAllByType(ActivityIndicator)).toHaveLength(0);
@@ -132,10 +128,7 @@ describe('CustomButton', () => {
     });
 
     it('should report disabled and busy states in accessibility', () => {
-      const { rerender } = render(
-        <CustomButton label="Btn" onPress={jest.fn()} disabled={true} />,
-        { wrapper },
-      );
+      const { rerender } = render(<CustomButton label="Btn" onPress={jest.fn()} disabled={true} />, { wrapper });
       expect(screen.getByRole('button').props.accessibilityState).toMatchObject({ disabled: true });
 
       rerender(<CustomButton label="Btn" onPress={jest.fn()} loading={true} />);

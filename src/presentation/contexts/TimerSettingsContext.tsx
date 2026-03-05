@@ -1,18 +1,16 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Toast from 'react-native-toast-message';
 
-import { useSettings } from './SettingsContext';
 import { useSession } from './SessionContext';
+import { useSettings } from './SettingsContext';
 
 export interface TimerSettingsState {
   amountDefault: number;
-  pauseReminder: boolean;
   isLoading: boolean;
 }
 
 interface TimerSettingsContextValue extends TimerSettingsState {
   setAmountDefault: (minutes: number) => void;
-  setPauseReminder: (value: boolean) => void;
 }
 
 const TimerSettingsContext = createContext<TimerSettingsContextValue | null>(null);
@@ -21,7 +19,6 @@ export function TimerSettingsProvider({ children }: { children: React.ReactNode 
   const { session } = useSession();
   const { fetchSettingsUseCase, updateSettingsUseCase } = useSettings();
   const [amountDefault, setAmountDefaultState] = useState(25);
-  const [pauseReminder, setPauseReminderState] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +31,6 @@ export function TimerSettingsProvider({ children }: { children: React.ReactNode 
       try {
         const settings = await fetchSettingsUseCase.execute();
         setAmountDefaultState(settings.amountDefault);
-        setPauseReminderState(settings.pauseReminder);
       } catch (error) {
         Toast.show({
           type: 'error',
@@ -65,36 +61,16 @@ export function TimerSettingsProvider({ children }: { children: React.ReactNode 
     [session?.uid, updateSettingsUseCase],
   );
 
-  const setPauseReminder = useCallback(
-    (value: boolean) => {
-      setPauseReminderState(value);
-      if (session?.uid) {
-        updateSettingsUseCase.execute({ pauseReminder: value }).catch((err) =>
-          Toast.show({
-            type: 'error',
-            text1: 'Falha ao salvar lembrete de pausa no Firebase',
-            text2: String(err),
-          }),
-        );
-      }
-    },
-    [session?.uid, updateSettingsUseCase],
-  );
-
   const value = useMemo<TimerSettingsContextValue>(
     () => ({
       amountDefault,
-      pauseReminder,
       isLoading,
       setAmountDefault,
-      setPauseReminder,
     }),
-    [amountDefault, pauseReminder, isLoading, setAmountDefault, setPauseReminder],
+    [amountDefault, isLoading, setAmountDefault],
   );
 
-  return (
-    <TimerSettingsContext.Provider value={value}>{children}</TimerSettingsContext.Provider>
-  );
+  return <TimerSettingsContext.Provider value={value}>{children}</TimerSettingsContext.Provider>;
 }
 
 export function useTimerSettings() {

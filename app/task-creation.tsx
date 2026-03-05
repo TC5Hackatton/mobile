@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-import TaskCreationContent from '@/src/presentation/components/register-task/TaskCreationContent';
+import TaskCreationContent from '@/src/presentation/components/register-task/smart/TaskCreationContent';
 import { TaskProvider } from '@/src/presentation/contexts/TaskContext';
 
 export default function TaskCreation() {

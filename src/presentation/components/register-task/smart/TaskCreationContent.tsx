@@ -5,15 +5,13 @@ import { TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-import { TaskStatus } from '@/src/domain';
+import { Settings, TaskStatus } from '@/src/domain';
 import { AppHeader } from '@/src/presentation/components/shared/app-header';
 import { CustomButton } from '@/src/presentation/components/shared/custom-button';
 import { useTask } from '@/src/presentation/contexts/TaskContext';
 import { useTimerSettings } from '@/src/presentation/contexts/TimerSettingsContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
-
-const FIXED_TIME_OPTIONS = [15, 25, 35, 45];
 
 export default function TaskCreationContent() {
   const { createTaskUseCase } = useTask();
@@ -136,7 +134,7 @@ export default function TaskCreationContent() {
             </View>
           ) : (
             <View style={styles.fixedTimeList}>
-              {FIXED_TIME_OPTIONS.map((minutes) => (
+              {Settings.VALID_AMOUNT_DEFAULTS.map((minutes) => (
                 <TouchableOpacity
                   key={minutes}
                   style={[
@@ -164,11 +162,7 @@ export default function TaskCreationContent() {
               variant="primary"
             />
 
-            <CustomButton
-              label="Cancelar"
-              onPress={() => router.back()}
-              variant="cancel"
-            />
+            <CustomButton label="Cancelar" onPress={() => router.back()} variant="cancel" />
           </View>
         </ScrollView>
       </SafeAreaView>

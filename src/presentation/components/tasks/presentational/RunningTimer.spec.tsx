@@ -1,5 +1,5 @@
 import { Task, TaskStatus, TimeType } from '@/src/domain';
-import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { act, render, screen } from '@testing-library/react-native';
 import { RunningTimer } from './RunningTimer';
@@ -10,9 +10,7 @@ const mockColors = {
   textSecondary: '#666',
 };
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <FontSizeProvider>{children}</FontSizeProvider>
-);
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
 
 describe('RunningTimer', () => {
   beforeEach(() => {

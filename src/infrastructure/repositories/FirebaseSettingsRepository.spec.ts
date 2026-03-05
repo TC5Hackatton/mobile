@@ -5,16 +5,15 @@ jest.mock('firebase/firestore', () => ({
   doc: jest.fn(() => ({ id: 'mock-doc' })),
   getDoc: jest.fn(),
   setDoc: jest.fn(),
+  updateDoc: jest.fn(),
 }));
 
 jest.mock('@/firebaseConfig', () => ({
   __esModule: true,
-  default: {
-    db: {},
-  },
+  default: { db: {} },
 }));
 
-const { doc, getDoc, setDoc } = require('firebase/firestore');
+const { doc, getDoc, setDoc, updateDoc } = require('firebase/firestore');
 const firebaseConfig = require('@/firebaseConfig').default;
 
 describe('FirebaseSettingsRepository', () => {
@@ -35,32 +34,27 @@ describe('FirebaseSettingsRepository', () => {
       expect(result).toBeNull();
     });
 
-    it('should return Settings when document has appearance and timer', async () => {
+    it('should return Settings when document has appearance and timer data', async () => {
       getDoc.mockResolvedValue({
         exists: () => true,
         data: () => ({
           appearance: { dark_mode: true, font_size: 'G' },
-          timer: { amount_default: 35, pause_reminder: true },
+          timer: { amount_default: 35 },
         }),
       });
 
       const result = await repository.fetch('uid-123');
 
       expect(result).toBeInstanceOf(Settings);
-      expect(result).not.toBeNull();
       expect(result!.darkMode).toBe(true);
       expect(result!.fontSize).toBe('G');
       expect(result!.amountDefault).toBe(35);
-      expect(result!.pauseReminder).toBe(true);
     });
 
     it('should use defaults when document has partial or missing data', async () => {
       getDoc.mockResolvedValue({
         exists: () => true,
-        data: () => ({
-          appearance: {},
-          timer: {},
-        }),
+        data: () => ({ appearance: {}, timer: {} }),
       });
 
       const result = await repository.fetch('uid-123');
@@ -69,7 +63,6 @@ describe('FirebaseSettingsRepository', () => {
       expect(result!.darkMode).toBe(false);
       expect(result!.fontSize).toBe('M');
       expect(result!.amountDefault).toBe(25);
-      expect(result!.pauseReminder).toBe(false);
     });
 
     it('should normalize invalid values via Settings.create', async () => {
@@ -77,76 +70,39 @@ describe('FirebaseSettingsRepository', () => {
         exists: () => true,
         data: () => ({
           appearance: { dark_mode: true, font_size: 'X' },
-          timer: { amount_default: 99, pause_reminder: true },
+          timer: { amount_default: 99 },
         }),
       });
 
       const result = await repository.fetch('uid-123');
 
-      expect(result).toBeInstanceOf(Settings);
       expect(result!.fontSize).toBe('M');
       expect(result!.amountDefault).toBe(25);
     });
   });
 
   describe('update', () => {
-    it('should merge appearance update with existing data', async () => {
-      getDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => ({
-          appearance: { dark_mode: false, font_size: 'M' },
-          timer: { amount_default: 25, pause_reminder: false },
-        }),
-      });
-      setDoc.mockResolvedValue(undefined);
-
-      await repository.update('uid-123', { darkMode: true });
-
-      expect(setDoc).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          appearance: {
-            dark_mode: true,
-            font_size: 'M',
-          },
-        },
-        { merge: true },
-      );
-    });
-
-    it('should merge timer update with existing data', async () => {
-      getDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => ({
-          appearance: { dark_mode: false, font_size: 'M' },
-          timer: { amount_default: 25, pause_reminder: false },
-        }),
-      });
-      setDoc.mockResolvedValue(undefined);
-
-      await repository.update('uid-123', { amountDefault: 35, pauseReminder: true });
-
-      expect(setDoc).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          timer: {
-            amount_default: 35,
-            pause_reminder: true,
-          },
-        },
-        { merge: true },
-      );
-    });
-
-    it('should not call setDoc when data is empty', async () => {
-      getDoc.mockResolvedValue({ exists: () => true, data: () => ({}) });
-
+    it('should do nothing when data is empty', async () => {
       await repository.update('uid-123', {});
 
+      expect(getDoc).not.toHaveBeenCalled();
+      expect(updateDoc).not.toHaveBeenCalled();
       expect(setDoc).not.toHaveBeenCalled();
     });
 
-    it('should create new doc when it does not exist', async () => {
+    it('should use updateDoc with dot-notation paths when document exists', async () => {
+      getDoc.mockResolvedValue({ exists: () => true });
+      updateDoc.mockResolvedValue(undefined);
+
+      await repository.update('uid-123', { darkMode: true });
+
+      expect(updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        { 'appearance.dark_mode': true },
+      );
+    });
+
+    it('should use setDoc when document does not exist', async () => {
       getDoc.mockResolvedValue({ exists: () => false });
       setDoc.mockResolvedValue(undefined);
 
@@ -154,8 +110,23 @@ describe('FirebaseSettingsRepository', () => {
 
       expect(setDoc).toHaveBeenCalledWith(
         expect.anything(),
-        { appearance: { font_size: 'P' } },
-        { merge: true },
+        { 'appearance.font_size': 'P' },
+      );
+    });
+
+    it('should map multiple fields to their dot-notation paths', async () => {
+      getDoc.mockResolvedValue({ exists: () => true });
+      updateDoc.mockResolvedValue(undefined);
+
+      await repository.update('uid-123', { darkMode: true, fontSize: 'G', amountDefault: 35 });
+
+      expect(updateDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          'appearance.dark_mode': true,
+          'appearance.font_size': 'G',
+          'timer.amount_default': 35,
+        },
       );
     });
   });

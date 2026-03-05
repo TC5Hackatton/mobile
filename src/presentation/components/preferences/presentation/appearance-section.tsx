@@ -1,41 +1,23 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Switch, Text } from 'react-native-paper';
-import Toast from 'react-native-toast-message';
 
+import { Settings, type FontSizeScale } from '@/src/domain';
 import { spacing } from '@/src/presentation/constants/spacing';
-import { typography, type FontSizeScale } from '@/src/presentation/constants/typography';
-import { useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { typography } from '@/src/presentation/constants/typography';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-export function AppearanceSection() {
+interface AppearanceSectionProps {
+  isDark: boolean;
+  fontSizeScale: FontSizeScale;
+  onThemeToggle: () => void;
+  onFontSizeChange: (size: FontSizeScale) => void;
+}
+
+export function AppearanceSection({ isDark, fontSizeScale, onThemeToggle, onFontSizeChange }: AppearanceSectionProps) {
   const colors = useThemeColors();
-  const { fontSize, fontSizeScale } = useFontSize();
-  const { isDark, setTheme, setFontSizeScale, updateSettingsUseCase } = useTheme();
-
-  const handleThemeToggle = () => {
-    const newDark = !isDark;
-    setTheme(newDark ? 'dark' : 'light');
-    updateSettingsUseCase.execute({ darkMode: newDark }).catch((err) =>
-      Toast.show({
-        type: 'error',
-        text1: 'Falha ao salvar tema no Firebase',
-        text2: String(err),
-      }),
-    );
-  };
-
-  const handleFontSizeChange = (size: FontSizeScale) => {
-    setFontSizeScale(size);
-    updateSettingsUseCase.execute({ fontSize: size }).catch((err) =>
-      Toast.show({
-        type: 'error',
-        text1: 'Falha ao salvar tamanho da fonte no Firebase',
-        text2: String(err),
-      }),
-    );
-  };
+  const { fontSize } = useFontSize();
 
   return (
     <Card
@@ -69,7 +51,7 @@ export function AppearanceSection() {
               Reduz luz da tela
             </Text>
           </View>
-          <Switch value={isDark} onValueChange={handleThemeToggle} />
+          <Switch value={isDark} onValueChange={onThemeToggle} />
         </View>
 
         <View style={styles.fontSizeContainer}>
@@ -80,7 +62,7 @@ export function AppearanceSection() {
             Tamanho da Fonte
           </Text>
           <View style={styles.fontSizeButtons}>
-            {(['P', 'M', 'G'] as FontSizeScale[]).map((size) => (
+            {Settings.VALID_FONT_SIZES.map((size) => (
               <TouchableOpacity
                 key={size}
                 style={[
@@ -88,7 +70,7 @@ export function AppearanceSection() {
                   { backgroundColor: colors.surfaceVariant },
                   fontSizeScale === size && { backgroundColor: colors.primary },
                 ]}
-                onPress={() => handleFontSizeChange(size)}
+                onPress={() => onFontSizeChange(size)}
                 accessibilityRole="button"
                 accessibilityLabel={`Tamanho ${size === 'P' ? 'Pequeno' : size === 'M' ? 'Médio' : 'Grande'}`}>
                 <Text

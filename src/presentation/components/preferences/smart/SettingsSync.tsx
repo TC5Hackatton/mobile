@@ -1,12 +1,13 @@
-import type { FontSizeScale } from '@/src/presentation/constants/typography';
-import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { useSession } from '@/src/presentation/contexts/SessionContext';
+import { useSettings } from '@/src/presentation/contexts/SettingsContext';
+import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { useEffect, useRef } from 'react';
 import Toast from 'react-native-toast-message';
 
 export function SettingsSync() {
   const { session } = useSession();
-  const { fetchSettingsUseCase, setTheme, setFontSizeScale } = useTheme();
+  const { fetchSettingsUseCase } = useSettings();
+  const { setTheme, setFontSizeScale } = useTheme();
   const lastSyncedUid = useRef<string | null>(null);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export function SettingsSync() {
       try {
         const settings = await fetchSettingsUseCase.execute();
         setTheme(settings.darkMode ? 'dark' : 'light');
-        setFontSizeScale((settings.fontSize || 'M') as FontSizeScale);
+        setFontSizeScale(settings.fontSize ?? 'M');
         lastSyncedUid.current = session.uid;
       } catch (error) {
         Toast.show({

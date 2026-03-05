@@ -2,12 +2,14 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconButton, Menu } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
 import { customColors } from '@/src/presentation/constants/paper-theme';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
 import { useDependencies } from '@/src/presentation/contexts/DependenciesContext';
 import { useSession } from '@/src/presentation/contexts/SessionContext';
+import { useSettings } from '@/src/presentation/contexts/SettingsContext';
 import { useTheme } from '@/src/presentation/contexts/ThemeContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { IconSymbol } from './icon-symbol';
@@ -21,6 +23,7 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
   const { logger } = useDependencies();
   const { clearSession } = useSession();
   const { isDark, toggleTheme } = useTheme();
+  const { updateSettingsUseCase } = useSettings();
   const { fontSize } = useFontSize();
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -35,8 +38,16 @@ export function AppHeader({ title = 'MindEase', showBackButton = false }: AppHea
 
   const handleThemeTogglePress = useCallback(() => {
     logger.log('Theme toggle pressed');
+    const newDark = !isDark;
     toggleTheme();
-  }, [logger, toggleTheme]);
+    updateSettingsUseCase.execute({ darkMode: newDark }).catch((err) =>
+      Toast.show({
+        type: 'error',
+        text1: 'Falha ao salvar tema no Firebase',
+        text2: String(err),
+      }),
+    );
+  }, [logger, isDark, toggleTheme, updateSettingsUseCase]);
 
   const handleLogout = useCallback(async () => {
     setMenuVisible(false);

@@ -1,5 +1,19 @@
-import { AuthRepository, LoggerRepository, SessionRepository, SettingsRepository, StorageRepository, TaskRepository } from '@/src/domain';
-import { AsyncStorageRepository, FirebaseAuthRepository, FirebaseSettingsRepository, FirebaseTaskRepository, InMemoryLoggerRepository, InMemorySessionRepository } from '@/src/infrastructure';
+import {
+  AuthRepository,
+  LoggerRepository,
+  SessionRepository,
+  SettingsRepository,
+  StorageRepository,
+  TaskRepository,
+} from '@/src/domain';
+import {
+  AsyncStorageRepository,
+  FirebaseAuthRepository,
+  FirebaseSettingsRepository,
+  FirebaseTaskRepository,
+  InMemoryLoggerRepository,
+  InMemorySessionRepository,
+} from '@/src/infrastructure';
 import { createContext, useContext, useMemo } from 'react';
 
 export interface AppDependencies {
@@ -17,21 +31,19 @@ const DependenciesContext = createContext<AppDependencies | null>(null);
 // Component (Provider) that provides all the dependencies instantiated through context
 export function DependenciesProvider({ children }: { children: React.ReactNode }) {
   // NOTE: useMemo is essential here to avoid re-instantiating the dependencies on every render
-  const dependencies = useMemo<AppDependencies>(
-    () => {
-      const storageRepository = new AsyncStorageRepository();
-      const sessionRepository = new InMemorySessionRepository(storageRepository);
-      return {
-        authRepository: new FirebaseAuthRepository(),
-        taskRepository: new FirebaseTaskRepository(),
-        logger: new InMemoryLoggerRepository(),
-        storageRepository,
-        sessionRepository,
-        settingsRepository: new FirebaseSettingsRepository(),
-      };
-    },
-    [],
-  );
+  const dependencies = useMemo<AppDependencies>(() => {
+    const storageRepository = new AsyncStorageRepository();
+    const sessionRepository = new InMemorySessionRepository(storageRepository);
+
+    return {
+      authRepository: new FirebaseAuthRepository(),
+      taskRepository: new FirebaseTaskRepository(),
+      logger: new InMemoryLoggerRepository(),
+      storageRepository,
+      sessionRepository,
+      settingsRepository: new FirebaseSettingsRepository(),
+    };
+  }, []);
 
   return <DependenciesContext.Provider value={dependencies}>{children}</DependenciesContext.Provider>;
 }

@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import {
-    getAdjustedFontSize,
-    getAdjustedLineHeight,
-    typography,
-    type FontSize,
+  getAdjustedFontSize,
+  getAdjustedLineHeight,
+  typography,
+  type FontSize,
 } from '../constants/typography';
-import { useFontSizeContext } from '../contexts/FontSizeContext';
+import { useFontSizeContext } from '../contexts/ThemeContext';
 
 
 export function useFontSize() {

@@ -1,4 +1,4 @@
-import { FontSizeProvider } from '@/src/presentation/contexts/FontSizeContext';
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { render, screen } from '@testing-library/react-native';
 import StatCard from './StatCard';
@@ -12,9 +12,7 @@ const mockColors = {
   textSecondary: '#666666',
 };
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <FontSizeProvider>{children}</FontSizeProvider>
-);
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
 
 describe('StatCard', () => {
   beforeEach(() => {

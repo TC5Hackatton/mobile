@@ -1,20 +1,21 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Card, Switch, Text } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
+import { Settings } from '@/src/domain';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
-import { useTimerSettings } from '@/src/presentation/contexts/TimerSettingsContext';
 import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-type PomodoroTime = 15 | 25 | 35 | 45;
-const POMODORO_OPTIONS: PomodoroTime[] = [15, 25, 35, 45];
+interface ProductivitySectionProps {
+  amountDefault: number;
+  onAmountDefaultChange: (minutes: number) => void;
+}
 
-export function ProductivitySection() {
+export function ProductivitySection({ amountDefault, onAmountDefaultChange }: ProductivitySectionProps) {
   const colors = useThemeColors();
   const { fontSize } = useFontSize();
-  const { amountDefault, pauseReminder, setAmountDefault, setPauseReminder } = useTimerSettings();
 
   return (
     <Card
@@ -41,7 +42,7 @@ export function ProductivitySection() {
             Tempo Padrão
           </Text>
           <View style={styles.pomodoroButtons}>
-            {POMODORO_OPTIONS.map((minutes) => (
+            {Settings.VALID_AMOUNT_DEFAULTS.map((minutes) => (
               <TouchableOpacity
                 key={minutes}
                 style={[
@@ -49,7 +50,7 @@ export function ProductivitySection() {
                   { backgroundColor: colors.surfaceVariant },
                   amountDefault === minutes && { backgroundColor: colors.primary },
                 ]}
-                onPress={() => setAmountDefault(minutes)}
+                onPress={() => onAmountDefaultChange(minutes)}
                 accessibilityRole="button"
                 accessibilityLabel={`Pomodoro de ${minutes} min`}>
                 <Text
@@ -63,16 +64,6 @@ export function ProductivitySection() {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
-
-        <View style={styles.pauseReminderRow}>
-          <Text
-            variant="titleMedium"
-            style={[styles.itemTitle, { fontSize: fontSize.md }]}
-            theme={{ colors: { onSurface: colors.text } }}>
-            Lembrete de Pausa
-          </Text>
-          <Switch value={pauseReminder} onValueChange={setPauseReminder} />
         </View>
       </Card.Content>
     </Card>
@@ -115,11 +106,5 @@ const styles = StyleSheet.create({
   },
   pomodoroButtonText: {
     fontFamily: typography.fontFamily.medium,
-  },
-  pauseReminderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: spacing.lg,
   },
 });

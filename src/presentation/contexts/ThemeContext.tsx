@@ -1,12 +1,8 @@
-import { Settings } from '@/src/domain/entities/Settings';
-import type { FetchSettingsUseCase, UpdateSettingsUseCase } from '@/src/domain';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 import type { FontSizeScale } from '../constants/typography';
 
 export type ThemeMode = 'light' | 'dark';
-
-const DEFAULT_SETTINGS = Settings.create(false, 'M', 25, false);
 
 export interface ThemeContextValue {
   themeMode: ThemeMode;
@@ -15,30 +11,15 @@ export interface ThemeContextValue {
   setTheme: (mode: ThemeMode) => void;
   fontSizeScale: FontSizeScale;
   setFontSizeScale: (scale: FontSizeScale) => void;
-  fetchSettingsUseCase: FetchSettingsUseCase;
-  updateSettingsUseCase: UpdateSettingsUseCase;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const stubFetchSettingsUseCase: FetchSettingsUseCase = {
-  execute: async () => DEFAULT_SETTINGS,
-};
-const stubUpdateSettingsUseCase: UpdateSettingsUseCase = {
-  execute: async () => {},
-};
-
 export interface ThemeProviderProps {
   children: React.ReactNode;
-  fetchSettingsUseCase?: FetchSettingsUseCase;
-  updateSettingsUseCase?: UpdateSettingsUseCase;
 }
 
-export function ThemeProvider({
-  children,
-  fetchSettingsUseCase = stubFetchSettingsUseCase,
-  updateSettingsUseCase = stubUpdateSettingsUseCase,
-}: ThemeProviderProps) {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
   const [fontSizeScale, setFontSizeScaleState] = useState<FontSizeScale>('M');
 
@@ -64,19 +45,8 @@ export function ThemeProvider({
       setTheme,
       fontSizeScale,
       setFontSizeScale,
-      fetchSettingsUseCase,
-      updateSettingsUseCase,
     }),
-    [
-      themeMode,
-      isDark,
-      toggleTheme,
-      setTheme,
-      fontSizeScale,
-      setFontSizeScale,
-      fetchSettingsUseCase,
-      updateSettingsUseCase,
-    ],
+    [themeMode, isDark, toggleTheme, setTheme, fontSizeScale, setFontSizeScale],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -95,9 +65,4 @@ export function useTheme() {
 export function useFontSizeContext() {
   const { fontSizeScale, setFontSizeScale } = useTheme();
   return { fontSizeScale, setFontSizeScale };
-}
-
-export function useSettings() {
-  const { fetchSettingsUseCase, updateSettingsUseCase } = useTheme();
-  return { fetchSettingsUseCase, updateSettingsUseCase };
 }

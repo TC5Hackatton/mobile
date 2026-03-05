@@ -20,8 +20,10 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   }),
 }));
 
-jest.mock('@/src/presentation/contexts/FontSizeContext', () => ({
-  FontSizeProvider: ({ children }: { children: React.ReactNode }) => children,
+jest.mock('@/src/presentation/contexts/ThemeContext', () => ({
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+  useTheme: jest.fn().mockReturnValue({ isDark: false, fontSizeScale: 'M' }),
+  useFontSizeContext: jest.fn().mockReturnValue({ fontSizeScale: 'M', setFontSizeScale: jest.fn() }),
 }));
 
 jest.mock('@/src/presentation/hooks/use-font-size', () => ({

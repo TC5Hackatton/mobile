@@ -1,10 +1,12 @@
-export const FONT_SIZE_ADJUSTMENTS = {
+import type { FontSizeScale } from '@/src/domain/entities/Settings';
+
+export type { FontSizeScale };
+
+export const FONT_SIZE_ADJUSTMENTS: Record<FontSizeScale, number> = {
   P: -4,
   M: 0,
   G: 4,
 } as const;
-
-export type FontSizeScale = keyof typeof FONT_SIZE_ADJUSTMENTS;
 
 export const typography = {
   fontSize: {
