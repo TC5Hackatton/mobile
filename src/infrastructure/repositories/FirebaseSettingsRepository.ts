@@ -10,6 +10,19 @@ const FIELD_MAP: Record<keyof Settings, string> = {
   amountDefault: 'timer.amount_default',
 };
 
+// updateDoc accepts dot-notation paths (e.g. 'timer.amount_default') and
+// correctly writes nested fields. setDoc does NOT — it stores the key literally.
+// This helper converts the flat map to a proper nested object for setDoc.
+function toNestedObject(flat: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, Record<string, unknown>> = {};
+  for (const [dotPath, value] of Object.entries(flat)) {
+    const [parent, child] = dotPath.split('.');
+    if (!result[parent]) result[parent] = {};
+    result[parent][child] = value;
+  }
+  return result;
+}
+
 export class FirebaseSettingsRepository implements SettingsRepository {
   async fetch(uid: string): Promise<Settings | null> {
     const snapshot = await getDoc(doc(firebaseConfig.db, SETTINGS_COLLECTION, uid));
@@ -29,7 +42,7 @@ export class FirebaseSettingsRepository implements SettingsRepository {
     const fields = Object.entries(data) as [keyof Settings, unknown][];
     if (fields.length === 0) return;
 
-    const payload = Object.fromEntries(
+    const flatPayload = Object.fromEntries(
       fields.map(([key, value]) => [FIELD_MAP[key], value]),
     );
 
@@ -37,9 +50,9 @@ export class FirebaseSettingsRepository implements SettingsRepository {
     const snapshot = await getDoc(ref);
 
     if (snapshot.exists()) {
-      await updateDoc(ref, payload);
+      await updateDoc(ref, flatPayload);
     } else {
-      await setDoc(ref, payload);
+      await setDoc(ref, toNestedObject(flatPayload));
     }
   }
 }

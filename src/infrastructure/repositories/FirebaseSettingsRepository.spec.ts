@@ -102,7 +102,7 @@ describe('FirebaseSettingsRepository', () => {
       );
     });
 
-    it('should use setDoc when document does not exist', async () => {
+    it('should use setDoc with a nested object when document does not exist', async () => {
       getDoc.mockResolvedValue({ exists: () => false });
       setDoc.mockResolvedValue(undefined);
 
@@ -110,7 +110,22 @@ describe('FirebaseSettingsRepository', () => {
 
       expect(setDoc).toHaveBeenCalledWith(
         expect.anything(),
-        { 'appearance.font_size': 'P' },
+        { appearance: { font_size: 'P' } },
+      );
+    });
+
+    it('should build correct nested object for multiple fields across groups', async () => {
+      getDoc.mockResolvedValue({ exists: () => false });
+      setDoc.mockResolvedValue(undefined);
+
+      await repository.update('uid-123', { darkMode: true, amountDefault: 35 });
+
+      expect(setDoc).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          appearance: { dark_mode: true },
+          timer: { amount_default: 35 },
+        },
       );
     });
 
