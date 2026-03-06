@@ -1,5 +1,6 @@
 // Entities
 export * from './entities/Session';
+export * from './entities/Settings';
 export * from './entities/Task';
 export * from './entities/User';
 
@@ -11,11 +12,15 @@ export * from './enums/TimeType';
 export * from './repositories/AuthRepository';
 export * from './repositories/LoggerRepository';
 export * from './repositories/SessionRepository';
+export * from './repositories/SettingsRepository';
 export * from './repositories/StorageRepository';
 export * from './repositories/TaskRepository';
 
 // Use Cases
 export * from './usecases/focus-mode/FetchFocusTasksUseCase';
+
+export * from './usecases/settings/FetchSettingsUseCase';
+export * from './usecases/settings/UpdateSettingsUseCase';
 
 export * from './usecases/task/CreateTaskUseCase';
 export * from './usecases/task/FetchAllTasksUseCase';

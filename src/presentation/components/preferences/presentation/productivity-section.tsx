@@ -1,17 +1,21 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 
+import { Settings } from '@/src/domain';
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
-type PomodoroTime = '15 min' | '25 min' | '35 min' | '45 min';
+interface ProductivitySectionProps {
+  amountDefault: number;
+  onAmountDefaultChange: (minutes: number) => void;
+}
 
-export function ProductivitySection() {
+export function ProductivitySection({ amountDefault, onAmountDefaultChange }: ProductivitySectionProps) {
   const colors = useThemeColors();
-  const [pomodoroTime, setPomodoroTime] = useState<PomodoroTime>('25 min');
+  const { fontSize } = useFontSize();
 
   return (
     <Card
@@ -22,34 +26,40 @@ export function ProductivitySection() {
       <Card.Content style={styles.content}>
         <View style={styles.header}>
           <MaterialIcons name="access-time" size={24} color={colors.text} />
-          <Text variant="titleLarge" style={styles.sectionTitle} theme={{ colors: { onSurface: colors.text } }}>
+          <Text
+            variant="titleLarge"
+            style={[styles.sectionTitle, { fontSize: fontSize.lg }]}
+            theme={{ colors: { onSurface: colors.text } }}>
             Tempo e Produtividade
           </Text>
         </View>
 
         <View>
-          <Text variant="titleMedium" style={styles.itemTitle} theme={{ colors: { onSurface: colors.text } }}>
-            Pomodoro Padrão
+          <Text
+            variant="titleMedium"
+            style={[styles.itemTitle, { fontSize: fontSize.md }]}
+            theme={{ colors: { onSurface: colors.text } }}>
+            Tempo Padrão
           </Text>
           <View style={styles.pomodoroButtons}>
-            {(['15 min', '25 min', '35 min', '45 min'] as PomodoroTime[]).map((time) => (
+            {Settings.VALID_AMOUNT_DEFAULTS.map((minutes) => (
               <TouchableOpacity
-                key={time}
+                key={minutes}
                 style={[
                   styles.pomodoroButton,
                   { backgroundColor: colors.surfaceVariant },
-                  pomodoroTime === time && { backgroundColor: colors.primary },
+                  amountDefault === minutes && { backgroundColor: colors.primary },
                 ]}
-                onPress={() => setPomodoroTime(time)}
+                onPress={() => onAmountDefaultChange(minutes)}
                 accessibilityRole="button"
-                accessibilityLabel={`Pomodoro de ${time}`}>
+                accessibilityLabel={`Pomodoro de ${minutes} min`}>
                 <Text
                   style={[
                     styles.pomodoroButtonText,
-                    { color: colors.textSecondary },
-                    pomodoroTime === time && { color: colors.white },
+                    { color: colors.textSecondary, fontSize: fontSize.sm },
+                    amountDefault === minutes && { color: colors.white },
                   ]}>
-                  {time}
+                  {minutes} min
                 </Text>
               </TouchableOpacity>
             ))}
@@ -76,11 +86,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    fontSize: typography.fontSize.lg,
     fontFamily: typography.fontFamily.bold,
   },
   itemTitle: {
-    fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.sm,
   },
@@ -97,7 +105,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pomodoroButtonText: {
-    fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.medium,
   },
 });

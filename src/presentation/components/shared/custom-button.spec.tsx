@@ -5,6 +5,7 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   useThemeColors: jest.fn(),
 }));
 
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { CustomButton } from './custom-button';
 
@@ -17,6 +18,8 @@ const mockColors = {
   white: '#FFFFFF',
 } as any;
 
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
+
 describe('CustomButton', () => {
   beforeEach(() => {
     mockUseThemeColors.mockReturnValue(mockColors);
@@ -27,13 +30,13 @@ describe('CustomButton', () => {
   });
 
   it('should render with the provided label', () => {
-    render(<CustomButton label="Entrar" onPress={jest.fn()} />);
+    render(<CustomButton label="Entrar" onPress={jest.fn()} />, { wrapper });
     expect(screen.getByText('Entrar')).toBeTruthy();
   });
 
   it('should call onPress when pressed', () => {
     const onPressMock = jest.fn();
-    render(<CustomButton label="Entrar" onPress={onPressMock} />);
+    render(<CustomButton label="Entrar" onPress={onPressMock} />, { wrapper });
 
     fireEvent.press(screen.getByText('Entrar'));
 
@@ -42,7 +45,7 @@ describe('CustomButton', () => {
 
   it('should NOT call onPress when disabled', () => {
     const onPressMock = jest.fn();
-    render(<CustomButton label="Disabled" onPress={onPressMock} disabled={true} />);
+    render(<CustomButton label="Disabled" onPress={onPressMock} disabled={true} />, { wrapper });
 
     fireEvent.press(screen.getByRole('button'));
 
@@ -51,7 +54,7 @@ describe('CustomButton', () => {
 
   it('should NOT call onPress when loading', () => {
     const onPressMock = jest.fn();
-    render(<CustomButton label="Loading" onPress={onPressMock} loading={true} />);
+    render(<CustomButton label="Loading" onPress={onPressMock} loading={true} />, { wrapper });
 
     fireEvent.press(screen.getByRole('button'));
 
@@ -59,9 +62,9 @@ describe('CustomButton', () => {
   });
 
   it('should show ActivityIndicator and hide label when loading', () => {
-    const { UNSAFE_getByType } = render(
-      <CustomButton label="Submit" onPress={jest.fn()} loading={true} />,
-    );
+    const { UNSAFE_getByType } = render(<CustomButton label="Submit" onPress={jest.fn()} loading={true} />, {
+      wrapper,
+    });
 
     const { ActivityIndicator } = require('react-native');
     expect(UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
@@ -69,9 +72,9 @@ describe('CustomButton', () => {
   });
 
   it('should show label and hide ActivityIndicator when not loading', () => {
-    const { UNSAFE_queryAllByType } = render(
-      <CustomButton label="Submit" onPress={jest.fn()} loading={false} />,
-    );
+    const { UNSAFE_queryAllByType } = render(<CustomButton label="Submit" onPress={jest.fn()} loading={false} />, {
+      wrapper,
+    });
 
     const { ActivityIndicator } = require('react-native');
     expect(UNSAFE_queryAllByType(ActivityIndicator)).toHaveLength(0);
@@ -80,7 +83,7 @@ describe('CustomButton', () => {
 
   describe('variants', () => {
     it('should use lightGreen background for primary variant (default)', () => {
-      render(<CustomButton label="Primary" onPress={jest.fn()} variant="primary" />);
+      render(<CustomButton label="Primary" onPress={jest.fn()} variant="primary" />, { wrapper });
 
       expect(screen.getByRole('button').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.lightGreen }),
@@ -88,7 +91,7 @@ describe('CustomButton', () => {
     });
 
     it('should use coral background for cancel variant', () => {
-      render(<CustomButton label="Cancel" onPress={jest.fn()} variant="cancel" />);
+      render(<CustomButton label="Cancel" onPress={jest.fn()} variant="cancel" />, { wrapper });
 
       expect(screen.getByRole('button').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.coral }),
@@ -96,7 +99,7 @@ describe('CustomButton', () => {
     });
 
     it('should use primary color background for secondary variant', () => {
-      render(<CustomButton label="Secondary" onPress={jest.fn()} variant="secondary" />);
+      render(<CustomButton label="Secondary" onPress={jest.fn()} variant="secondary" />, { wrapper });
 
       expect(screen.getByRole('button').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.primary }),
@@ -104,7 +107,7 @@ describe('CustomButton', () => {
     });
 
     it('should default to lightGreen when no variant is provided', () => {
-      render(<CustomButton label="Default" onPress={jest.fn()} />);
+      render(<CustomButton label="Default" onPress={jest.fn()} />, { wrapper });
 
       expect(screen.getByRole('button').props.style).toEqual(
         expect.objectContaining({ backgroundColor: mockColors.lightGreen }),
@@ -116,6 +119,7 @@ describe('CustomButton', () => {
     it('should use custom accessibilityLabel when provided, falling back to label', () => {
       const { rerender } = render(
         <CustomButton label="Submit" onPress={jest.fn()} accessibilityLabel="My accessibility label" />,
+        { wrapper },
       );
       expect(screen.getByRole('button', { name: 'My accessibility label' })).toBeTruthy();
 
@@ -124,9 +128,7 @@ describe('CustomButton', () => {
     });
 
     it('should report disabled and busy states in accessibility', () => {
-      const { rerender } = render(
-        <CustomButton label="Btn" onPress={jest.fn()} disabled={true} />,
-      );
+      const { rerender } = render(<CustomButton label="Btn" onPress={jest.fn()} disabled={true} />, { wrapper });
       expect(screen.getByRole('button').props.accessibilityState).toMatchObject({ disabled: true });
 
       rerender(<CustomButton label="Btn" onPress={jest.fn()} loading={true} />);
@@ -134,7 +136,7 @@ describe('CustomButton', () => {
     });
 
     it('should propagate testID', () => {
-      render(<CustomButton label="Test" onPress={jest.fn()} testID="my-button" />);
+      render(<CustomButton label="Test" onPress={jest.fn()} testID="my-button" />, { wrapper });
       expect(screen.getByTestId('my-button')).toBeTruthy();
     });
   });

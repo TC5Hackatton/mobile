@@ -10,12 +10,15 @@ import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { SettingsSync } from '@/src/presentation/components/preferences/smart/SettingsSync';
 import { CustomToast } from '@/src/presentation/components/shared/custom-toast';
 import { ErrorBoundary } from '@/src/presentation/components/shared/error-boundary';
 import { customColors, darkTheme, lightTheme } from '@/src/presentation/constants/paper-theme';
 import { DependenciesProvider } from '@/src/presentation/contexts/DependenciesContext';
 import { SessionProvider } from '@/src/presentation/contexts/SessionContext';
+import { SettingsProvider } from '@/src/presentation/contexts/SettingsContext';
 import { ThemeProvider as AppThemeProvider, useTheme } from '@/src/presentation/contexts/ThemeContext';
+import { TimerSettingsProvider } from '@/src/presentation/contexts/TimerSettingsContext';
 import {
   Raleway_400Regular,
   Raleway_500Medium,
@@ -23,7 +26,6 @@ import {
   Raleway_700Bold,
 } from '@expo-google-fonts/raleway';
 
-// Manter a splash screen visível enquanto carregamos as fontes
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
@@ -64,9 +66,11 @@ function RootLayoutContent() {
     return null;
   }
 
+  const containerBg = isDark ? customColors.darkNavy : customColors.white;
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: containerBg }} edges={['top', 'left', 'right']}>
         <PaperProvider key={isDark ? 'dark' : 'light'} theme={paperTheme}>
           <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
             <Stack>
@@ -91,7 +95,12 @@ export default function RootLayout() {
       <DependenciesProvider>
         <SessionProvider>
           <AppThemeProvider>
-            <RootLayoutContent />
+            <SettingsProvider>
+              <TimerSettingsProvider>
+                <SettingsSync />
+                <RootLayoutContent />
+              </TimerSettingsProvider>
+            </SettingsProvider>
           </AppThemeProvider>
         </SessionProvider>
       </DependenciesProvider>

@@ -13,12 +13,14 @@ import { LoginLogo } from '@/src/presentation/components/shared/login-logo';
 import { useSession } from '@/src/presentation/contexts/SessionContext';
 import { useUser } from '@/src/presentation/contexts/UserContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { signInSchema, type SignInFormData } from './sign-in-schema';
 
 export default function SignInContent() {
   const { signInUseCase } = useUser();
   const { setSession } = useSession();
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   const params = useLocalSearchParams<{ success?: string; message?: string }>();
 
   const {
@@ -92,7 +94,7 @@ export default function SignInContent() {
               />
               {errors.email && (
                 <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.email.message}</Text>
+                  <Text style={[styles.errorText, { fontSize: fontSize.xs }]}>{errors.email.message}</Text>
                 </View>
               )}
             </View>
@@ -111,7 +113,7 @@ export default function SignInContent() {
               />
               {errors.password && (
                 <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>{errors.password.message}</Text>
+                  <Text style={[styles.errorText, { fontSize: fontSize.xs }]}>{errors.password.message}</Text>
                 </View>
               )}
             </View>
@@ -172,7 +174,6 @@ const styles = StyleSheet.create({
     minHeight: 20,
   },
   errorText: {
-    fontSize: 12,
     color: '#E89B8C',
     fontFamily: 'Raleway_400Regular',
   },

@@ -19,6 +19,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Instantiate use cases
   const useCases = useMemo(
     () => ({
       getStoredSessionUseCase: new GetStoredSessionUseCase(sessionRepository),
@@ -27,6 +28,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [authRepository, sessionRepository],
   );
 
+  // Auto-restore session on mount
   useEffect(() => {
     const initializeAuth = async () => {
       try {

@@ -1,3 +1,4 @@
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { render, screen } from '@testing-library/react-native';
 import StatCard from './StatCard';
@@ -11,31 +12,33 @@ const mockColors = {
   textSecondary: '#666666',
 };
 
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
+
 describe('StatCard', () => {
   beforeEach(() => {
     (useThemeColors as jest.Mock).mockReturnValue(mockColors);
   });
 
   it('should render the value correctly', () => {
-    render(<StatCard icon="pending" iconColor="#666" value={7} label="A Fazer" />);
+    render(<StatCard icon="pending" iconColor="#666" value={7} label="A Fazer" />, { wrapper });
 
     expect(screen.getByTestId('stat-card-value')).toHaveTextContent('7');
   });
 
   it('should render the label correctly', () => {
-    render(<StatCard icon="timelapse" iconColor="#888" value={3} label="Em Andamento" />);
+    render(<StatCard icon="timelapse" iconColor="#888" value={3} label="Em Andamento" />, { wrapper });
 
     expect(screen.getByTestId('stat-card-label')).toHaveTextContent('Em Andamento');
   });
 
   it('should render the card container', () => {
-    render(<StatCard icon="check-circle-outline" iconColor="#00f" value={5} label="Concluídas" />);
+    render(<StatCard icon="check-circle-outline" iconColor="#00f" value={5} label="Concluídas" />, { wrapper });
 
     expect(screen.getByTestId('stat-card')).toBeTruthy();
   });
 
   it('should render a zero value without errors', () => {
-    render(<StatCard icon="group-work" iconColor="#f00" value={0} label="Tarefas Totais" />);
+    render(<StatCard icon="group-work" iconColor="#f00" value={0} label="Tarefas Totais" />, { wrapper });
 
     expect(screen.getByTestId('stat-card-value')).toHaveTextContent('0');
   });

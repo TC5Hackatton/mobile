@@ -3,6 +3,7 @@ import { Switch, Text } from 'react-native-paper';
 
 import { spacing } from '@/src/presentation/constants/spacing';
 import { typography } from '@/src/presentation/constants/typography';
+import { useFontSize } from '@/src/presentation/hooks/use-font-size';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 
 interface ToggleLineProps {
@@ -14,19 +15,20 @@ interface ToggleLineProps {
 
 export function ToggleLine({ title, description, value, onValueChange }: ToggleLineProps) {
   const colors = useThemeColors();
+  const { fontSize } = useFontSize();
   
   return (
     <View style={styles.item}>
       <View style={styles.itemContent}>
         <Text 
           variant="titleMedium" 
-          style={styles.itemTitle}
+          style={[styles.itemTitle, { fontSize: fontSize.md }]}
           theme={{ colors: { onSurface: colors.text } }}>
           {title}
         </Text>
         <Text 
           variant="bodySmall" 
-          style={styles.itemSubtitle}
+          style={[styles.itemSubtitle, { fontSize: fontSize.sm }]}
           theme={{ colors: { onSurface: colors.textSecondary } }}>
           {description}
         </Text>
@@ -47,12 +49,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemTitle: {
-    fontSize: typography.fontSize.md,
     fontFamily: typography.fontFamily.medium,
     marginBottom: spacing.xs,
   },
   itemSubtitle: {
-    fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily.regular,
   },
 });

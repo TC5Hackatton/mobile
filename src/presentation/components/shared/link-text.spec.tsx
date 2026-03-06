@@ -5,6 +5,7 @@ jest.mock('@/src/presentation/hooks/use-theme-colors', () => ({
   useThemeColors: jest.fn(),
 }));
 
+import { ThemeProvider as FontSizeProvider } from '@/src/presentation/contexts/ThemeContext';
 import { useThemeColors } from '@/src/presentation/hooks/use-theme-colors';
 import { LinkText } from './link-text';
 
@@ -13,6 +14,8 @@ const mockUseThemeColors = useThemeColors as jest.MockedFunction<typeof useTheme
 const mockColors = {
   tertiary: '#6B9BD0',
 } as any;
+
+const wrapper = ({ children }: { children: React.ReactNode }) => <FontSizeProvider>{children}</FontSizeProvider>;
 
 describe('LinkText', () => {
   beforeEach(() => {
@@ -24,13 +27,13 @@ describe('LinkText', () => {
   });
 
   it('should render with the provided text', () => {
-    render(<LinkText text="Esqueci minha senha" onPress={jest.fn()} />);
+    render(<LinkText text="Esqueci minha senha" onPress={jest.fn()} />, { wrapper });
     expect(screen.getByText('Esqueci minha senha')).toBeTruthy();
   });
 
   it('should call onPress when tapped', () => {
     const onPressMock = jest.fn();
-    render(<LinkText text="Click me" onPress={onPressMock} />);
+    render(<LinkText text="Click me" onPress={onPressMock} />, { wrapper });
 
     fireEvent.press(screen.getByText('Click me'));
 
@@ -38,7 +41,7 @@ describe('LinkText', () => {
   });
 
   it('should apply tertiary color from theme to the text', () => {
-    render(<LinkText text="Link" onPress={jest.fn()} />);
+    render(<LinkText text="Link" onPress={jest.fn()} />, { wrapper });
 
     expect(screen.getByText('Link').props.style).toEqual(
       expect.arrayContaining([expect.objectContaining({ color: mockColors.tertiary })]),

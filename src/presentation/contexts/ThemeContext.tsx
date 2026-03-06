@@ -1,67 +1,41 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+
+import type { FontSizeScale } from '../constants/typography';
 
 export type ThemeMode = 'light' | 'dark';
 
-interface ThemeContextValue {
+export interface ThemeContextValue {
   themeMode: ThemeMode;
   isDark: boolean;
   toggleTheme: () => void;
   setTheme: (mode: ThemeMode) => void;
+  fontSizeScale: FontSizeScale;
+  setFontSizeScale: (scale: FontSizeScale) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const THEME_STORAGE_KEY = 'mindease_theme_mode';
+export interface ThemeProviderProps {
+  children: React.ReactNode;
+}
 
-// Função helper para salvar tema (funciona em web e mobile)
-const saveTheme = (mode: ThemeMode) => {
-  try {
-    // Para web
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem(THEME_STORAGE_KEY, mode);
-    }
-    // Para React Native, podemos adicionar AsyncStorage depois se necessário
-  } catch (error) {
-    // Ignorar erros de storage
-    console.warn('Não foi possível salvar o tema:', error);
-  }
-};
-
-// Função helper para carregar tema
-const loadTheme = (): ThemeMode | null => {
-  try {
-    // Para web
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const saved = window.localStorage.getItem(THEME_STORAGE_KEY);
-      if (saved === 'light' || saved === 'dark') {
-        return saved as ThemeMode;
-      }
-    }
-  } catch (error) {
-    // Ignorar erros
-    console.warn('Não foi possível carregar o tema:', error);
-  }
-  return null;
-};
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
-    // Carregar tema salvo na inicialização
-    const saved = loadTheme();
-    return saved || 'light';
-  });
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
+  const [fontSizeScale, setFontSizeScaleState] = useState<FontSizeScale>('M');
 
   const isDark = themeMode === 'dark';
 
-  const setTheme = (mode: ThemeMode) => {
+  const setTheme = useCallback((mode: ThemeMode) => {
     setThemeModeState(mode);
-    saveTheme(mode);
-  };
+  }, []);
 
-  const toggleTheme = () => {
-    const newMode = themeMode === 'dark' ? 'light' : 'dark';
-    setTheme(newMode);
-  };
+  const toggleTheme = useCallback(() => {
+    setThemeModeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
+
+  const setFontSizeScale = useCallback((scale: FontSizeScale) => {
+    setFontSizeScaleState(scale);
+  }, []);
 
   const value = useMemo<ThemeContextValue>(
     () => ({
@@ -69,8 +43,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       isDark,
       toggleTheme,
       setTheme,
+      fontSizeScale,
+      setFontSizeScale,
     }),
-    [themeMode, isDark],
+    [themeMode, isDark, toggleTheme, setTheme, fontSizeScale, setFontSizeScale],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -84,4 +60,9 @@ export function useTheme() {
   }
 
   return context;
+}
+
+export function useFontSizeContext() {
+  const { fontSizeScale, setFontSizeScale } = useTheme();
+  return { fontSizeScale, setFontSizeScale };
 }
